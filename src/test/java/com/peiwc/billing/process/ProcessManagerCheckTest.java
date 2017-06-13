@@ -4,7 +4,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.log4j.BasicConfigurator;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +17,21 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.peiwc.billing.configuration.ConfigurationBeanMock;
 
+/**
+ * this test checks class {@link ProcessManagerCheck}
+ */
 @ContextConfiguration(classes = { ConfigurationBeanMock.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 public class ProcessManagerCheckTest {
+
+	/**
+	 * sets up logging before tests begins.
+	 */
+	@Before
+	public void setup() {
+		BasicConfigurator.configure();
+	}
 
 	@Autowired
 	private ProcessManagerCheck processManagerCheck;
@@ -27,7 +40,7 @@ public class ProcessManagerCheckTest {
 	 * this test should check if process has already been run after setting a
 	 * valid date in the system.
 	 *
-	 * @throws ParseException
+	 * @throws Exception
 	 *             if current date can not be parsed normally
 	 */
 	@Test

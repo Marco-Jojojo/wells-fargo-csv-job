@@ -13,26 +13,42 @@ import javax.persistence.Embeddable;
 public class WFMamSrcFilePK implements Serializable {
 
 	/**
-	 *
+	 * generated serial version.
 	 */
 	private static final long serialVersionUID = 6799455314066296091L;
+
 	@Column(name = "CYCLE_NUMBER")
 	private int cycleNumber;
+
 	@Column(name = "SEQUENCE_NUMBER")
 	private int sequenceNumber;
 
+	/**
+	 * @return the cycleNumber
+	 */
 	public int getCycleNumber() {
 		return cycleNumber;
 	}
 
-	public int getSequenceNumber() {
-		return sequenceNumber;
-	}
-
+	/**
+	 * @param cycleNumber
+	 *            the cycleNumber to set
+	 */
 	public void setCycleNumber(final int cycleNumber) {
 		this.cycleNumber = cycleNumber;
 	}
 
+	/**
+	 * @return the sequenceNumber
+	 */
+	public int getSequenceNumber() {
+		return sequenceNumber;
+	}
+
+	/**
+	 * @param sequenceNumber
+	 *            the sequenceNumber to set
+	 */
 	public void setSequenceNumber(final int sequenceNumber) {
 		this.sequenceNumber = sequenceNumber;
 	}

@@ -7,6 +7,9 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+/**
+ * implementation of {@link ProcessDAO}
+ */
 @Repository("processDAOImpl")
 public class ProcessDAOImpl implements ProcessDAO {
 
@@ -23,6 +26,9 @@ public class ProcessDAOImpl implements ProcessDAO {
 	private static final String GET_LAST_CYCLE_NUMBER = "select ifnull(max( cycle_number ),0) as cycle_number "
 			+ "from WF_MAM_OP_HDR_TRLR";
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public boolean checkProcessDate(final Date creationDate) {
 		final MapSqlParameterSource parameters = new MapSqlParameterSource();
@@ -32,6 +38,9 @@ public class ProcessDAOImpl implements ProcessDAO {
 		return runStatus == 1;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public int getLastCycleNumber() {
 		final MapSqlParameterSource parameters = new MapSqlParameterSource();

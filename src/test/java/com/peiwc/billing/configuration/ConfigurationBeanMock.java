@@ -24,6 +24,9 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.TransactionManagementConfigurer;
 
+/**
+ * Configuration file for checking integration tests in current application.
+ */
 @Configuration
 @ComponentScan(basePackages = { "com.peiwc.billing" }, excludeFilters = {
 		@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = { ConfigurationBean.class }) })
@@ -55,6 +58,11 @@ public class ConfigurationBeanMock implements TransactionManagementConfigurer {
 	 */
 	public static final String PERSISTENCE_APP_NAME = "WFPU";
 
+	/**
+	 * generates global datasource.
+	 *
+	 * @return global datasource.
+	 */
 	@Bean("dataSource")
 	public DataSource getDataSource() {
 		final EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
@@ -63,6 +71,11 @@ public class ConfigurationBeanMock implements TransactionManagementConfigurer {
 		return db;
 	}
 
+	/**
+	 * generates entitymanager factory.
+	 *
+	 * @return a global entity manager factory.
+	 */
 	@Bean("entityManagerFactory")
 	public LocalContainerEntityManagerFactoryBean getEntityManagerFactory() {
 		final LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
@@ -78,6 +91,11 @@ public class ConfigurationBeanMock implements TransactionManagementConfigurer {
 		return factory;
 	}
 
+	/**
+	 * generates a hibernate vendor adapter.
+	 *
+	 * @return a generated vendor adapter.
+	 */
 	@Bean("vendorAdapter")
 	public JpaVendorAdapter getJpaVendorAdapter() {
 		final HibernateJpaVendorAdapter hibernateVendor = new HibernateJpaVendorAdapter();
@@ -87,6 +105,11 @@ public class ConfigurationBeanMock implements TransactionManagementConfigurer {
 		return hibernateVendor;
 	}
 
+	/**
+	 * generates a named jdbc template.
+	 *
+	 * @return a global named jdbc template.
+	 */
 	@Bean("namedParameterJdbcTemplate")
 	public NamedParameterJdbcTemplate getNamedParameterJdbcTemplate() {
 		final NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(getDataSource());

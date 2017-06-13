@@ -23,6 +23,12 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.TransactionManagementConfigurer;
 
+/**
+ *
+ * this bean contains all the configuration managed across the current
+ * application.
+ *
+ */
 @Configuration
 @ComponentScans({ @ComponentScan("com.peiwc.billing") })
 @EnableTransactionManagement()
@@ -53,6 +59,12 @@ public class ConfigurationBean implements TransactionManagementConfigurer {
 	 */
 	public static final String PERSISTENCE_APP_NAME = "WFPU";
 
+	/**
+	 * generates a global datasource using the persistence settings in the
+	 * properties file.
+	 *
+	 * @return a datasource managed bean
+	 */
 	@Bean("dataSource")
 	public DataSource getDataSource() {
 		final BasicDataSource dataSource = new BasicDataSource();
@@ -65,6 +77,12 @@ public class ConfigurationBean implements TransactionManagementConfigurer {
 		return dataSource;
 	}
 
+	/**
+	 * Generates a entity manager factory that scans the application beans to
+	 * search all JPA managed beans.
+	 *
+	 * @return an global entity manager factory
+	 */
 	@Bean("entityManagerFactory")
 	public LocalContainerEntityManagerFactoryBean getEntityManagerFactory() {
 		final LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
@@ -80,6 +98,12 @@ public class ConfigurationBean implements TransactionManagementConfigurer {
 		return factory;
 	}
 
+	/**
+	 * Generates a vendor adapter for hibernate that manages specific vendor
+	 * properties of hibernate connection.
+	 *
+	 * @return a global vendor adapter for hibernate.
+	 */
 	@Bean("vendorAdapter")
 	public JpaVendorAdapter getJpaVendorAdapter() {
 		final HibernateJpaVendorAdapter hibernateVendor = new HibernateJpaVendorAdapter();
@@ -89,6 +113,12 @@ public class ConfigurationBean implements TransactionManagementConfigurer {
 		return hibernateVendor;
 	}
 
+	/**
+	 * constructs a transaction manager for use when generating a transaction in
+	 * a DAO repository or component.
+	 *
+	 * @return a global transaction manager for use in the application.
+	 */
 	@Bean("transactionManager")
 	public JpaTransactionManager setTransactionManager() {
 		final JpaTransactionManager transactionManager = new JpaTransactionManager();
@@ -96,6 +126,11 @@ public class ConfigurationBean implements TransactionManagementConfigurer {
 		return transactionManager;
 	}
 
+	/**
+	 * generates a spring jdbc template for global use in the application.
+	 *
+	 * @return a named parameter jdbc template
+	 */
 	@Bean("namedParameterJdbcTemplate")
 	public NamedParameterJdbcTemplate getNamedParameterJdbcTemplate() {
 		final NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(getDataSource());
