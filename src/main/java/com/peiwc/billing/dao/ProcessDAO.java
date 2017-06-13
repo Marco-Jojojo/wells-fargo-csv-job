@@ -4,6 +4,6 @@ import java.util.Date;
 
 public interface ProcessDAO {
 
-	boolean checkProcessDAte(Date date);
+	boolean checkProcessDate(Date creationDate);
 
 }

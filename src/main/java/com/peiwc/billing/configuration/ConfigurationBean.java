@@ -6,14 +6,12 @@ import javax.sql.DataSource;
 
 import org.apache.commons.dbcp.BasicDataSource;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
@@ -49,9 +47,14 @@ public class ConfigurationBean implements TransactionManagementConfigurer {
 	@Value("${database.mssql.generateDdl}")
 	private String generateDdl;
 
+	/**
+	 * global persistence name shared across application
+	 */
+	public static final String PERSISTENCE_APP_NAME = "WFPU";
+
 	@Bean("dataSource")
 	public DataSource getDataSource() {
-		BasicDataSource dataSource = new BasicDataSource();
+		final BasicDataSource dataSource = new BasicDataSource();
 		dataSource.setDriverClassName(driverClassName);
 		dataSource.setUrl(url);
 		dataSource.setUsername(username);
@@ -63,20 +66,21 @@ public class ConfigurationBean implements TransactionManagementConfigurer {
 
 	@Bean("entityManagerFactory")
 	public LocalContainerEntityManagerFactoryBean getEntityManagerFactory() {
-		LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
+		final LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
 		emf.setDataSource(getDataSource());
 		emf.setJpaDialect(new HibernateJpaDialect());
 		emf.setPackagesToScan("com.peiwc.billing.domain");
 		emf.setJpaVendorAdapter(getJpaVendorAdapter());
-		Properties jpaProperties = new Properties();
+		final Properties jpaProperties = new Properties();
 		jpaProperties.setProperty("hibernate.dialect", databasePlatform);
 		emf.setJpaProperties(jpaProperties);
+		emf.setPersistenceUnitName(PERSISTENCE_APP_NAME);
 		return emf;
 	}
 
 	@Bean("vendorAdapter")
 	public JpaVendorAdapter getJpaVendorAdapter() {
-		HibernateJpaVendorAdapter hibernateVendor = new HibernateJpaVendorAdapter();
+		final HibernateJpaVendorAdapter hibernateVendor = new HibernateJpaVendorAdapter();
 		hibernateVendor.setDatabasePlatform(databasePlatform);
 		hibernateVendor.setShowSql(Boolean.valueOf(showSql));
 		hibernateVendor.setGenerateDdl(Boolean.valueOf(generateDdl));
@@ -85,9 +89,15 @@ public class ConfigurationBean implements TransactionManagementConfigurer {
 
 	@Bean("transactionManager")
 	public JpaTransactionManager setTransactionManager() {
-		JpaTransactionManager transactionManager = new JpaTransactionManager();
+		final JpaTransactionManager transactionManager = new JpaTransactionManager();
 		transactionManager.setDataSource(getDataSource());
 		return transactionManager;
+	}
+
+	@Bean("namedParameterJdbcTemplate")
+	public NamedParameterJdbcTemplate getNamedParameterJdbcTemplate() {
+		final NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(getDataSource());
+		return namedParameterJdbcTemplate;
 	}
 
 	@Override
