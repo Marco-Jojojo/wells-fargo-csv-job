@@ -6,4 +6,6 @@ public interface ProcessDAO {
 
 	boolean checkProcessDate(Date creationDate);
 
+	int getLastCycleNumber();
+
 }
