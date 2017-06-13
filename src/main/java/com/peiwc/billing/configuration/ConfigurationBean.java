@@ -5,6 +5,7 @@ import java.util.Properties;
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp.BasicDataSource;
+import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -66,16 +67,17 @@ public class ConfigurationBean implements TransactionManagementConfigurer {
 
 	@Bean("entityManagerFactory")
 	public LocalContainerEntityManagerFactoryBean getEntityManagerFactory() {
-		final LocalContainerEntityManagerFactoryBean emf = new LocalContainerEntityManagerFactoryBean();
-		emf.setDataSource(getDataSource());
-		emf.setJpaDialect(new HibernateJpaDialect());
-		emf.setPackagesToScan("com.peiwc.billing.domain");
-		emf.setJpaVendorAdapter(getJpaVendorAdapter());
+		final LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
+		factory.setPersistenceProvider(new HibernatePersistenceProvider());
+		factory.setDataSource(getDataSource());
+		factory.setJpaDialect(new HibernateJpaDialect());
+		factory.setPackagesToScan("com.peiwc.billing.domain");
+		factory.setJpaVendorAdapter(getJpaVendorAdapter());
 		final Properties jpaProperties = new Properties();
 		jpaProperties.setProperty("hibernate.dialect", databasePlatform);
-		emf.setJpaProperties(jpaProperties);
-		emf.setPersistenceUnitName(PERSISTENCE_APP_NAME);
-		return emf;
+		factory.setJpaProperties(jpaProperties);
+		factory.setPersistenceUnitName(PERSISTENCE_APP_NAME);
+		return factory;
 	}
 
 	@Bean("vendorAdapter")
