@@ -2,7 +2,6 @@ package com.peiwc.billing.dao;
 
 import java.util.Date;
 
-import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -18,23 +17,19 @@ public class ProcessDAOImpl implements ProcessDAO {
 
 	private static final String NO = "no";
 
-	private static final String CHECK_PROCESS_BY_DATE = "select top 1 case when exists "
-			+ "(select * from [COMPSUPTPROD].[dbo].[WF_MAM_OP_HDR_TRLR] "
-			+ "where creation_date = :creationDate) then 'yes' else 'no' end as HAS_RUN from  "
-			+ "[COMPSUPTPROD].[dbo].[WF_MAM_OP_HDR_TRLR];";
+	private static final String CHECK_PROCESS_BY_DATE = "select count(0) as HAS_RUN from "
+			+ "WF_MAM_OP_HDR_TRLR where cast(creation_date as date)= :creationDate ";
 
-	private static final String GET_LAST_CYCLE_NUMBER = "select top 1 case when exists "
-			+ "(select  CYCLE_NUMBER from [COMPSUPTPROD].[dbo].[WF_MAM_OP_HDR_TRLR] ) "
-			+ "then MAX(CYCLE_NUMBER) else 0 end as MAX_CYCLE_NUMBER "
-			+ "from  [COMPSUPTPROD].[dbo].[WF_MAM_OP_HDR_TRLR];";
+	private static final String GET_LAST_CYCLE_NUMBER = "select ifnull(max( cycle_number ),0) as cycle_number "
+			+ "from WF_MAM_OP_HDR_TRLR";
 
 	@Override
 	public boolean checkProcessDate(final Date creationDate) {
 		final MapSqlParameterSource parameters = new MapSqlParameterSource();
 		parameters.addValue("creationDate", creationDate);
-		final String runStatus = this.namedParameterJdbcTemplate.queryForObject(CHECK_PROCESS_BY_DATE, parameters,
-				String.class);
-		return BooleanUtils.toBoolean(runStatus, YES, NO);
+		final int runStatus = this.namedParameterJdbcTemplate.queryForObject(CHECK_PROCESS_BY_DATE, parameters,
+				Integer.class);
+		return runStatus == 1;
 	}
 
 	@Override
