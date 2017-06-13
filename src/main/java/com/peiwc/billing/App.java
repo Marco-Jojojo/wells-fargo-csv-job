@@ -8,17 +8,18 @@ import org.w3c.dom.DOMConfiguration;
 import com.peiwc.billing.configuration.ConfigurationBean;
 
 /**
- * Hello world!
+ * Main Start Point for Processing CSV job
  *
  */
-public class App 
-{
-    public static void main( String[] args )
-    {
-        
-    	DOMConfigurator.configure("wells-fargo-log4j.xml");
-        ApplicationContext ctx = new AnnotationConfigApplicationContext(ConfigurationBean.class);
-        
-        
-    }
+public class App {
+	
+	/**
+	 * main method for start point
+	 * @param args arguments passed from command line
+	 */
+	public static void main(String[] args) {
+		DOMConfigurator.configure("wells-fargo-log4j.xml");
+		ApplicationContext ctx = new AnnotationConfigApplicationContext(ConfigurationBean.class);
+		System.out.println(ctx);
+	}
 }
