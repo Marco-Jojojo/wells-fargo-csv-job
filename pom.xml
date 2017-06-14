@@ -12,6 +12,7 @@
 		<hibernate.jpa.version>1.0.0.Final</hibernate.jpa.version>
 		<spring.data.jpa.version>1.6.5.RELEASE</spring.data.jpa.version>
 		<hibernate.version>4.3.11.Final</hibernate.version>
+		<main.class>com.peiwc.billing.App</main.class>
 	</properties>
 	<dependencies>
 
@@ -120,12 +121,6 @@
 			<version>2.10.4</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.hsqldb</groupId>
-			<artifactId>hsqldb</artifactId>
-			<version>2.3.1</version>
-		</dependency>
-
 		<!-- test libraries -->
 
 		<dependency>
@@ -154,6 +149,30 @@
 					<source>${java.version}</source>
 					<target>${java.version}</target>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.4.1</version>
+				<configuration>
+					<descriptorRefs>
+						<descriptorRef>jar-with-dependencies</descriptorRef>
+					</descriptorRefs>
+					<archive>
+						<manifest>
+							<mainClass>${main.class}</mainClass>
+						</manifest>
+					</archive>
+				</configuration>
+				<executions>
+					<execution>
+						<id>make-assembly</id>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 		<finalName>${project.artifactId}</finalName>
