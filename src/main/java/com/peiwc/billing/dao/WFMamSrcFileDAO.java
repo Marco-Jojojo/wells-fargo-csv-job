@@ -2,20 +2,26 @@ package com.peiwc.billing.dao;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
+
 import com.peiwc.billing.domain.WFMamSrcFile;
 
 /**
  * DAO For retrieving {@link WFMamSrcFile } .
  */
-public interface WFMamSrcFileDAO {
+@Repository("wfMamSrcFileDAO")
+public interface WFMamSrcFileDAO extends JpaRepository<WFMamSrcFile, Integer> {
 
 	/**
-	 * gets all the {@link WFMamSrcFile} related to the current cycle number.
+	 * find by cycle Number
 	 *
 	 * @param cycleNumber
-	 *            cycle number that contains
-	 * @return list of {@link WFMamSrcFile} related to cycle number
+	 * @return a list of {@link WFMamSrcFile} by cycle number
 	 */
-	public List<WFMamSrcFile> getMamRecordsFromCycleNumber(int cycleNumber);
+	@Query("select w from WFMamSrcFile w where w.id.cycleNumber = :cycleNumber")
+	List<WFMamSrcFile> findByCycleNumber(@Param("cycleNumber") int cycleNumber);
 
 }

@@ -21,4 +21,15 @@ public interface WFMamOpHDRTRLRDAO {
 	 */
 	WFMamOpHDRTRLR saveCycleForToday(Date currentDate, int cycleNumber);
 
+	/**
+	 * saves the total of records processed in this run.
+	 *
+	 * @param nextCycle
+	 *            cycle that is currently run for getting the CSV records and
+	 *            saving them into the file.
+	 * @param totalRecordCount
+	 *            records that have been processed currently.
+	 */
+	void saveTotalRecordsProcessed(int nextCycle, int totalRecordCount);
+
 }

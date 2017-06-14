@@ -1,5 +1,6 @@
 package com.peiwc.billing.process;
 
+import java.io.IOException;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
@@ -24,6 +25,9 @@ public class MainProcess {
 	@Autowired
 	private WFMamOpHDRTRLRProcess wfMamOpHDRTRLRProcess;
 
+	@Autowired
+	private WriteWFMAMSrcFileCSV writeWFMAMSrcFileCSV;
+
 	/**
 	 * this is the main process that checks if the process has already run and
 	 * then writes the entire data from a cycle to database.
@@ -37,13 +41,32 @@ public class MainProcess {
 			final int nextCycle = processManagerCheck.getNextCycleNumber();
 			MainProcess.LOGGER.info("Process Has not been run, Next cycle is: " + nextCycle);
 			final WFMamOpHDRTRLR wfMamOpHDRTRLR = wfMamOpHDRTRLRProcess.saveNextCycle(nextCycle, currentDate);
-			System.out.println("next cycle : " + wfMamOpHDRTRLR.getCycleNumber());
-
+			MainProcess.LOGGER.info("wfMamOpHDRTRLR cycleNumber: " + wfMamOpHDRTRLR.getCycleNumber()
+					+ " , creationDate:" + wfMamOpHDRTRLR.getCreationDate());
+			// here goes the main process where the data for WF_MAM_SRC_FILE
+			// table is filled.
+			fillTables();
+			String fileName = System.getProperty("file.name");
+			if (fileName == null) {
+				fileName = "test.csv";
+			}
+			try {
+				final int totalRecordCount = writeWFMAMSrcFileCSV.writeDataToCSV(nextCycle, fileName);
+				wfMamOpHDRTRLRProcess.saveTotalRecordsProcessed(nextCycle, totalRecordCount);
+			} catch (final IOException e) {
+				MainProcess.LOGGER.error(e, e);
+				hasRunSuccessfully = false;
+			}
 		} else {
 			MainProcess.LOGGER.info("Process has already run today");
 			hasRunSuccessfully = false;
 		}
 		return hasRunSuccessfully;
+	}
+
+	private void fillTables() {
+		// TODO generate here the process to fill the tables with data.
+
 	}
 
 }

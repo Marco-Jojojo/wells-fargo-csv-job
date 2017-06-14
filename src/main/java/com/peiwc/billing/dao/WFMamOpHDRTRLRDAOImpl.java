@@ -20,14 +20,29 @@ public class WFMamOpHDRTRLRDAOImpl implements WFMamOpHDRTRLRDAO {
 	@PersistenceContext(name = ConfigurationBean.PERSISTENCE_APP_NAME)
 	private EntityManager entityManager;
 
-	@Transactional
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public WFMamOpHDRTRLR saveCycleForToday(final Date currentDate, final int cycleNumber) {
 		final WFMamOpHDRTRLR wfMamOpHDRTRLR = new WFMamOpHDRTRLR();
 		wfMamOpHDRTRLR.setCycleNumber(cycleNumber);
 		wfMamOpHDRTRLR.setCreationDate(currentDate);
 		entityManager.persist(wfMamOpHDRTRLR);
+		entityManager.flush();
 		return wfMamOpHDRTRLR;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Transactional
+	@Override
+	public void saveTotalRecordsProcessed(final int nextCycle, final int totalRecordCount) {
+		final WFMamOpHDRTRLR wfMamOpHDRTRLR = entityManager.find(WFMamOpHDRTRLR.class, nextCycle);
+		wfMamOpHDRTRLR.setTotalRecordCount(totalRecordCount);
+		entityManager.persist(wfMamOpHDRTRLR);
+		entityManager.flush();
 	}
 
 }

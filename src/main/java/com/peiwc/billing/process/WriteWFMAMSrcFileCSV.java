@@ -58,18 +58,21 @@ public class WriteWFMAMSrcFileCSV {
 	 *            number of cycle where wfdata is retrieved
 	 * @param fileName
 	 *            file where data is being stored.
+	 * @return a record count of the number of records processed.
 	 * @throws IOException
 	 *             if file could not be written
 	 * @throws FileNotFoundException
 	 */
-	public void writeDataToCSV(final int cycleNumber, final String fileName) throws IOException {
-		final List<WFMamSrcFile> wfList = this.wfMamSrcFileDAO.getMamRecordsFromCycleNumber(cycleNumber);
+	public int writeDataToCSV(final int cycleNumber, final String fileName) throws IOException {
+		int recordCount = 0;
+		final List<WFMamSrcFile> wfList = this.wfMamSrcFileDAO.findByCycleNumber(cycleNumber);
 		OutputStream out = null;
 		try {
 			out = new FileOutputStream(fileName, true);
 			for (final WFMamSrcFile wfMamSrcFile : wfList) {
 				final String csvLine = getCSVFromSrcFile(wfMamSrcFile);
 				out.write(csvLine.getBytes());
+				recordCount++;
 			}
 		} finally {
 			if (out != null) {
@@ -80,7 +83,7 @@ public class WriteWFMAMSrcFileCSV {
 				}
 			}
 		}
-
+		return recordCount;
 	}
 
 	private String getCSVFromSrcFile(final WFMamSrcFile wfMamSrcFile) {

@@ -2,6 +2,7 @@ package com.peiwc.billing.configuration;
 
 import java.util.Properties;
 
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp.BasicDataSource;
@@ -12,6 +13,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -31,7 +33,8 @@ import org.springframework.transaction.annotation.TransactionManagementConfigure
  */
 @Configuration
 @ComponentScans({ @ComponentScan("com.peiwc.billing") })
-@EnableTransactionManagement()
+@EnableJpaRepositories(entityManagerFactoryRef = "entityManagerFactory", basePackages = { "com.peiwc.billing.dao" })
+@EnableTransactionManagement
 @PropertySource("file:database.mssql.properties")
 public class ConfigurationBean implements TransactionManagementConfigurer {
 
@@ -140,6 +143,13 @@ public class ConfigurationBean implements TransactionManagementConfigurer {
 	@Override
 	public PlatformTransactionManager annotationDrivenTransactionManager() {
 		return new DataSourceTransactionManager(getDataSource());
+	}
+
+	@Bean
+	JpaTransactionManager transactionManager(final EntityManagerFactory entityManagerFactory) {
+		final JpaTransactionManager transactionManager = new JpaTransactionManager();
+		transactionManager.setEntityManagerFactory(entityManagerFactory);
+		return transactionManager;
 	}
 
 }

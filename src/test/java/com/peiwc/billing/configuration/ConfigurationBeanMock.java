@@ -2,6 +2,7 @@ package com.peiwc.billing.configuration;
 
 import java.util.Properties;
 
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.hibernate.jpa.HibernatePersistenceProvider;
@@ -11,18 +12,17 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
+import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaDialect;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.transaction.annotation.TransactionManagementConfigurer;
 
 /**
  * Configuration file for checking integration tests in current application.
@@ -30,9 +30,10 @@ import org.springframework.transaction.annotation.TransactionManagementConfigure
 @Configuration
 @ComponentScan(basePackages = { "com.peiwc.billing" }, excludeFilters = {
 		@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = { ConfigurationBean.class }) })
-@EnableTransactionManagement()
+@EnableJpaRepositories(entityManagerFactoryRef = "entityManagerFactory", basePackages = { "com.peiwc.billing.dao" })
+@EnableTransactionManagement
 @PropertySource("file:database.h2.properties")
-public class ConfigurationBeanMock implements TransactionManagementConfigurer {
+public class ConfigurationBeanMock {
 
 	@Value("${database.mssql.driverClassName}")
 	private String driverClassName;
@@ -87,7 +88,7 @@ public class ConfigurationBeanMock implements TransactionManagementConfigurer {
 		final Properties jpaProperties = new Properties();
 		jpaProperties.setProperty("hibernate.dialect", databasePlatform);
 		factory.setJpaProperties(jpaProperties);
-		factory.setPersistenceUnitName(PERSISTENCE_APP_NAME);
+		factory.setPersistenceUnitName(ConfigurationBeanMock.PERSISTENCE_APP_NAME);
 		return factory;
 	}
 
@@ -116,9 +117,11 @@ public class ConfigurationBeanMock implements TransactionManagementConfigurer {
 		return namedParameterJdbcTemplate;
 	}
 
-	@Override
-	public PlatformTransactionManager annotationDrivenTransactionManager() {
-		return new DataSourceTransactionManager(getDataSource());
+	@Bean
+	JpaTransactionManager transactionManager(final EntityManagerFactory entityManagerFactory) {
+		final JpaTransactionManager transactionManager = new JpaTransactionManager();
+		transactionManager.setEntityManagerFactory(entityManagerFactory);
+		return transactionManager;
 	}
 
 }

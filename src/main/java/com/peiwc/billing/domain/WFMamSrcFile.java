@@ -5,8 +5,6 @@ import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -16,8 +14,6 @@ import javax.persistence.TemporalType;
  * WF_MAM_SRC_FILE, these results are going to be stored in a csv file.
  *
  */
-@NamedQueries({
-		@NamedQuery(name = "WFMamSrcFile.findByCycleNumber", query = "select w from WFMamSrcFile w where w.id.cycleNumber = :cycleNumber") })
 @Entity
 @Table(name = "WF_MAM_SRC_FILE")
 public class WFMamSrcFile {

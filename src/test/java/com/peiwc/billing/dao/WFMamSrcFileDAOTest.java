@@ -40,7 +40,7 @@ public class WFMamSrcFileDAOTest {
 	 */
 	@Test
 	public void testGetMamRecordsFromCycleNumber() {
-		final List<WFMamSrcFile> records = this.wfMamSrcFileDAO.getMamRecordsFromCycleNumber(2006);
+		final List<WFMamSrcFile> records = this.wfMamSrcFileDAO.findByCycleNumber(2006);
 		Assert.assertEquals(1, records.size());
 	}
 
