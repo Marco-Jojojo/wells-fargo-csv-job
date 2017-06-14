@@ -9,7 +9,7 @@ CREATE TABLE WF_MAM_OP_HDR_TRLR(
 	FILENAME varchar(250) NULL,
 	ERROR_MSG varchar(100) NULL);
 	
-	
+--creates detail table for wf mam, this table contains all the records that are written to csv.	
 CREATE TABLE WF_MAM_SRC_FILE(
 	CYCLE_NUMBER decimal(10, 0) NOT NULL,
 	SEQUENCE_NUMBER decimal(10, 0) NOT NULL,

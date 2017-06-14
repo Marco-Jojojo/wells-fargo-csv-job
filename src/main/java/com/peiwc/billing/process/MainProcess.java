@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.peiwc.billing.App;
+import com.peiwc.billing.domain.WFMamOpHDRTRLR;
 
 /**
  * this is the main process where all the data processing runs, this is called
@@ -20,6 +21,9 @@ public class MainProcess {
 	@Autowired
 	private ProcessManagerCheck processManagerCheck;
 
+	@Autowired
+	private WFMamOpHDRTRLRProcess wfMamOpHDRTRLRProcess;
+
 	/**
 	 * this is the main process that checks if the process has already run and
 	 * then writes the entire data from a cycle to database.
@@ -27,13 +31,17 @@ public class MainProcess {
 	 * @return a flag indicating the process has been run successfully
 	 */
 	public boolean runWellsFargoCSVProcess() {
-		final boolean hasRunSuccessfully = true;
+		boolean hasRunSuccessfully = true;
 		final Date currentDate = new Date();
 		if (!this.processManagerCheck.checkIfProcessHasAlreadyRun(currentDate)) {
 			final int nextCycle = processManagerCheck.getNextCycleNumber();
 			MainProcess.LOGGER.info("Process Has not been run, Next cycle is: " + nextCycle);
+			final WFMamOpHDRTRLR wfMamOpHDRTRLR = wfMamOpHDRTRLRProcess.saveNextCycle(nextCycle, currentDate);
+			System.out.println("next cycle : " + wfMamOpHDRTRLR.getCycleNumber());
+
 		} else {
 			MainProcess.LOGGER.info("Process has already run today");
+			hasRunSuccessfully = false;
 		}
 		return hasRunSuccessfully;
 	}
