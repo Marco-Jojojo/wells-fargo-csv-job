@@ -1,6 +1,4 @@
-package com.peiwc.billing.dao;
-
-import java.util.List;
+package com.peiwc.billing.process;
 
 import org.apache.log4j.BasicConfigurator;
 import org.junit.Assert;
@@ -14,21 +12,20 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.peiwc.billing.configuration.ConfigurationBeanMock;
-import com.peiwc.billing.domain.WFMamSrcFile;
 
 /**
- * test for {@link WFMamSrcFileDAO}
+ * this class test {@link MainProcess}
  */
 @ContextConfiguration(classes = { ConfigurationBeanMock.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
-public class WFMamSrcFileDAOTest {
+public class MainProcessTest {
 
 	@Autowired
-	private WFMamSrcFileDAO wfMamSrcFileDAO;
+	private MainProcess mainProcess;
 
 	/**
-	 * setup.
+	 * sets up logging before tests begins.
 	 */
 	@Before
 	public void setup() {
@@ -36,12 +33,12 @@ public class WFMamSrcFileDAOTest {
 	}
 
 	/**
-	 * test if records are retrieved successfully from database.
+	 * this test checks if runWellsFargoCSVProcess runs correctly
 	 */
 	@Test
-	public void testGetMamRecordsFromCycleNumber() {
-		final List<WFMamSrcFile> records = this.wfMamSrcFileDAO.getMamRecordsFromCycleNumber(2006);
-		Assert.assertEquals(1, records.size());
+	public void testRunWellsFargoCSVProcess() {
+		final boolean success = this.mainProcess.runWellsFargoCSVProcess();
+		Assert.assertTrue(success);
 	}
 
 }

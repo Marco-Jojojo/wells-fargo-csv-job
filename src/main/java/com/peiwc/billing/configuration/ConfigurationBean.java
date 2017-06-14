@@ -94,7 +94,7 @@ public class ConfigurationBean implements TransactionManagementConfigurer {
 		final Properties jpaProperties = new Properties();
 		jpaProperties.setProperty("hibernate.dialect", databasePlatform);
 		factory.setJpaProperties(jpaProperties);
-		factory.setPersistenceUnitName(PERSISTENCE_APP_NAME);
+		factory.setPersistenceUnitName(ConfigurationBean.PERSISTENCE_APP_NAME);
 		return factory;
 	}
 
