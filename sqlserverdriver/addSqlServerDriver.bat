@@ -1,0 +1,1 @@
+mvn install:install-file "-DgroupId=com.microsoft.sqlserver" "-DartifactId=sqljdbc41"  "-Dversion=4.1"  "-Dpackaging=jar" "-Dfile=sqljdbc4.jar" 

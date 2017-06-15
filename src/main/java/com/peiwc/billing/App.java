@@ -1,8 +1,8 @@
 package com.peiwc.billing;
 
 import org.apache.log4j.xml.DOMConfigurator;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.AbstractApplicationContext;
 
 import com.peiwc.billing.configuration.ConfigurationBean;
 import com.peiwc.billing.process.MainProcess;
@@ -21,8 +21,10 @@ public class App {
 	 */
 	public static void main(final String[] args) {
 		DOMConfigurator.configure("wells-fargo-log4j.xml");
-		final ApplicationContext ctx = new AnnotationConfigApplicationContext(ConfigurationBean.class);
+		final AbstractApplicationContext ctx = new AnnotationConfigApplicationContext(ConfigurationBean.class);
 		final MainProcess mainProcess = ctx.getBean(MainProcess.class);
 		mainProcess.runWellsFargoCSVProcess();
+		ctx.close();
+		System.exit(0);
 	}
 }

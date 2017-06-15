@@ -45,7 +45,7 @@ public class MainProcess {
 					+ " , creationDate:" + wfMamOpHDRTRLR.getCreationDate());
 			// here goes the main process where the data for WF_MAM_SRC_FILE
 			// table is filled.
-			fillTables();
+			fillTables(nextCycle);
 			String fileName = System.getProperty("file.name");
 			if (fileName == null) {
 				fileName = "test.csv";
@@ -64,7 +64,7 @@ public class MainProcess {
 		return hasRunSuccessfully;
 	}
 
-	private void fillTables() {
+	private void fillTables(final int nextCycle) {
 		// TODO generate here the process to fill the tables with data.
 
 	}
