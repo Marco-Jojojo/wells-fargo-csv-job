@@ -53,4 +53,16 @@ public class WFMamOpHDRTRLRProcess {
 		this.wfMamOpHDRTRLRRepository.saveAndFlush(wfMamOpHDRTRLR);
 	}
 
+
+	/**
+	 * saves current Error Message to master table for current cycle.
+	 * @param cycleNumber current cycle number run by the application.
+	 * @param errorMessage critical error caught during execution.
+	 */
+	public void saveErrorMessage(int cycleNumber,String errorMessage){
+		WFMamOpHDRTRLR wfMamOpHDRTRLR = wfMamOpHDRTRLRRepository.findOne(cycleNumber);
+		wfMamOpHDRTRLR.setErrorMessage(errorMessage);
+		wfMamOpHDRTRLRRepository.saveAndFlush(wfMamOpHDRTRLR);
+	}
+
 }
