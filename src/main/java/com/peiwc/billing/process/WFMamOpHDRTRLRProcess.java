@@ -7,7 +7,6 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.peiwc.billing.dao.WFMamOpHDRTRLRDAO;
 import com.peiwc.billing.dao.WFMamOpHDRTRLRRepository;
 import com.peiwc.billing.domain.WFMamOpHDRTRLR;
 
@@ -18,8 +17,6 @@ import com.peiwc.billing.domain.WFMamOpHDRTRLR;
 @Component("wfMamOpHDRTRLRProcess")
 public class WFMamOpHDRTRLRProcess {
 
-	@Autowired
-	private WFMamOpHDRTRLRDAO wfMamOpHDRTRLRDAO;
 
 	@Autowired
 	private WFMamOpHDRTRLRRepository wfMamOpHDRTRLRRepository;
@@ -51,8 +48,9 @@ public class WFMamOpHDRTRLRProcess {
 	 *            records that have been processed currently.
 	 */
 	public void saveTotalRecordsProcessed(final int nextCycle, final int totalRecordCount) {
-		wfMamOpHDRTRLRDAO.saveTotalRecordsProcessed(nextCycle, totalRecordCount);
-
+		WFMamOpHDRTRLR wfMamOpHDRTRLR = wfMamOpHDRTRLRRepository.findOne(nextCycle);
+		wfMamOpHDRTRLR.setTotalRecordCount(totalRecordCount);
+		this.wfMamOpHDRTRLRRepository.saveAndFlush(wfMamOpHDRTRLR);
 	}
 
 }

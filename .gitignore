@@ -7,3 +7,5 @@ target
 .project
 *.log*
 *.csv
+.idea
+*.iml
