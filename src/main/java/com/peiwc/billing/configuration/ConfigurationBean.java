@@ -140,11 +140,20 @@ public class ConfigurationBean implements TransactionManagementConfigurer {
 		return namedParameterJdbcTemplate;
 	}
 
+	/**
+	 * generates an annotationdriven transaction manager
+	 * @return datasource transaction manager.
+	 */
 	@Override
 	public PlatformTransactionManager annotationDrivenTransactionManager() {
 		return new DataSourceTransactionManager(getDataSource());
 	}
 
+	/**
+	 * generates a transaction manager for use in @Transactional annotations
+	 * @param entityManagerFactory entityManager Factory passed as parameter when building transaction manager method.
+	 * @return a transaction manager to use in jpa transactions.
+	 */
 	@Bean
 	JpaTransactionManager transactionManager(final EntityManagerFactory entityManagerFactory) {
 		final JpaTransactionManager transactionManager = new JpaTransactionManager();
