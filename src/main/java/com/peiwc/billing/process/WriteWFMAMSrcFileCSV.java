@@ -37,6 +37,9 @@ public class WriteWFMAMSrcFileCSV {
     @Value("${numeric.decimal.places}")
     private int minFractionDigits;
 
+    @Value("${csv.headers}")
+    private String csvHeaders;
+
     /**
      * Add code initialize
      */
@@ -72,6 +75,8 @@ public class WriteWFMAMSrcFileCSV {
         OutputStream out = null;
         try {
             out = new FileOutputStream(fileName, true);
+            final byte[] headers = (csvHeaders + NEW_LINE).getBytes();
+            out.write(headers);
             for (final WFMamSrcFile wfMamSrcFile : wfList) {
                 final String csvLine = getCSVFromSrcFile(wfMamSrcFile);
                 out.write(csvLine.getBytes());
@@ -121,5 +126,6 @@ public class WriteWFMAMSrcFileCSV {
         builder.append(WriteWFMAMSrcFileCSV.NEW_LINE);
         return builder.toString();
     }
+
 
 }
