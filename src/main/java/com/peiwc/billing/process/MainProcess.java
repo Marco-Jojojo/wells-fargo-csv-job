@@ -1,16 +1,15 @@
 package com.peiwc.billing.process;
 
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
+import com.peiwc.billing.App;
+import com.peiwc.billing.domain.WFMamOpHDRTRLR;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import com.peiwc.billing.App;
-import com.peiwc.billing.domain.WFMamOpHDRTRLR;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * this is the main process where all the data processing runs, this is called
@@ -48,10 +47,12 @@ public class MainProcess {
                 nextCycle = processManagerCheck.getNextCycleNumber();
                 MainProcess.LOGGER.info("Process Has not been run, Next cycle is: " + nextCycle);
                 final WFMamOpHDRTRLR wfMamOpHDRTRLR = wfMamOpHDRTRLRProcess.saveNextCycle(nextCycle, currentDate);
+                wfMamOpHDRTRLRProcess.setCurrentState(ProcessState.PENDING_START, nextCycle);
                 MainProcess.LOGGER.info("wfMamOpHDRTRLR cycleNumber: " + wfMamOpHDRTRLR.getCycleNumber()
                         + " , creationDate:" + wfMamOpHDRTRLR.getCreationDate());
                 // here goes the main process where the data for WF_MAM_SRC_FILE
                 // table is filled.
+                wfMamOpHDRTRLRProcess.setCurrentState(ProcessState.RUNNING, nextCycle);
                 fillTables(nextCycle);
                 final String fileNamePrefix = System.getProperty("file.name");
                 String fileName = "test.csv";
@@ -64,10 +65,11 @@ public class MainProcess {
                 } catch (final IOException ex) {
                     MainProcess.LOGGER.error(ex, ex);
                     hasRunSuccessfully = false;
-                    this.wfMamOpHDRTRLRProcess.saveErrorMessage(nextCycle, ex.getMessage());
+                    wfMamOpHDRTRLRProcess.saveErrorMessage(nextCycle, ex.getMessage());
                 }
-            } catch (Exception ex) {
-                this.wfMamOpHDRTRLRProcess.saveErrorMessage(nextCycle, ex.getMessage());
+                wfMamOpHDRTRLRProcess.setCurrentState(ProcessState.FINISHED, nextCycle);
+            } catch (final Exception ex) {
+                wfMamOpHDRTRLRProcess.saveErrorMessage(nextCycle, ex.getMessage());
             }
         } else {
             MainProcess.LOGGER.info("Process has already run today");
@@ -82,8 +84,8 @@ public class MainProcess {
     }
 
     private String generateFileSuffix() {
-        Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat(dateFormatPattern);
+        final Date date = new Date();
+        final SimpleDateFormat sdf = new SimpleDateFormat(dateFormatPattern);
         return sdf.format(date);
     }
 
