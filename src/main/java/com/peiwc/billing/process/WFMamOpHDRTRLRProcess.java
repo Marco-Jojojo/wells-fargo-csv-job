@@ -101,13 +101,15 @@ public class WFMamOpHDRTRLRProcess {
     }
 
     public void moveGeneratedFileToExternalLocation(final String fileName, final String fileNameLocation) throws IOException {
-        final NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(user);
-        final String path = "smb://" + fileNameLocation + "/" + fileName;
-        final SmbFile sFile = new SmbFile(path, auth);
-        final SmbFileOutputStream sfos = new SmbFileOutputStream(sFile);
-        final byte[] data = readAllBytes(fileName);
-        sfos.write(data);
-        sfos.close();
+        if (processEnabled) {
+            final NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(user);
+            final String path = "smb://" + fileNameLocation + "/" + fileName;
+            final SmbFile sFile = new SmbFile(path, auth);
+            final SmbFileOutputStream sfos = new SmbFileOutputStream(sFile);
+            final byte[] data = readAllBytes(fileName);
+            sfos.write(data);
+            sfos.close();
+        }
     }
 
     private byte[] readAllBytes(final String fileName) {
