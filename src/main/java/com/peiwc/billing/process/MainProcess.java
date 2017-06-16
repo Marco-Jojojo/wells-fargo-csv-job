@@ -42,7 +42,7 @@ public class MainProcess {
         boolean hasRunSuccessfully = true;
         final Date currentDate = new Date();
         int nextCycle = 0;
-        if (!this.processManagerCheck.checkIfProcessHasAlreadyRun(currentDate)) {
+        if (!processManagerCheck.checkIfProcessHasAlreadyRun(currentDate)) {
             try {
                 nextCycle = processManagerCheck.getNextCycleNumber();
                 MainProcess.LOGGER.info("Process Has not been run, Next cycle is: " + nextCycle);
@@ -54,7 +54,8 @@ public class MainProcess {
                 // table is filled.
                 wfMamOpHDRTRLRProcess.setCurrentState(ProcessState.RUNNING, nextCycle);
                 fillTables(nextCycle);
-                final String fileNamePrefix = System.getProperty("file.name");
+                final String fileNamePrefix = System.getProperty("csv.name.prefix");
+                final String fileNameLocation = System.getProperty("csv.path.location");
                 String fileName = "test.csv";
                 if (fileNamePrefix != null) {
                     fileName = fileNamePrefix + generateFileSuffix() + ".csv";
@@ -62,18 +63,22 @@ public class MainProcess {
                 try {
                     final int totalRecordCount = writeWFMAMSrcFileCSV.writeDataToCSV(nextCycle, fileName);
                     wfMamOpHDRTRLRProcess.saveTotalRecordsProcessed(nextCycle, totalRecordCount);
+                    wfMamOpHDRTRLRProcess.moveGeneratedFileToExternalLocation(fileName, fileNameLocation);
                 } catch (final IOException ex) {
                     MainProcess.LOGGER.error(ex, ex);
                     hasRunSuccessfully = false;
                     wfMamOpHDRTRLRProcess.saveErrorMessage(nextCycle, ex.getMessage());
                 }
-                wfMamOpHDRTRLRProcess.setCurrentState(ProcessState.FINISHED, nextCycle);
+                if (hasRunSuccessfully) {
+                    wfMamOpHDRTRLRProcess.setCurrentState(ProcessState.FINISHED, nextCycle);
+                }
             } catch (final Exception ex) {
                 wfMamOpHDRTRLRProcess.saveErrorMessage(nextCycle, ex.getMessage());
             }
         } else {
             MainProcess.LOGGER.info("Process has already run today");
             hasRunSuccessfully = false;
+            wfMamOpHDRTRLRProcess.setProcessAsAlreadyRunForToday();
         }
         return hasRunSuccessfully;
     }

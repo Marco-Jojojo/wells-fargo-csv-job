@@ -5,7 +5,7 @@ package com.peiwc.billing.process;
  */
 public enum ProcessState {
 
-    FINISHED("FINISHED"), PENDING_START("PENDING_START"), RUNNING("RUNNING");
+    FINISHED("FINISHED"), PENDING_START("PENDING_START"), RUNNING("RUNNING"), ALREADY_RUN("ALREADY_RUN"), IO_ERROR("IO_ERROR");
 
     private final String state;
 
