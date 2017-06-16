@@ -94,9 +94,10 @@ public class WFMamOpHDRTRLRProcess {
     /**
      * if process has already run for today, sets error as already run.
      */
-    public void setProcessAsAlreadyRunForToday() {
+    public int setProcessAsAlreadyRunForToday() {
         final int lastCycleNumber = processManagerCheck.getLastCycleNumber();
         this.setCurrentState(ProcessState.ALREADY_RUN, lastCycleNumber);
+        return lastCycleNumber;
     }
 
     public void moveGeneratedFileToExternalLocation(final String fileName, final String fileNameLocation) throws IOException {

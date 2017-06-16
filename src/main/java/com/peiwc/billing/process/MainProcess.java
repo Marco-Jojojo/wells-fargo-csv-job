@@ -2,6 +2,7 @@ package com.peiwc.billing.process;
 
 import com.peiwc.billing.App;
 import com.peiwc.billing.domain.WFMamOpHDRTRLR;
+import com.peiwc.billing.process.mail.MailSender;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +32,9 @@ public class MainProcess {
 
     @Value("${csv.name.suffix}")
     private String dateFormatPattern;
+
+    @Autowired
+    private MailSender mailSender;
 
     /**
      * this is the main process that checks if the process has already run and
@@ -71,9 +75,11 @@ public class MainProcess {
                 }
                 if (hasRunSuccessfully) {
                     wfMamOpHDRTRLRProcess.setCurrentState(ProcessState.FINISHED, nextCycle);
+                    mailSender.sendMailMessage("Process #" + nextCycle + "has run successfully ");
                 }
             } catch (final Exception ex) {
                 wfMamOpHDRTRLRProcess.saveErrorMessage(nextCycle, ex.getMessage());
+                mailSender.sendMailMessage("Process # " + nextCycle + " , has failed: " + ex.getMessage());
             }
         } else {
             MainProcess.LOGGER.info("Process has already run today");

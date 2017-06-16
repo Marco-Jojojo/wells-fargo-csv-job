@@ -1,5 +1,6 @@
 package com.peiwc.billing.process.mail;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +20,8 @@ public class MailSender {
 
     private static final String DEFAULT_SMTP_PORT = "25";
 
+    private static final Logger LOGGER = Logger.getLogger(MailSender.class);
+
     @Value("${mail.send.enabled}")
     private boolean isEnabled;
 
@@ -31,20 +34,24 @@ public class MailSender {
      * @param mailMessage message argument that contains the body text.
      * @throws MessagingException if message could not be sent.
      */
-    public void sendMailMessage(final String mailMessage) throws MessagingException {
+    public void sendMailMessage(final String mailMessage) {
         if (isEnabled) {
-            final Properties properties = new Properties();
-            final String smtpHost = System.getProperty("email.server.address");
-            properties.setProperty("mail.smtp.auth", "false");
-            properties.setProperty("mail.smtp.host", smtpHost);
-            properties.setProperty("mail.smtp.port", DEFAULT_SMTP_PORT);
-            final Session session = Session.getInstance(properties);
-            final Message message = new MimeMessage(session);
-            final String responsible = System.getProperty("email.notification.address");
-            message.setRecipient(Message.RecipientType.TO, new InternetAddress(responsible));
-            message.setSubject(mailSubject);
-            message.setText(mailMessage);
-            Transport.send(message);
+            try {
+                final Properties properties = new Properties();
+                final String smtpHost = System.getProperty("email.server.address");
+                properties.setProperty("mail.smtp.auth", "false");
+                properties.setProperty("mail.smtp.host", smtpHost);
+                properties.setProperty("mail.smtp.port", DEFAULT_SMTP_PORT);
+                final Session session = Session.getInstance(properties);
+                final Message message = new MimeMessage(session);
+                final String responsible = System.getProperty("email.notification.address");
+                message.setRecipient(Message.RecipientType.TO, new InternetAddress(responsible));
+                message.setSubject(mailSubject);
+                message.setText(mailMessage);
+                Transport.send(message);
+            } catch (final MessagingException ex) {
+                LOGGER.error(ex, ex);
+            }
         }
     }
 
