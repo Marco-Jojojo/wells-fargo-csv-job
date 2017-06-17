@@ -103,7 +103,7 @@ public class WFMamOpHDRTRLRProcess {
 
 	/**
 	 * if process has already run for today, sets error as already run.
-	 * 
+	 *
 	 * @return cycle number.
 	 */
 	public int setProcessAsAlreadyRunForToday() {
@@ -114,7 +114,7 @@ public class WFMamOpHDRTRLRProcess {
 
 	/**
 	 * moves csv generated file to an external location.
-	 * 
+	 *
 	 * @param fileName
 	 *            csv generated file
 	 * @param fileNameLocation
@@ -125,25 +125,35 @@ public class WFMamOpHDRTRLRProcess {
 	public void moveGeneratedFileToExternalLocation(final String fileName, final String fileNameLocation)
 			throws IOException {
 		if (processEnabled) {
-			final NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(user);
-			final String path = "smb://" + fileNameLocation + "/" + fileName;
-			final SmbFile sFile = new SmbFile(path, auth);
-			final SmbFileOutputStream sfos = new SmbFileOutputStream(sFile);
-			final byte[] data = readAllBytes(fileName);
-			sfos.write(data);
-			sfos.close();
+			SmbFileOutputStream sfos = null;
+			try {
+				final NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(user);
+				final String path = "smb://" + fileNameLocation + "/" + fileName;
+				final SmbFile sFile = new SmbFile(path, auth);
+				sfos = new SmbFileOutputStream(sFile);
+				final byte[] data = readAllBytes(fileName);
+				sfos.write(data);
+			} finally {
+				if (sfos != null) {
+					try {
+						sfos.close();
+					} catch (final Exception e) {
+						WFMamOpHDRTRLRProcess.LOGGER.error(e, e);
+					}
+				}
+
+			}
+
 		}
 	}
 
-	private byte[] readAllBytes(final String fileName) {
+	private byte[] readAllBytes(final String fileName) throws IOException {
 		final File file = new File(fileName);
 		final byte[] bytesArray = new byte[(int) file.length()];
 		FileInputStream fis = null;
 		try {
 			fis = new FileInputStream(file);
 			fis.read(bytesArray);
-		} catch (final IOException ex) {
-			WFMamOpHDRTRLRProcess.LOGGER.error(ex, ex);
 		} finally {
 			if (fis != null) {
 				try {
