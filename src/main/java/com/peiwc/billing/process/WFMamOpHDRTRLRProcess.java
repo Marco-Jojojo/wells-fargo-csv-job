@@ -34,9 +34,6 @@ public class WFMamOpHDRTRLRProcess {
 
 	private static final Logger LOGGER = Logger.getLogger(WFMamOpHDRTRLRProcess.class);
 
-	@Value("${cifs.user.pass}")
-	private String user;
-
 	@Value("${cifs.process.enabled}")
 	private boolean processEnabled;
 
@@ -127,7 +124,10 @@ public class WFMamOpHDRTRLRProcess {
 		if (processEnabled) {
 			SmbFileOutputStream sfos = null;
 			try {
-				final NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(user);
+				final String userName = System.getProperty("access.win.username");
+				final String password = System.getProperty("access.win.password");
+				final String authentication = userName + ":" + password;
+				final NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(authentication);
 				final String path = "smb://" + fileNameLocation + "/" + fileName;
 				final SmbFile sFile = new SmbFile(path, auth);
 				sfos = new SmbFileOutputStream(sFile);
