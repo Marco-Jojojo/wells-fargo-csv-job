@@ -1,0 +1,9 @@
+#.gitignore  
+target
+.class
+.jar
+.classpath
+.settings
+.project
+*.log*
+*.csv
