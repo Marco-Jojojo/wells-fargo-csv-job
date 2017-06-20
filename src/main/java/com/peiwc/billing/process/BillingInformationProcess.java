@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.peiwc.billing.dao.BillingProcessDAO;
 import com.peiwc.billing.domain.SprInsuredContact;
-import com.peiwc.billing.domain.SprLocation;
 
 public class BillingInformationProcess {
 
@@ -15,9 +14,9 @@ public class BillingInformationProcess {
 	public String getName(final String submissionNumber) {
 
 		SprInsuredContact contact = billingProcessDAO.getContactInfo(submissionNumber);
-
-		String firstName = contact.getFirst_name();
-		String lastName = contact.getLast_name();
+		
+		String firstName = contact.getFirstName();
+		String lastName = contact.getLastName();
 
 		String result = StringUtils.join(firstName, " ", lastName);
 
@@ -28,9 +27,9 @@ public class BillingInformationProcess {
 
 		SprInsuredContact contact = billingProcessDAO.getContactInfo(submissionNumber);
 
-		String area = contact.getPhone_area_code();
-		String prefix = contact.getPhone_prefix();
-		String suffix = contact.getPhone_suffix();
+		String area = contact.getPhoneAreaCode();
+		String prefix = contact.getPhonePrefix();
+		String suffix = contact.getPhoneSuffix();
 
 		String result = StringUtils.join(area, " ", prefix, suffix);
 
@@ -39,7 +38,7 @@ public class BillingInformationProcess {
 
 	public String getEmail(final String submissionNumber) {
 
-		return billingProcessDAO.getContactInfo(submissionNumber).getEmail_address();
+		return billingProcessDAO.getContactInfo(submissionNumber).getEmailAddress();
 	}
 
 	public String getAddress(final String submissionNumber) {
@@ -49,7 +48,7 @@ public class BillingInformationProcess {
 
 	public String getAddress2(final String submissionNumber) {
 
-		return billingProcessDAO.getLocation(submissionNumber).getAddr_2();
+		return billingProcessDAO.getLocation(submissionNumber).getAddr2();
 	}
 
 	public String getCity(final String submissionNumber) {

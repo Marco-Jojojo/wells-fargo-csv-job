@@ -1,6 +1,7 @@
 package com.peiwc.billing.domain;
 
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -8,8 +9,8 @@ import javax.persistence.Table;
 @Table(name = "SPR_LOCATION")
 public class SprLocation {
 
-	@Column(name = "SUBMISSION_NUMBER")
-	private String submissionNumber;
+	@EmbeddedId
+	private SprLocationPK id;
 
 	@Column(name = "ADDR_1")
 	private String addr1;
@@ -26,12 +27,12 @@ public class SprLocation {
 	@Column(name = "ZIP1")
 	private String zip1;
 
-	public String getSubmission_number() {
-		return submissionNumber;
+	public SprLocationPK getId() {
+		return id;
 	}
 
-	public void setSubmission_number(String submission_number) {
-		this.submissionNumber = submission_number;
+	public void setId(SprLocationPK id) {
+		this.id = id;
 	}
 
 	public String getAddr1() {
@@ -42,12 +43,12 @@ public class SprLocation {
 		this.addr1 = addr1;
 	}
 
-	public String getAddr_2() {
+	public String getAddr2() {
 		return addr2;
 	}
 
-	public void setAddr_2(String addr_2) {
-		this.addr2 = addr_2;
+	public void setAddr2(String addr2) {
+		this.addr2 = addr2;
 	}
 
 	public String getCity() {

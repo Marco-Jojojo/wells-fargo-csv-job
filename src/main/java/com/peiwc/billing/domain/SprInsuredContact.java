@@ -1,6 +1,7 @@
 package com.peiwc.billing.domain;
 
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
@@ -8,8 +9,8 @@ import javax.persistence.Table;
 @Table(name = "SPR_INSURED_CONTACT_")
 public class SprInsuredContact {
 
-	@Column(name = "SUBMISSION_NUMBER")
-	private String submissionNumber;
+	@EmbeddedId
+	private SprInsuredContactPK id;
 
 	@Column(name = "FIRST_NAME")
 	private String firstName;
@@ -29,60 +30,61 @@ public class SprInsuredContact {
 	@Column(name = "PHONE_SUFFIX")
 	private String phoneSuffix;
 
-	public String getSubmission_number() {
-		return submissionNumber;
+	public SprInsuredContactPK getId() {
+		return id;
 	}
 
-	public void setSubmission_number(String submission_number) {
-		this.submissionNumber = submission_number;
+	public void setId(SprInsuredContactPK id) {
+		this.id = id;
 	}
 
-	public String getFirst_name() {
+	public String getFirstName() {
 		return firstName;
 	}
 
-	public void setFirst_name(String first_name) {
-		this.firstName = first_name;
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
 	}
 
-	public String getLast_name() {
+	public String getLastName() {
 		return lastName;
 	}
 
-	public void setLast_name(String last_name) {
-		this.lastName = last_name;
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 
-	public String getEmail_address() {
+	public String getEmailAddress() {
 		return emailAddress;
 	}
 
-	public void setEmail_address(String email_address) {
-		this.emailAddress = email_address;
+	public void setEmailAddress(String emailAddress) {
+		this.emailAddress = emailAddress;
 	}
 
-	public String getPhone_area_code() {
+	public String getPhoneAreaCode() {
 		return phoneAreaCode;
 	}
 
-	public void setPhone_area_code(String phone_area_code) {
-		this.phoneAreaCode = phone_area_code;
+	public void setPhoneAreaCode(String phoneAreaCode) {
+		this.phoneAreaCode = phoneAreaCode;
 	}
 
-	public String getPhone_prefix() {
+	public String getPhonePrefix() {
 		return phonePrefix;
 	}
 
-	public void setPhone_prefix(String phone_prefix) {
-		this.phonePrefix = phone_prefix;
+	public void setPhonePrefix(String phonePrefix) {
+		this.phonePrefix = phonePrefix;
 	}
 
-	public String getPhone_suffix() {
+	public String getPhoneSuffix() {
 		return phoneSuffix;
 	}
 
-	public void setPhone_suffix(String phone_suffix) {
-		this.phoneSuffix = phone_suffix;
+	public void setPhoneSuffix(String phoneSuffix) {
+		this.phoneSuffix = phoneSuffix;
 	}
 
+	
 }
