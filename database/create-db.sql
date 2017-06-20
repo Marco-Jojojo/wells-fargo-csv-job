@@ -2,12 +2,14 @@
 -- creates master table wf mam, this table contains data of records 
 -- created in cycle number and error messages during the processing of data generated.
 
-CREATE TABLE WF_MAM_OP_HDR_TRLR(
-	CYCLE_NUMBER decimal(10, 0) NOT NULL primary key,
-	CREATION_DATE date NOT NULL,
-	TOTAL_RECORD_COUNT decimal(10, 0) NULL,
-	FILENAME varchar(250) NULL,
-	ERROR_MSG varchar(100) NULL);
+CREATE CACHED TABLE PUBLIC.WF_MAM_OP_HDR_TRLR(
+    CYCLE_NUMBER DECIMAL(10, 0) NOT NULL,
+    CREATION_DATE DATE NOT NULL,
+    TOTAL_RECORD_COUNT DECIMAL(10, 0),
+    FILENAME VARCHAR(250),
+    ERROR_MSG VARCHAR(100),
+    STATUS VARCHAR(20)
+);
 	
 --creates detail table for wf mam, this table contains all the records that are written to csv.	
 CREATE TABLE WF_MAM_SRC_FILE(
