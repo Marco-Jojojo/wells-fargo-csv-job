@@ -7,15 +7,15 @@ import com.peiwc.billing.domain.WFMamSrcFile;
 
 public interface CalcUnclearedBilledAmtDAO {
 
+	List<WFMamSrcFile> findAll();
+	
 	WFMamSrcFile isRecordInSrcFile(int cycleNumber, String secondaryAuth, String invoiceNumber);
-
-	List<WFMamSrcFile> findAll(String todayFormatted, String twoYearsFromTodayFormatted);
 
 	void update(int cycleNumber, String secondaryAuth, String invoiceNumber, double amountDue);
 	
-	Date getInvoiceDate(String invoiceNumber);
+	void create(WFMamSrcFile wfMamSrcFile);
 	
-	void create(WFMamSrcFile obj);
+	Date getInvoiceDate(String invoiceNumber);
 	
 	
 }

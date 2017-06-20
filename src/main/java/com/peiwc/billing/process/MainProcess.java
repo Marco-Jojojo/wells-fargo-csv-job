@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import com.peiwc.billing.App;
 import com.peiwc.billing.domain.WFMamOpHDRTRLR;
+import com.peiwc.billing.process.billingP1.CalcUnclearedBilledAmt;
 
 /**
  * this is the main process where all the data processing runs, this is called
@@ -27,6 +28,9 @@ public class MainProcess {
 
 	@Autowired
 	private WriteWFMAMSrcFileCSV writeWFMAMSrcFileCSV;
+	
+	@Autowired
+	private CalcUnclearedBilledAmt calcUnclearedBilledAmt;
 
 	/**
 	 * this is the main process that checks if the process has already run and
@@ -47,7 +51,7 @@ public class MainProcess {
 						+ " , creationDate:" + wfMamOpHDRTRLR.getCreationDate());
 				// here goes the main process where the data for WF_MAM_SRC_FILE
 				// table is filled.
-				fillTables(nextCycle);
+				this.calcUnclearedBilledAmt.updWFMamSrcFileRec(nextCycle);
 				String fileName = System.getProperty("file.name");
 				if (fileName == null) {
 					fileName = "test.csv";

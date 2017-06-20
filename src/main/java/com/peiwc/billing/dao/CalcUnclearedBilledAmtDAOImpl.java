@@ -21,12 +21,11 @@ public class CalcUnclearedBilledAmtDAOImpl implements CalcUnclearedBilledAmtDAO 
 	
 	private static final String FIND_ALL = ""
 			+ "SELECT c.POLICY_NUMBER, c.SUBMISSION_NUMBER, c.NET_PREMIUM_AMOUNT, c.DIRECT_BILL_INVOICE "
-			+ "FROM COLLECTION_MASTER c, SP_BILL_STMT_CTRL s, POLICY_MASTER p "
+			+ "FROM COLLECTION_MASTER c, SP_BILL_STMT_CTRL s"
 			+ "WHERE CLEARED_RECEIVABLE=:clearedReceivable AND AGENCYDIRECT_BILL=:agencyDirectBill AND DIRECT_BILL_INVOICE>=:directBillInvoice "
 			+ "AND c.POLICY_PREFIX_1=s.POLICY_PREFIX_1 AND c.POLICY_PREFIX_2=s.POLICY_PREFIX_2  "
 			+ "AND c.POLICY_NUMBER=s.POLICY_NUMBER AND c.POLICY_SUFFIX=s.POLICY_SUFFIX "
-			+ "AND c.DIRECT_BILL_INVOICE=s.INVOICE_NUMBER AND c.SUBMISSION_NUMBER=p.SUBMISSION_NUMBER "
-			+ "AND P.EFFECTIVE_DATE BETWEEN :today AND :twoYearsFromToday";
+			+ "AND c.DIRECT_BILL_INVOICE=s.INVOICE_NUMBER";
 	
 	private static final String IS_RECORD_IN_SRC_FILE = ""
 			+ "SELECT COUNT(*) "
@@ -45,23 +44,16 @@ public class CalcUnclearedBilledAmtDAOImpl implements CalcUnclearedBilledAmtDAO 
 			+ "INSERT INTO WF_MAM_SRC_FILE (CYCLE_NUMBER, SEQUENCE_NUMBER, REFERENCE_NUMBER, SECONDARY_AUTH, CONSOLIDATED_NAME, DUE_DATE"
 			+ ",AMOUNT_DUE, INVOICE_NUMBER, INVOICE_DATE, EMAIL, ADDRESS, ADDRESS_2, CITY, STATE, ZIP, PHONE, STATUS) "
 			+ "VALUES(:cycleNumber, :sequenceNumber, :referenceNumber, :secondaryAuth, :consolidateName, :dueDate, :amountDue, :invoiceNumber, "
-			+ ":invoiceDate, :email, :address, :address2, :city, :state, :zip, :phone)";
-           
-           
-           
-           
-           
+			+ ":invoiceDate, :email, :address, :address2, :city, :state, :zip, :phone)";       
            
 	
 
 	@Override
-	public List<WFMamSrcFile> findAll(String today, String twoYearsFromToday) {
+	public List<WFMamSrcFile> findAll() {
 		final MapSqlParameterSource parameters = new MapSqlParameterSource();
 		parameters.addValue("clearedReceivable", 'N');
 		parameters.addValue("agencyDirectBill", 'D');
 		parameters.addValue("directBillInvoice", 1);
-		parameters.addValue("today", today); //TODO:
-		parameters.addValue("twoYearsFromToday", twoYearsFromToday);
 		return this.namedParameterJdbcTemplate.query(FIND_ALL, parameters, new SrcFileMapper());
 	}
 
@@ -93,14 +85,6 @@ public class CalcUnclearedBilledAmtDAOImpl implements CalcUnclearedBilledAmtDAO 
 	}
 	
 	@Override
-	public Date getInvoiceDate(String invoiceNumber) {
-		final MapSqlParameterSource parameters = new MapSqlParameterSource();
-		parameters.addValue("invoiceNumber", invoiceNumber);
-		final Date invoiceDate = this.namedParameterJdbcTemplate.queryForObject(GET_INVOICE_DATE, parameters, Date.class);
-		return null;
-	}
-	
-	@Override
 	public void create(WFMamSrcFile wfMamSrcFile) {
 		final MapSqlParameterSource parameters = new MapSqlParameterSource();
 		parameters.addValue("cycleNumber", wfMamSrcFile.getId().getCycleNumber());
@@ -123,6 +107,14 @@ public class CalcUnclearedBilledAmtDAOImpl implements CalcUnclearedBilledAmtDAO 
 		this.namedParameterJdbcTemplate.update(SAVE_RECORD, parameters);		
 	}
 	
+	@Override
+	public Date getInvoiceDate(String invoiceNumber) {
+		final MapSqlParameterSource parameters = new MapSqlParameterSource();
+		parameters.addValue("invoiceNumber", invoiceNumber);
+		return this.namedParameterJdbcTemplate.queryForObject(GET_INVOICE_DATE, parameters, Date.class);
+		
+	}
+	
 	//TODO: move to another file
 	private static final class SrcFileMapper implements RowMapper<WFMamSrcFile> {
 
@@ -133,7 +125,7 @@ public class CalcUnclearedBilledAmtDAOImpl implements CalcUnclearedBilledAmtDAO 
 			wfMamSrcFile.setSecondaryAuth(Integer.toString(rs.getInt("SUBMISSION_NUMBER")));
 			wfMamSrcFile.setAmountDue(rs.getFloat("NET_PREMIUM_AMOUNT"));
 			wfMamSrcFile.setInvoiceNumber(Integer.toString(rs.getInt("DIRECT_BILL_INVOICE")));
-			return null;
+			return wfMamSrcFile;
 		}
 		
 	}
