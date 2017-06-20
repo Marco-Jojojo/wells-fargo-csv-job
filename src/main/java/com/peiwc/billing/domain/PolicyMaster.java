@@ -9,27 +9,27 @@ import javax.persistence.Table;
 @Table(name = "POLICY_MASTER")
 public class PolicyMaster {
 
-	@Id
+	
 	@Column(name = "POLICY_NUMBER")
-	private String policy_number;
+	private String policyNumber;
 
 	@Column(name = "SUBMISSION_NUMBER")
-	private String submission_number;
+	private String submissionNumber;
 
 	public String getPolicy_number() {
-		return policy_number;
+		return policyNumber;
 	}
 
 	public void setPolicy_number(String value) {
-		this.policy_number = value;
+		this.policyNumber = value;
 	}
 
 	public String getSubmission_number() {
-		return submission_number;
+		return submissionNumber;
 	}
 
 	public void setSubmission_number(String value) {
-		this.submission_number = value;
+		this.submissionNumber = value;
 	}
 
 }

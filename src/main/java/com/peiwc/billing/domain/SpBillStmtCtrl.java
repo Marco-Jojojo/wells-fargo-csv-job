@@ -9,60 +9,60 @@ import javax.persistence.Table;
 @Table(name = "SP_BILL_STMT_CTRL")
 public class SpBillStmtCtrl {
 
-	@Id
+	
 	@Column(name = "POLICY_NUMBER")
-	private String policy_number;
+	private String policyNumber;
 
 	@Column(name = "AMOUNT_DUE")
-	private String amount_due;
+	private String amountDue;
 
 	@Column(name = "DUE_DATE")
-	private String due_date;
+	private String dueDate;
 
 	@Column(name = "INVOICE_NUMBER")
-	private String invoice_number;
+	private String invoiceNumber;
 
 	@Column(name = "ENTRY_DATE")
-	private String entry_date;
+	private String entryDate;
 
 	public String getPolicy_number() {
-		return policy_number;
+		return policyNumber;
 	}
 
 	public void setPolicy_number(String policy_number) {
-		this.policy_number = policy_number;
+		this.policyNumber = policy_number;
 	}
 
 	public String getAmount_due() {
-		return amount_due;
+		return amountDue;
 	}
 
 	public void setAmount_due(String amount_due) {
-		this.amount_due = amount_due;
+		this.amountDue = amount_due;
 	}
 
 	public String getDue_date() {
-		return due_date;
+		return dueDate;
 	}
 
 	public void setDue_date(String due_date) {
-		this.due_date = due_date;
+		this.dueDate = due_date;
 	}
 
 	public String getInvoice_number() {
-		return invoice_number;
+		return invoiceNumber;
 	}
 
 	public void setInvoice_number(String invoice_number) {
-		this.invoice_number = invoice_number;
+		this.invoiceNumber = invoice_number;
 	}
 
 	public String getEntry_date() {
-		return entry_date;
+		return entryDate;
 	}
 
 	public void setEntry_date(String entry_date) {
-		this.entry_date = entry_date;
+		this.entryDate = entry_date;
 	}
 
 }

@@ -9,15 +9,15 @@ import javax.persistence.Table;
 @Table(name = "SPR_LOCATION")
 public class SprLocation {
 
-	@Id
+	
 	@Column(name = "SUBMISSION_NUMBER")
-	private String submission_number;
+	private String submissionNumber;
 
 	@Column(name = "ADDR_1")
 	private String addr1;
 
 	@Column(name = "ADDR_2")
-	private String addr_2;
+	private String addr2;
 
 	@Column(name = "CITY")
 	private String city;
@@ -29,11 +29,11 @@ public class SprLocation {
 	private String zip1;
 
 	public String getSubmission_number() {
-		return submission_number;
+		return submissionNumber;
 	}
 
 	public void setSubmission_number(String submission_number) {
-		this.submission_number = submission_number;
+		this.submissionNumber = submission_number;
 	}
 
 	public String getAddr1() {
@@ -45,11 +45,11 @@ public class SprLocation {
 	}
 
 	public String getAddr_2() {
-		return addr_2;
+		return addr2;
 	}
 
 	public void setAddr_2(String addr_2) {
-		this.addr_2 = addr_2;
+		this.addr2 = addr_2;
 	}
 
 	public String getCity() {

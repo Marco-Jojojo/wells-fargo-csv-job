@@ -1,6 +1,7 @@
 package com.peiwc.billing.dao;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * ProcessDAO interface for defining methods for retrieving database
@@ -26,5 +27,19 @@ public interface ProcessDAO {
 	 * @return cycle number in conjunction with the current date.
 	 */
 	int getLastCycleNumber();
+	
+	
+	
+	String getFirstName(String submissionNumber);
+	String getLastName(String submissionNumber);
+	String getPhoneAreacode(String submissionNumber);
+	String getPhonePrefix(String submissionNumber);
+	String getPhoneSuffix(String submissionNumber);
+	String getEmail(String submissionNumber);
+	String getAddr1(String submissionNumber);
+	String getAddr2(String submissionNumber);
+	String getCity(String submissionNumber);
+	String getState(String submissionNumber);
+	String getZip(String submissionNumber);
 
 }

@@ -95,6 +95,16 @@ public class MainProcess {
 	private void fillTables(final int nextCycle) {
 		// TODO: generate here the process to fill the tables with data.
 
+		final String submissionNumber = "297110";
+
+		String name = processManagerCheck.getName(submissionNumber);
+		String phone = processManagerCheck.getPhone(submissionNumber);
+		String email = processManagerCheck.getEmail(submissionNumber);
+		String address = processManagerCheck.getAddress(submissionNumber);
+		String city = processManagerCheck.getCity(submissionNumber);
+		String state = processManagerCheck.getState(submissionNumber);
+		String zip = processManagerCheck.getZip(submissionNumber);
+
 	}
 
 	private String generateFileSuffix() {
