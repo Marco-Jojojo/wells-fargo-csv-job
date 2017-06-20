@@ -11,7 +11,7 @@ public class BillingInformationProcess {
 	@Autowired
 	private BillingProcessDAO billingProcessDAO;
 
-	public String getName(final String submissionNumber) {
+	public String getName(final int submissionNumber) {
 
 		SprInsuredContact contact = billingProcessDAO.getContactInfo(submissionNumber);
 		
@@ -23,7 +23,7 @@ public class BillingInformationProcess {
 		return result;
 	}
 
-	public String getPhone(final String submissionNumber) {
+	public String getPhone(final int submissionNumber) {
 
 		SprInsuredContact contact = billingProcessDAO.getContactInfo(submissionNumber);
 
@@ -36,32 +36,32 @@ public class BillingInformationProcess {
 		return result;
 	}
 
-	public String getEmail(final String submissionNumber) {
+	public String getEmail(final int submissionNumber) {
 
 		return billingProcessDAO.getContactInfo(submissionNumber).getEmailAddress();
 	}
 
-	public String getAddress(final String submissionNumber) {
+	public String getAddress(final int submissionNumber) {
 
 		return billingProcessDAO.getLocation(submissionNumber).getAddr1();
 	}
 
-	public String getAddress2(final String submissionNumber) {
+	public String getAddress2(final int submissionNumber) {
 
 		return billingProcessDAO.getLocation(submissionNumber).getAddr2();
 	}
 
-	public String getCity(final String submissionNumber) {
+	public String getCity(final int submissionNumber) {
 
 		return billingProcessDAO.getLocation(submissionNumber).getCity();
 	}
 
-	public String getState(final String submissionNumber) {
+	public String getState(final int submissionNumber) {
 
 		return billingProcessDAO.getLocation(submissionNumber).getState();
 	}
 
-	public String getZip(final String submissionNumber) {
+	public String getZip(final int submissionNumber) {
 
 		return billingProcessDAO.getLocation(submissionNumber).getZip1();
 	}

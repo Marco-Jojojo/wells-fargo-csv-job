@@ -20,7 +20,7 @@ public class BillingProcessDAOImpl implements BillingProcessDAO {
 			+ "from SPR_LOCATION where SUBMISSION_NUMBER = :submissionNumber";
 
 	@Override
-	public SprInsuredContact getContactInfo(String submissionNumber) {
+	public SprInsuredContact getContactInfo(int submissionNumber) {
 		final MapSqlParameterSource parameters = new MapSqlParameterSource();
 		parameters.addValue("SUBMISSION_NUMBER", submissionNumber);
 		final SprInsuredContact contactInfo = namedParameterJdbcTemplate.queryForObject(GET_CONTACT_INFO, parameters,
@@ -29,7 +29,7 @@ public class BillingProcessDAOImpl implements BillingProcessDAO {
 	}
 
 	@Override
-	public SprLocation getLocation(String submissionNumber) {
+	public SprLocation getLocation(int submissionNumber) {
 		final MapSqlParameterSource parameters = new MapSqlParameterSource();
 		parameters.addValue("SUBMISSION_NUMBER", submissionNumber);
 		final SprLocation location = namedParameterJdbcTemplate.queryForObject(GET_LOCATION, parameters,

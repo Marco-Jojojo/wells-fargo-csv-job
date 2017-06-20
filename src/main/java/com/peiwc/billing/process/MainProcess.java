@@ -99,7 +99,7 @@ public class MainProcess {
 	private void fillTables(final int nextCycle) {
 		// TODO: generate here the process to fill the tables with data.
 
-		final String submissionNumber = "297110";
+		final int submissionNumber = 297110;
 
 		String name = billingInformationProcess.getName(submissionNumber);
 		String phone = billingInformationProcess.getPhone(submissionNumber);

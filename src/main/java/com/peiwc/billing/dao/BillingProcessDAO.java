@@ -5,9 +5,9 @@ import com.peiwc.billing.domain.SprLocation;
 
 public interface BillingProcessDAO {
 	
-	SprInsuredContact getContactInfo(String submissionNumber);
+	SprInsuredContact getContactInfo(int submissionNumber);
 
-	SprLocation getLocation(String submissionNumber);
+	SprLocation getLocation(int submissionNumber);
 
 	
 }
