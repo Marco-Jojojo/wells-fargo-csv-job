@@ -14,7 +14,7 @@ import com.peiwc.billing.App;
 import com.peiwc.billing.domain.WFMamOpHDRTRLR;
 
 import com.peiwc.billing.process.billingP1.CalcUnclearedBilledAmt;
-
+import com.peiwc.billing.process.billingP1.WFMamSrcGenRecs;
 import com.peiwc.billing.process.mail.MailSender;
 
 
@@ -37,7 +37,7 @@ public class MainProcess {
 	private WriteWFMAMSrcFileCSV writeWFMAMSrcFileCSV;
 	
 	@Autowired
-	private CalcUnclearedBilledAmt calcUnclearedBilledAmt;
+	private WFMamSrcGenRecs wfMamSrcGenRecs;
 
 	@Value("${csv.name.suffix}")
 	private String dateFormatPattern;
@@ -66,7 +66,7 @@ public class MainProcess {
 				wfMamOpHDRTRLRProcess.setCurrentState(ProcessState.RUNNING, nextCycle);
 				// here goes the main process where the data for WF_MAM_SRC_FILE
 				// table is filled.
-				this.calcUnclearedBilledAmt.updWFMamSrcFileRec(nextCycle);
+				this.wfMamSrcGenRecs.billingProcess(nextCycle);
 				final String fileNameId = System.getProperty("csv.id.prefix");
 				final String fileNamePrefix = System.getProperty("csv.name.prefix");
 				final String fileNameLocation = System.getProperty("csv.path.location");
