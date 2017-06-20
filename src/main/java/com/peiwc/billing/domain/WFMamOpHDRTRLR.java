@@ -79,4 +79,19 @@ public class WFMamOpHDRTRLR {
 		this.totalRecordCount = totalRecordCount;
 	}
 
+	/**
+	 * gets the error message
+	 * @return error message
+	 */
+	public String getErrorMessage() {
+		return errorMessage;
+	}
+
+	/**
+	 * sets the error message
+	 * @param errorMessage sets the error message
+	 */
+	public void setErrorMessage(String errorMessage) {
+		this.errorMessage = errorMessage;
+	}
 }

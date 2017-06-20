@@ -35,18 +35,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @PropertySource("file:database.h2.properties")
 public class ConfigurationBeanMock {
 
-	@Value("${database.mssql.driverClassName}")
-	private String driverClassName;
-	@Value("${database.mssql.url}")
-	private String url;
-	@Value("${database.mssql.username}")
-	private String username;
-	@Value("${database.mssql.password}")
-	private String password;
-	@Value("${database.mssql.maxActive}")
-	private String maxActive;
-	@Value("${database.mssql.minIdle}")
-	private String minIdle;
+
 	@Value("${database.mssql.databasePlatform}")
 	private String databasePlatform;
 	@Value("${database.mssql.showSql}")
@@ -117,6 +106,11 @@ public class ConfigurationBeanMock {
 		return namedParameterJdbcTemplate;
 	}
 
+	/**
+	 * generates a transaction manager for use in @Transactional annotations
+	 * @param entityManagerFactory entityManager Factory passed as parameter when building transaction manager method.
+	 * @return a transaction manager to use in jpa transactions.
+	 */
 	@Bean
 	JpaTransactionManager transactionManager(final EntityManagerFactory entityManagerFactory) {
 		final JpaTransactionManager transactionManager = new JpaTransactionManager();

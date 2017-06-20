@@ -15,13 +15,6 @@
 		<main.class>com.peiwc.billing.App</main.class>
 	</properties>
 
-	<repositories>
-		<repository>
-			<id>alfresco-public</id>
-			<url>https://artifacts.alfresco.com/nexus/content/groups/public</url>
-		</repository>
-	</repositories>
-
 
 	<dependencies>
 		<!-- support libraries -->

@@ -37,25 +37,31 @@ public class MainProcess {
 	public boolean runWellsFargoCSVProcess() {
 		boolean hasRunSuccessfully = true;
 		final Date currentDate = new Date();
+		int nextCycle = 0;
 		if (!this.processManagerCheck.checkIfProcessHasAlreadyRun(currentDate)) {
-			final int nextCycle = processManagerCheck.getNextCycleNumber();
-			MainProcess.LOGGER.info("Process Has not been run, Next cycle is: " + nextCycle);
-			final WFMamOpHDRTRLR wfMamOpHDRTRLR = wfMamOpHDRTRLRProcess.saveNextCycle(nextCycle, currentDate);
-			MainProcess.LOGGER.info("wfMamOpHDRTRLR cycleNumber: " + wfMamOpHDRTRLR.getCycleNumber()
-					+ " , creationDate:" + wfMamOpHDRTRLR.getCreationDate());
-			// here goes the main process where the data for WF_MAM_SRC_FILE
-			// table is filled.
-			fillTables(nextCycle);
-			String fileName = System.getProperty("file.name");
-			if (fileName == null) {
-				fileName = "test.csv";
-			}
-			try {
-				final int totalRecordCount = writeWFMAMSrcFileCSV.writeDataToCSV(nextCycle, fileName);
-				wfMamOpHDRTRLRProcess.saveTotalRecordsProcessed(nextCycle, totalRecordCount);
-			} catch (final IOException e) {
-				MainProcess.LOGGER.error(e, e);
-				hasRunSuccessfully = false;
+			try{
+				nextCycle = processManagerCheck.getNextCycleNumber();
+				MainProcess.LOGGER.info("Process Has not been run, Next cycle is: " + nextCycle);
+				final WFMamOpHDRTRLR wfMamOpHDRTRLR = wfMamOpHDRTRLRProcess.saveNextCycle(nextCycle, currentDate);
+				MainProcess.LOGGER.info("wfMamOpHDRTRLR cycleNumber: " + wfMamOpHDRTRLR.getCycleNumber()
+						+ " , creationDate:" + wfMamOpHDRTRLR.getCreationDate());
+				// here goes the main process where the data for WF_MAM_SRC_FILE
+				// table is filled.
+				fillTables(nextCycle);
+				String fileName = System.getProperty("file.name");
+				if (fileName == null) {
+					fileName = "test.csv";
+				}
+				try {
+					final int totalRecordCount = writeWFMAMSrcFileCSV.writeDataToCSV(nextCycle, fileName);
+					wfMamOpHDRTRLRProcess.saveTotalRecordsProcessed(nextCycle, totalRecordCount);
+				} catch (final IOException ex) {
+					MainProcess.LOGGER.error(ex, ex);
+					hasRunSuccessfully = false;
+					this.wfMamOpHDRTRLRProcess.saveErrorMessage(nextCycle,ex.getMessage());
+				}
+			}catch(Exception ex){
+				this.wfMamOpHDRTRLRProcess.saveErrorMessage(nextCycle,ex.getMessage());
 			}
 		} else {
 			MainProcess.LOGGER.info("Process has already run today");

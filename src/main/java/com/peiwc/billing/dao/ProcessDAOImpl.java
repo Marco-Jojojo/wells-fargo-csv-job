@@ -16,10 +16,6 @@ public class ProcessDAOImpl implements ProcessDAO {
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	private static final String YES = "yes";
-
-	private static final String NO = "no";
-
 	private static final String CHECK_PROCESS_BY_DATE = "select count(0) as HAS_RUN from "
 			+ "WF_MAM_OP_HDR_TRLR where cast(creation_date as date)= :creationDate ";
 
