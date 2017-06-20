@@ -2,14 +2,12 @@ package com.peiwc.billing.domain;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "SPR_LOCATION")
 public class SprLocation {
 
-	
 	@Column(name = "SUBMISSION_NUMBER")
 	private String submissionNumber;
 

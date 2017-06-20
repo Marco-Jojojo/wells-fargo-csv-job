@@ -43,51 +43,6 @@ public class ProcessManagerCheck {
 		return this.processDAO.getLastCycleNumber();
 	}
 
-	public String getName(final String submissionNumber) {
-
-		String firstName = processDAO.getFirstName(submissionNumber);
-		String lastName = processDAO.getLastName(submissionNumber);
-
-		String result = StringUtils.join(firstName, " ", lastName);
-
-		return result;
-	}
-
-	public String getPhone(final String submissionNumber) {
-
-		String area = processDAO.getPhoneAreacode(submissionNumber);
-		String prefix = processDAO.getPhonePrefix(submissionNumber);
-		String suffix = processDAO.getPhoneSuffix(submissionNumber);
-
-		String result = StringUtils.join(area, " ", prefix, suffix);
-
-		return result;
-	}
-
-	public String getEmail(final String submissionNumber) {
-		return this.processDAO.getEmail(submissionNumber);
-	}
-
-	public String getAddress(final String submissionNumber) {
-
-		String addr1 = processDAO.getAddr1(submissionNumber);
-		String addr2 = processDAO.getAddr2(submissionNumber);
-
-		String result = StringUtils.join(addr1, " ", addr2);
-
-		return result;
-	}
-
-	public String getCity(final String submissionNumber) {
-		return this.processDAO.getCity(submissionNumber);
-	}
-
-	public String getState(final String submissionNumber) {
-		return this.processDAO.getState(submissionNumber);
-	}
-
-	public String getZip(final String submissionNumber) {
-		return this.processDAO.getZip(submissionNumber);
-	}
+	
 
 }

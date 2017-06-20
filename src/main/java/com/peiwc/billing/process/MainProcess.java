@@ -31,6 +31,9 @@ public class MainProcess {
 
 	@Autowired
 	private WriteWFMAMSrcFileCSV writeWFMAMSrcFileCSV;
+	
+	@Autowired
+	private BillingInformationProcess billingInformationProcess;
 
 	@Value("${csv.name.suffix}")
 	private String dateFormatPattern;
@@ -94,16 +97,17 @@ public class MainProcess {
 
 	private void fillTables(final int nextCycle) {
 		// TODO: generate here the process to fill the tables with data.
+		
 
 		final String submissionNumber = "297110";
 
-		String name = processManagerCheck.getName(submissionNumber);
-		String phone = processManagerCheck.getPhone(submissionNumber);
-		String email = processManagerCheck.getEmail(submissionNumber);
-		String address = processManagerCheck.getAddress(submissionNumber);
-		String city = processManagerCheck.getCity(submissionNumber);
-		String state = processManagerCheck.getState(submissionNumber);
-		String zip = processManagerCheck.getZip(submissionNumber);
+		String name = billingInformationProcess.getName(submissionNumber);
+		String phone = billingInformationProcess.getPhone(submissionNumber);
+		String email = billingInformationProcess.getEmail(submissionNumber);
+		String address = billingInformationProcess.getAddress(submissionNumber);
+		String city = billingInformationProcess.getCity(submissionNumber);
+		String state = billingInformationProcess.getState(submissionNumber);
+		String zip = billingInformationProcess.getZip(submissionNumber);
 
 	}
 
