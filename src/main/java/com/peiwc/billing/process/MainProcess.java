@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 
 import com.peiwc.billing.App;
 import com.peiwc.billing.domain.WFMamOpHDRTRLR;
+import com.peiwc.billing.domain.WFMamSrcFile;
 import com.peiwc.billing.process.mail.MailSender;
 
 /**
@@ -97,7 +98,6 @@ public class MainProcess {
 
 	private void fillTables(final int nextCycle) {
 		// TODO: generate here the process to fill the tables with data.
-		
 
 		final String submissionNumber = "297110";
 
@@ -105,9 +105,21 @@ public class MainProcess {
 		String phone = billingInformationProcess.getPhone(submissionNumber);
 		String email = billingInformationProcess.getEmail(submissionNumber);
 		String address = billingInformationProcess.getAddress(submissionNumber);
+		String address2 = billingInformationProcess.getAddress2(submissionNumber);
 		String city = billingInformationProcess.getCity(submissionNumber);
 		String state = billingInformationProcess.getState(submissionNumber);
 		String zip = billingInformationProcess.getZip(submissionNumber);
+		
+		WFMamSrcFile srcFile = new WFMamSrcFile();
+		srcFile.setConsolidatedName(name);
+		srcFile.setPhone(phone);
+		srcFile.setEmail(email);
+		srcFile.setAddress(address);
+		srcFile.setAddress2(address2);
+		srcFile.setCity(city);
+		srcFile.setState(state);
+		srcFile.setZip(zip);
+		
 
 	}
 

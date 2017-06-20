@@ -39,37 +39,32 @@ public class BillingInformationProcess {
 
 	public String getEmail(final String submissionNumber) {
 
-		SprInsuredContact contact = billingProcessDAO.getContactInfo(submissionNumber);
-
-		return contact.getEmail_address();
+		return billingProcessDAO.getContactInfo(submissionNumber).getEmail_address();
 	}
 
 	public String getAddress(final String submissionNumber) {
 
-		SprLocation location = billingProcessDAO.getLocation(submissionNumber);
+		return billingProcessDAO.getLocation(submissionNumber).getAddr1();
+	}
 
-		String addr1 = location.getAddr1();
-		String addr2 = location.getAddr_2();
+	public String getAddress2(final String submissionNumber) {
 
-		String result = StringUtils.join(addr1, " ", addr2);
-
-		return result;
+		return billingProcessDAO.getLocation(submissionNumber).getAddr_2();
 	}
 
 	public String getCity(final String submissionNumber) {
-		SprLocation location = billingProcessDAO.getLocation(submissionNumber);
 
-		return location.getCity();
+		return billingProcessDAO.getLocation(submissionNumber).getCity();
 	}
 
 	public String getState(final String submissionNumber) {
-		SprLocation location = billingProcessDAO.getLocation(submissionNumber);
-		return location.getState();
+
+		return billingProcessDAO.getLocation(submissionNumber).getState();
 	}
 
 	public String getZip(final String submissionNumber) {
-		SprLocation location = billingProcessDAO.getLocation(submissionNumber);
-		return location.getZip1();
+
+		return billingProcessDAO.getLocation(submissionNumber).getZip1();
 	}
 
 }

@@ -14,10 +14,10 @@ public class BillingProcessDAOImpl implements BillingProcessDAO {
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	private static final String GET_CONTACT_INFO = "select top1 FIRST_NAME, LAST_NAME, PHONE_AREA_CODE, PHONE_PREFIX, PHONE_SUFFIX, EMAIL_ADDRESS "
-			+ "from SPR_INSURED_CONTACT_ where SUBMISSION_NUMBER = submissionNumber";
+			+ "from SPR_INSURED_CONTACT_ where SUBMISSION_NUMBER = :submissionNumber";
 
 	private static final String GET_LOCATION = "select top1 ADDR_1, ADDR_2, CITY, STATE, ZIP "
-			+ "from SPR_LOCATION where SUBMISSION_NUMBER = submissionNumber";
+			+ "from SPR_LOCATION where SUBMISSION_NUMBER = :submissionNumber";
 
 	@Override
 	public SprInsuredContact getContactInfo(String submissionNumber) {
