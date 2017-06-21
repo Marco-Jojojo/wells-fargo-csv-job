@@ -1,17 +1,14 @@
 package com.peiwc.billing.dao;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.peiwc.billing.domain.WFMamSrcFile;
+import com.peiwc.billing.process.billing1.SrcFileMapper;
 
 @Repository("calcUnclearedBilledAmtDAOImpl")
 public class CalcUnclearedBilledAmtDAOImpl implements CalcUnclearedBilledAmtDAO {
@@ -28,7 +25,7 @@ public class CalcUnclearedBilledAmtDAOImpl implements CalcUnclearedBilledAmtDAO 
 			+ "AND c.DIRECT_BILL_INVOICE=s.INVOICE_NUMBER";
 	
 	private static final String IS_RECORD_IN_SRC_FILE = ""
-			+ "SELECT COUNT(*) "
+			+ "SELECT AMT_DUE "
 			+ "FROM WF_MAM_SRC_FILE "
 			+ "WHERE CYCLE_NUMBER=:cycleNumber AND SUBMISSION_NUMBER=:submissionNumber AND INVOICE_NUMBER=:invoiceNumber";
 	
@@ -42,7 +39,7 @@ public class CalcUnclearedBilledAmtDAOImpl implements CalcUnclearedBilledAmtDAO 
 	
 	private static final String SAVE_RECORD = ""
 			+ "INSERT INTO WF_MAM_SRC_FILE (CYCLE_NUMBER, SEQUENCE_NUMBER, REFERENCE_NUMBER, SECONDARY_AUTH, CONSOLIDATED_NAME, DUE_DATE"
-			+ ",AMOUNT_DUE, INVOICE_NUMBER, INVOICE_DATE, EMAIL, ADDRESS, ADDRESS_2, CITY, STATE, ZIP, PHONE, STATUS) "
+			+ ",AMOUNT_DUE, INVOICE_NUMBER, INVOICE_DATE, EMAIL, ADDRESS, ADDRESS_2, CITY, STATE, ZIP, PHONE) "
 			+ "VALUES(:cycleNumber, :sequenceNumber, :referenceNumber, :secondaryAuth, :consolidateName, :dueDate, :amountDue, :invoiceNumber, "
 			+ ":invoiceDate, :email, :address, :address2, :city, :state, :zip, :phone)";       
            
@@ -58,17 +55,13 @@ public class CalcUnclearedBilledAmtDAOImpl implements CalcUnclearedBilledAmtDAO 
 	}
 
 	@Override
-	public WFMamSrcFile isRecordInSrcFile(int cycleNumber, String submissionNumber, String invoiceNumber) {
+	public List<WFMamSrcFile> isRecordInSrcFile(int cycleNumber, String submissionNumber, String invoiceNumber) {
 		final MapSqlParameterSource parameters = new MapSqlParameterSource();
 		parameters.addValue("cycleNumber", cycleNumber);
 		parameters.addValue("submissionNumber", submissionNumber);
 		parameters.addValue("invoiceNumber", invoiceNumber);
-		try {
-			final WFMamSrcFile row = this.namedParameterJdbcTemplate.queryForObject(IS_RECORD_IN_SRC_FILE, parameters, WFMamSrcFile.class);
-			return row;
-		} catch (EmptyResultDataAccessException e) {
-			return null;
-		}
+		final List<WFMamSrcFile> rows = this.namedParameterJdbcTemplate.queryForList(IS_RECORD_IN_SRC_FILE, parameters, WFMamSrcFile.class);
+		return rows;
 		
 	}
 	
@@ -115,19 +108,5 @@ public class CalcUnclearedBilledAmtDAOImpl implements CalcUnclearedBilledAmtDAO 
 		
 	}
 	
-	//TODO: move to another file
-	private static final class SrcFileMapper implements RowMapper<WFMamSrcFile> {
-
-		@Override
-		public WFMamSrcFile mapRow(ResultSet rs, int rowNumber) throws SQLException {
-			WFMamSrcFile wfMamSrcFile = new WFMamSrcFile();
-			wfMamSrcFile.setReferenceNumber(Integer.toString(rs.getInt("POLICY_NUMBER")));
-			wfMamSrcFile.setSecondaryAuth(Integer.toString(rs.getInt("SUBMISSION_NUMBER")));
-			wfMamSrcFile.setAmountDue(rs.getFloat("NET_PREMIUM_AMOUNT"));
-			wfMamSrcFile.setInvoiceNumber(Integer.toString(rs.getInt("DIRECT_BILL_INVOICE")));
-			return wfMamSrcFile;
-		}
-		
-	}
 
 }

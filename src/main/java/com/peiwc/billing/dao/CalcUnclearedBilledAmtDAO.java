@@ -9,7 +9,7 @@ public interface CalcUnclearedBilledAmtDAO {
 
 	List<WFMamSrcFile> findAll();
 	
-	WFMamSrcFile isRecordInSrcFile(int cycleNumber, String secondaryAuth, String invoiceNumber);
+	List<WFMamSrcFile> isRecordInSrcFile(int cycleNumber, String secondaryAuth, String invoiceNumber);
 
 	void update(int cycleNumber, String secondaryAuth, String invoiceNumber, double amountDue);
 	
