@@ -12,9 +12,7 @@ import org.springframework.stereotype.Component;
 
 import com.peiwc.billing.App;
 import com.peiwc.billing.domain.WFMamOpHDRTRLR;
-
-import com.peiwc.billing.process.billingP1.CalcUnclearedBilledAmt;
-import com.peiwc.billing.process.billingP1.WFMamSrcGenRecs;
+import com.peiwc.billing.process.billing1.WFMamSrcGenRecs;
 import com.peiwc.billing.process.mail.MailSender;
 
 
@@ -97,11 +95,6 @@ public class MainProcess {
 			wfMamOpHDRTRLRProcess.setProcessAsAlreadyRunForToday();
 		}
 		return hasRunSuccessfully;
-	}
-
-	private void fillTables(final int nextCycle) {
-		// TODO: generate here the process to fill the tables with data.
-
 	}
 
 	private String generateFileSuffix() {

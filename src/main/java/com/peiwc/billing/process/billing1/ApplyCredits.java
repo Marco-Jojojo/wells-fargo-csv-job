@@ -1,4 +1,4 @@
-package com.peiwc.billing.process.billingP1;
+package com.peiwc.billing.process.billing1;
 
 import org.springframework.stereotype.Component;
 

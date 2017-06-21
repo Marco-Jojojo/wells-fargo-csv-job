@@ -1,14 +1,11 @@
-package com.peiwc.billing.process.billingP1;
+package com.peiwc.billing.process.billing1;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 
 @Component("wfMamSrcGenRecs")
 public class WFMamSrcGenRecs {
-	
-	private static final Logger LOGGER = Logger.getLogger(WFMamSrcGenRecs.class);
 	
 	@Autowired
 	private CalcUnclearedBilledAmt calcUnclearedBilledAmt;
