@@ -4,5 +4,8 @@ import org.springframework.stereotype.Component;
 
 @Component("applyCredits")
 public class ApplyCredits {
-
+	
+	public void applyCreditsProcess(int cycleNumber){
+		
+	}
 }
