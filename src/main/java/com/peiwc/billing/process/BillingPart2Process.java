@@ -37,7 +37,7 @@ public class BillingPart2Process {
 			if (CollectionUtils.isEmpty(users)) {
 				final WFMamErrLog error = new WFMamErrLog();
 				error.setCycleNumber(cycleNumber);
-				error.setSequenceNumber(srcFile.getId().getSequenceNumber());
+				error.setSequenceNumber(wfMamSrcFile.getId().getSequenceNumber());
 				error.setDescription("Billing 2 error");
 				error.setStatus("N");
 				wfMamErrLogRepository.saveAndFlush(error);

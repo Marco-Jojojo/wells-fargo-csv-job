@@ -36,13 +36,16 @@ public class BillingPart2ProcessTest {
 
 	@Test
 	public void testBillingProcess2() {
+
+		final int submissionNumber = 2007;
+
 		final MapSqlParameterSource parameters = new MapSqlParameterSource();
-		parameters.addValue("submissionNumber", 2006);
+		parameters.addValue("submissionNumber", submissionNumber);
 
 		final WFUserInfo before = namedParameterJdbcTemplate.queryForObject(BillingProcessDAOImpl.GET_USER_INFORMATION,
 				parameters, new WFUserInfoMapper());
 
-		billingPart2Process.updateUserInfo(2006);
+		billingPart2Process.updateUserInfo(submissionNumber);
 
 		final WFUserInfo after = namedParameterJdbcTemplate.queryForObject(BillingProcessDAOImpl.GET_USER_INFORMATION,
 				parameters, new WFUserInfoMapper());
