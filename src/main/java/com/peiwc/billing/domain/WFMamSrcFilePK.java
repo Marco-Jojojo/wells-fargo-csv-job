@@ -5,6 +5,8 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
+import com.google.common.base.Objects;
+
 /**
  * Embedded id for WFMamSrcFile
  *
@@ -51,6 +53,24 @@ public class WFMamSrcFilePK implements Serializable {
 	 */
 	public void setSequenceNumber(final int sequenceNumber) {
 		this.sequenceNumber = sequenceNumber;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 *
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(final Object obj) {
+		boolean equals = true;
+		if (!(obj instanceof WFMamSrcFilePK)) {
+			equals = false;
+		} else {
+			final WFMamSrcFilePK other = (WFMamSrcFilePK) obj;
+			equals = Objects.equal(other.getCycleNumber(), this.getCycleNumber())
+					&& Objects.equal(other.getSequenceNumber(), this.getSequenceNumber());
+		}
+		return equals;
 	}
 
 }
