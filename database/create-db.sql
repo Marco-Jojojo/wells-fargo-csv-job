@@ -109,7 +109,7 @@ CREATE TABLE SPR_INSURED_CONTACT_(
              XFER_POLICY_SUFFIX   char(2) NOT NULL,
              XFER_ID   int  NOT NULL,
              POLICY_STATE_IDC   int  NOT NULL,
-             DEFERRAL_PERCENT   decimal(9,0) NOT NULL,
+             DEFERRAL_PERCENT   decimal(9,8) NOT NULL,
              DEFERRAL_GROSS_AMOUN   decimal(10, 2) NOT NULL,
              DEFERRAL_COMM_AMOUNT   decimal(10, 2) NOT NULL,
              DEFERRAL_NET_AMOUNT   decimal(10, 2) NOT NULL,
