@@ -1,4 +1,4 @@
-package com.peiwc.billing.process.billingP1;
+package com.peiwc.billing.process.billing1;
 
 import java.util.List;
 
@@ -10,16 +10,16 @@ import com.peiwc.billing.domain.WFMamSrcFile;
 
 @Component("calcUnclearedUnBilledCreditAmt")
 public class CalcUnclearedUnBilledCreditAmt {
-	
+
 	@Autowired
 	private CalcUnclearedUnBilledCreditAmtDAO calcUnclearedUnBilledCreditAmtDAO;
 
-	public void wfMamSrcFileUpdRecDBI1(int cycleNumber) {
-		List<WFMamSrcFile> rows = this.calcUnclearedUnBilledCreditAmtDAO.findAll();
-		for (WFMamSrcFile row : rows) {
-			//TODO: continue...
+	public void wfMamSrcFileUpdRecDBI1(final int cycleNumber) {
+		final List<WFMamSrcFile> rows = this.calcUnclearedUnBilledCreditAmtDAO.findAll();
+		for (final WFMamSrcFile row : rows) {
+			// TODO: continue...
 		}
-		
+
 	}
 
 }

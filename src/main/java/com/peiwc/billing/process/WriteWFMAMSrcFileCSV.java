@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -116,29 +117,29 @@ public class WriteWFMAMSrcFileCSV {
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
 		builder.append(wfMamSrcFile.getSecondaryAuth());
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
-		builder.append(wfMamSrcFile.getConsolidatedName());
+		builder.append(formatString(wfMamSrcFile.getConsolidatedName()));
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
-		builder.append(dateFormat.format(wfMamSrcFile.getDueDate()));
+		builder.append(formatDate(wfMamSrcFile.getDueDate()));
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
 		builder.append(numberFormat.format(wfMamSrcFile.getAmountDue()));
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
 		builder.append(wfMamSrcFile.getInvoiceNumber());
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
-		builder.append(dateFormat.format(wfMamSrcFile.getInvoiceDate()));
+		builder.append(formatDate(wfMamSrcFile.getInvoiceDate()));
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
-		builder.append(wfMamSrcFile.getEmail());
+		builder.append(formatString(wfMamSrcFile.getEmail()));
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
-		builder.append(wfMamSrcFile.getAddress());
+		builder.append(formatString(wfMamSrcFile.getAddress()));
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
-		builder.append(wfMamSrcFile.getAddress2());
+		builder.append(formatString(wfMamSrcFile.getAddress2()));
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
-		builder.append(wfMamSrcFile.getCity());
+		builder.append(formatString(wfMamSrcFile.getCity()));
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
-		builder.append(wfMamSrcFile.getState());
+		builder.append(formatString(wfMamSrcFile.getState()));
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
-		builder.append(wfMamSrcFile.getZip());
+		builder.append(formatString(wfMamSrcFile.getZip()));
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
-		builder.append(wfMamSrcFile.getPhone());
+		builder.append(formatString(wfMamSrcFile.getPhone()));
 		builder.append(WriteWFMAMSrcFileCSV.NEW_LINE);
 		return builder.toString();
 	}
@@ -155,6 +156,22 @@ public class WriteWFMAMSrcFileCSV {
 			errorList.add(pk);
 		}
 		return errorList;
+	}
+
+	private String formatDate(final Date dateValue) {
+		String resultFormat = "";
+		if (dateValue != null) {
+			resultFormat = dateFormat.format(dateValue);
+		}
+		return resultFormat;
+	}
+
+	private String formatString(final String stringValue) {
+		String resultFormat = "";
+		if (stringValue != null) {
+			resultFormat = stringValue;
+		}
+		return resultFormat;
 	}
 
 }
