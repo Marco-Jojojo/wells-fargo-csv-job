@@ -6,7 +6,9 @@ import com.peiwc.billing.domain.WFMamSrcFile;
 
 public interface ProcessPoliciesLessOrEqual2YearsOldDAO {
 
-	List<WFMamSrcFile> findAll(String twoYearsFromTodayFormatted, String todayFormatted);
+	List<WFMamSrcFile> findAll(String twoYearsBefore, String today);
 	
-	int insertBill(WFMamSrcFile obj);
+	List<WFMamSrcFile> findOneInWFSrcFile(int cycleNumber, String secondaryAuth);
+	
+	void insert(WFMamSrcFile wfMamSrcFile);
 }
