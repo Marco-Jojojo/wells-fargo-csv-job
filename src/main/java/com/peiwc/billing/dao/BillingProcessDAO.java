@@ -1,13 +1,11 @@
 package com.peiwc.billing.dao;
 
-import com.peiwc.billing.domain.SprInsuredContact;
-import com.peiwc.billing.domain.SprLocation;
+import java.util.List;
+
+import com.peiwc.billing.domain.WFUserInfo;
 
 public interface BillingProcessDAO {
-	
-	SprInsuredContact getContactInfo(int submissionNumber);
 
-	SprLocation getLocation(int submissionNumber);
+	List<WFUserInfo> getUserInformation(int submissionNumber);
 
-	
 }
