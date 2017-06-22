@@ -55,6 +55,11 @@ public class WFMamSrcFilePK implements Serializable {
 		this.sequenceNumber = sequenceNumber;
 	}
 
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(cycleNumber, sequenceNumber);
+	}
+
 	/*
 	 * (non-Javadoc)
 	 *
