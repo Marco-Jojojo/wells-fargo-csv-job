@@ -1,5 +1,6 @@
 package com.peiwc.billing.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import com.peiwc.billing.domain.WFMamSrcFile;
@@ -17,5 +18,7 @@ public interface CalcUnclearedUnBilledCreditAmtDAO {
 	void updateDBI0(int cycleNumber, String secondaryAuth, String invoiceNumber, float amtDue);
 	
 	void create(WFMamSrcFile wfMamSrcFile);
+
+	Date getInvoiceDate(String invoiceNumber);
 
 }
