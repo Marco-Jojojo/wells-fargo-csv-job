@@ -16,11 +16,9 @@ public class SrcFileMapper implements RowMapper<WFMamSrcFile> {
 		final WFMamSrcFilePK id = new WFMamSrcFilePK();
 		id.setSequenceNumber(rs.getInt("SEQUENCE_NUMBER"));
 		wfMamSrcFile.setId(id);
-		// wfMamSrcFile.setConsolidatedName(rs.getString("CONSOLIDATED_NAME"));
-		wfMamSrcFile.setReferenceNumber(Integer.toString(rs.getInt("POLICY_NUMBER")));
-		wfMamSrcFile.setSecondaryAuth(Integer.toString(rs.getInt("SUBMISSION_NUMBER")));
+		wfMamSrcFile.setReferenceNumber(Integer.toString(rs.getInt("REFERENCE_NUMBER")));
+		wfMamSrcFile.setSecondaryAuth(Integer.toString(rs.getInt("SECONDARY_AUTH")));
 		wfMamSrcFile.setInvoiceNumber(Integer.toString(rs.getInt("INVOICE_NUMBER")));
-		// wfMamSrcFile.setDueDate(rs.getDate("DUE_DATE"));
 		wfMamSrcFile.setAmountDue(rs.getFloat("AMOUNT_DUE"));
 		return wfMamSrcFile;
 	}
