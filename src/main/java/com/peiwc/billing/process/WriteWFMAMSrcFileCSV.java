@@ -140,6 +140,8 @@ public class WriteWFMAMSrcFileCSV {
 		builder.append(formatString(wfMamSrcFile.getZip()));
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
 		builder.append(formatString(wfMamSrcFile.getPhone()));
+		builder.append(WriteWFMAMSrcFileCSV.COMMA);
+		builder.append(formatString(wfMamSrcFile.getStatus()));
 		builder.append(WriteWFMAMSrcFileCSV.NEW_LINE);
 		return builder.toString();
 	}
