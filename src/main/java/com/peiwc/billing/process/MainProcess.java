@@ -36,6 +36,9 @@ public class MainProcess {
 	@Autowired
 	private WFMamSrcGenRecs wfMamSrcGenRecs;
 
+	@Autowired
+	private BillingPart2Process billingPart2Process;
+
 	@Value("${csv.name.suffix}")
 	private String dateFormatPattern;
 
@@ -99,7 +102,7 @@ public class MainProcess {
 	}
 
 	private void fillTables(final int nextCycle) {
-		// TODO: generate here the process to fill the tables with data.
+		billingPart2Process.updateUserInfo(nextCycle);
 
 	}
 
