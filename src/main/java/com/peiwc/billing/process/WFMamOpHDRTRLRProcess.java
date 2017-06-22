@@ -78,9 +78,15 @@ public class WFMamOpHDRTRLRProcess {
 	 *            critical error caught during execution.
 	 */
 	public void saveErrorMessage(final int cycleNumber, final String errorMessage) {
-		final WFMamOpHDRTRLR wfMamOpHDRTRLR = wfMamOpHDRTRLRRepository.findOne(cycleNumber);
-		wfMamOpHDRTRLR.setErrorMessage(errorMessage);
-		wfMamOpHDRTRLRRepository.saveAndFlush(wfMamOpHDRTRLR);
+		// final WFMamOpHDRTRLR wfMamOpHDRTRLR =
+		// wfMamOpHDRTRLRRepository.findOne(cycleNumber);
+		// String errMessage = errorMessage;
+		// if (errorMessage.length() > 100) {
+		// errMessage = errorMessage.substring(0, 100);
+		// }
+		// wfMamOpHDRTRLR.setErrorMessage(errMessage);
+		// wfMamOpHDRTRLRRepository.saveAndFlush(wfMamOpHDRTRLR);
+
 	}
 
 	/**

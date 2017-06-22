@@ -15,7 +15,6 @@ import com.peiwc.billing.domain.WFMamOpHDRTRLR;
 import com.peiwc.billing.process.billing1.WFMamSrcGenRecs;
 import com.peiwc.billing.process.mail.MailSender;
 
-
 /**
  * this is the main process where all the data processing runs, this is called
  * from the main method in {@link App} class
@@ -33,7 +32,7 @@ public class MainProcess {
 
 	@Autowired
 	private WriteWFMAMSrcFileCSV writeWFMAMSrcFileCSV;
-	
+
 	@Autowired
 	private WFMamSrcGenRecs wfMamSrcGenRecs;
 
@@ -86,8 +85,10 @@ public class MainProcess {
 					mailSender.sendMailMessage("Process #" + nextCycle + "has run successfully ");
 				}
 			} catch (final Exception ex) {
+				hasRunSuccessfully = false;
 				wfMamOpHDRTRLRProcess.saveErrorMessage(nextCycle, ex.getMessage());
 				mailSender.sendMailMessage("Process # " + nextCycle + " , has failed: " + ex.getMessage());
+				MainProcess.LOGGER.error(ex, ex);
 			}
 		} else {
 			MainProcess.LOGGER.info("Process has already run today");

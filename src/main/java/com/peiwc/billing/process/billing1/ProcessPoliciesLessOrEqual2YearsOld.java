@@ -14,13 +14,13 @@ import com.peiwc.billing.domain.WFMamSrcFile;
 
 @Component("processPoliciesLessOrEqual2YearsOld")
 public class ProcessPoliciesLessOrEqual2YearsOld {
-	
+
 	@Autowired
 	private ProcessPoliciesLessOrEqual2YearsOldDAO processPoliciesLessOrEqual2YearsOldDAO;
 
-	public void processPolicies(int cycleNumber) {
-		Calendar cal = Calendar.getInstance();
-		Date today = cal.getTime();
+	public void processPolicies(final int cycleNumber) {
+		final Calendar cal = Calendar.getInstance();
+		final Date today = cal.getTime();
 		cal.add(Calendar.YEAR, -2);
 		Date twoYearsBefore = cal.getTime();
 		SimpleDateFormat sqlFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -34,6 +34,5 @@ public class ProcessPoliciesLessOrEqual2YearsOld {
 			}
 		}
 	}
-
 
 }

@@ -7,15 +7,20 @@ import org.springframework.jdbc.core.RowMapper;
 
 import com.peiwc.billing.domain.WFMamSrcFile;
 
-public class SrcFileMapper implements RowMapper<WFMamSrcFile>{
+import com.peiwc.billing.domain.WFMamSrcFilePK;
+
+public class SrcFileMapper implements RowMapper<WFMamSrcFile> {
 
 	@Override
-	public WFMamSrcFile mapRow(ResultSet rs, int rowNumber) throws SQLException {
-		WFMamSrcFile wfMamSrcFile = new WFMamSrcFile();
-		wfMamSrcFile.setReferenceNumber(Integer.toString(rs.getInt("POLICY_NUMBER")));
-		wfMamSrcFile.setSecondaryAuth(Integer.toString(rs.getInt("SUBMISSION_NUMBER")));
-		wfMamSrcFile.setAmountDue(rs.getFloat("NET_PREMIUM_AMOUNT"));
-		wfMamSrcFile.setInvoiceNumber(Integer.toString(rs.getInt("DIRECT_BILL_INVOICE")));
+	public WFMamSrcFile mapRow(final ResultSet rs, final int rowNumber) throws SQLException {
+		final WFMamSrcFile wfMamSrcFile = new WFMamSrcFile();
+		final WFMamSrcFilePK id = new WFMamSrcFilePK();
+		id.setSequenceNumber(rs.getInt("SEQUENCE_NUMBER"));
+		wfMamSrcFile.setId(id);
+		wfMamSrcFile.setReferenceNumber(Integer.toString(rs.getInt("REFERENCE_NUMBER")));
+		wfMamSrcFile.setSecondaryAuth(Integer.toString(rs.getInt("SECONDARY_AUTH")));
+		wfMamSrcFile.setInvoiceNumber(Integer.toString(rs.getInt("INVOICE_NUMBER")));
+		wfMamSrcFile.setAmountDue(rs.getFloat("AMOUNT_DUE"));
 		return wfMamSrcFile;
 	}
 

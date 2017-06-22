@@ -1,9 +1,9 @@
 package com.peiwc.billing.dao;
 
+import com.peiwc.billing.domain.WFMamSrcFile;
+
 import java.util.Date;
 import java.util.List;
-
-import com.peiwc.billing.domain.WFMamSrcFile;
 
 public interface CalcUnclearedBilledAmtDAO {
 
@@ -16,6 +16,5 @@ public interface CalcUnclearedBilledAmtDAO {
 	void create(WFMamSrcFile wfMamSrcFile);
 	
 	Date getInvoiceDate(String invoiceNumber);
-	
-	
+
 }

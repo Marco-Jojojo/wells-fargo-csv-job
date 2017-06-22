@@ -39,7 +39,6 @@ public class CalcUnclearedUnBilledCreditAmt {
 					float amt_due = amtDueWFSrcFile + recordFromCM.getAmountDue();
 					this.calcUnclearedUnBilledCreditAmtDAO.updateDBI0(cycleNumber, recordFromCM.getSecondaryAuth(), recordFromCM.getInvoiceNumber(), amt_due);
 				} else {
-					recordFromCM.setInvoiceDate(this.calcUnclearedUnBilledCreditAmtDAO.getInvoiceDate(recordFromCM.getInvoiceNumber()));
 					this.calcUnclearedUnBilledCreditAmtDAO.create(recordFromCM);
 				}
 			}			
