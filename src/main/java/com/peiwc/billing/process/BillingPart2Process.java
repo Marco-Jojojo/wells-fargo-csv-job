@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,6 +17,8 @@ import com.peiwc.billing.domain.WFUserInfo;
 @Component
 public class BillingPart2Process {
 
+	private static final Logger LOGGER = Logger.getLogger(BillingPart2Process.class);
+
 	@Autowired
 	private WFMamSrcFileDAO wfMamSrcFileDAO;
 
@@ -26,7 +29,7 @@ public class BillingPart2Process {
 	private BillingInformationProcess billingInformationProcess;
 
 	public void updateUserInfo(final int cycleNumber) {
-
+		BillingPart2Process.LOGGER.info("Begin billing part2 for current cycle");
 		final List<WFMamSrcFile> wfMamList = wfMamSrcFileDAO.findByCycleNumber(cycleNumber);
 
 		for (final WFMamSrcFile wfMamSrcFile : wfMamList) {
@@ -35,6 +38,7 @@ public class BillingPart2Process {
 			final List<WFUserInfo> users = billingInformationProcess.getUserInformation(submissionNumber);
 			final WFMamSrcFile srcFile = new WFMamSrcFile();
 			if (CollectionUtils.isEmpty(users)) {
+				BillingPart2Process.LOGGER.info("Billing error, could not get user information");
 				final WFMamErrLog error = new WFMamErrLog();
 				error.setCycleNumber(cycleNumber);
 				error.setSequenceNumber(wfMamSrcFile.getId().getSequenceNumber());
