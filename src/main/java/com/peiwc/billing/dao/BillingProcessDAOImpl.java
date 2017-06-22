@@ -17,8 +17,9 @@ public class BillingProcessDAOImpl implements BillingProcessDAO {
 
 	public static final String GET_USER_INFORMATION = "SELECT "
 			+ "FIRST_NAME, LAST_NAME, PHONE_AREA_CODE, PHONE_PREFIX, PHONE_SUFFIX, EMAIL_ADDRESS, "
-			+ "ADDR_1, ADDR_2, CITY, STATE, ZIP1 FROM SPR_INSURED_CONTACT_ as p JOIN SPR_LOCATION as b "
-			+ "ON b.SUBMISSION_NUMBER = p.SUBMISSION_NUMBER WHERE p.SUBMISSION_NUMBER = :submissionNumber";
+			+ "ADDR_1, ADDR_2, CITY, STATE, ZIP1, STATUS_CODE FROM SPR_INSURED_CONTACT_ as p JOIN SPR_LOCATION as b "
+			+ "ON b.SUBMISSION_NUMBER = p.SUBMISSION_NUMBER  JOIN POLICY_MASTER as r ON r.SUBMISSION_NUMBER = p.SUBMISSION_NUMBER "
+			+ "WHERE p.SUBMISSION_NUMBER = :submissionNumber";
 
 	@Override
 	public List<WFUserInfo> getUserInformation(final int submissionNumber) {

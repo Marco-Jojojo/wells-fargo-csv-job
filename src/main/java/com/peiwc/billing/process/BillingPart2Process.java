@@ -61,6 +61,12 @@ public class BillingPart2Process {
 				srcFile.setCity(user.getCity());
 				srcFile.setState(user.getState());
 				srcFile.setZip(user.getZip());
+				String status = "";
+				if (user.getStatus() == "2")
+					status = "Expired";
+				else
+					status = "Active";
+				srcFile.setStatus(status);
 
 				wfMamSrcFileDAO.saveAndFlush(srcFile);
 			}

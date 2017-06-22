@@ -10,9 +10,9 @@ import com.peiwc.billing.domain.WFUserInfo;
 public class WFUserInfoMapper implements RowMapper<WFUserInfo> {
 
 	@Override
-	public WFUserInfo mapRow(ResultSet rs, int rowNum) throws SQLException {
+	public WFUserInfo mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 
-		WFUserInfo user = new WFUserInfo();
+		final WFUserInfo user = new WFUserInfo();
 
 		user.setFirstName(rs.getString("FIRST_NAME"));
 		user.setLastName(rs.getString("LAST_NAME"));
@@ -25,6 +25,7 @@ public class WFUserInfoMapper implements RowMapper<WFUserInfo> {
 		user.setCity(rs.getString("CITY"));
 		user.setState(rs.getString("STATE"));
 		user.setZip(rs.getString("ZIP1"));
+		user.setStatus(rs.getString("STATUS_CODE"));
 
 		return user;
 	}
