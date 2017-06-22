@@ -52,7 +52,7 @@ public class WFMamSrcFile {
 	private String phone;
 	@Column(name = "STATUS")
 	private String status;
-	@Column(name = "STATUS_PHONE")
+	@Column(name = "STATUS_INVOICE")
 	private String statusInvoice;
 
 	/**
