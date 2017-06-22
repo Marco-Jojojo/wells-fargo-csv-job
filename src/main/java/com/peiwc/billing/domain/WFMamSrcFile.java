@@ -50,6 +50,10 @@ public class WFMamSrcFile {
 	private String zip;
 	@Column(name = "PHONE")
 	private String phone;
+	@Column(name = "STATUS")
+	private String status;
+	@Column(name = "STATUS_INVOICE")
+	private String statusInvoice;
 
 	/**
 	 * @return the id
@@ -274,6 +278,36 @@ public class WFMamSrcFile {
 	 */
 	public void setPhone(final String phone) {
 		this.phone = phone;
+	}
+
+	/**
+	 * @return the status
+	 */
+	public String getStatus() {
+		return status;
+	}
+
+	/**
+	 * @param status
+	 *            the status to set
+	 */
+	public void setStatus(final String status) {
+		this.status = status;
+	}
+
+	/**
+	 * @return the statusInvoice
+	 */
+	public String getStatusInvoice() {
+		return statusInvoice;
+	}
+
+	/**
+	 * @param statusInvoice
+	 *            the statusInvoice to set
+	 */
+	public void setStatusInvoice(final String statusInvoice) {
+		this.statusInvoice = statusInvoice;
 	}
 
 }

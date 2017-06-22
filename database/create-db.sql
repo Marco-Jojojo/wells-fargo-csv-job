@@ -29,6 +29,8 @@ CREATE TABLE WF_MAM_SRC_FILE(
 	STATE char(2) NULL,
 	ZIP char(10) NULL,
 	PHONE varchar(20) NULL,
+	STATUS varchar(20) NULL,
+	STATUS_INVOICE varchar(50) NULL,
 	primary key(CYCLE_NUMBER, SEQUENCE_NUMBER )
 	);
 	
