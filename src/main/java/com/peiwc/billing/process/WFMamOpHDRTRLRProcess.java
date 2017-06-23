@@ -107,4 +107,10 @@ public class WFMamOpHDRTRLRProcess {
 		return lastCycleNumber;
 	}
 
+	public void saveFileName(final int nextCycle, final String fileName) {
+		final WFMamOpHDRTRLR wfMamOpHDRTRLR = wfMamOpHDRTRLRRepository.findOne(nextCycle);
+		wfMamOpHDRTRLR.setFileName(fileName);
+		this.wfMamOpHDRTRLRRepository.saveAndFlush(wfMamOpHDRTRLR);
+	}
+
 }

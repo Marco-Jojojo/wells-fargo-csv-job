@@ -77,6 +77,7 @@ public class MainProcess {
 				try {
 					final int totalRecordCount = writeWFMAMSrcFileCSV.writeDataToCSV(nextCycle, fileName);
 					wfMamOpHDRTRLRProcess.saveTotalRecordsProcessed(nextCycle, totalRecordCount);
+					wfMamOpHDRTRLRProcess.saveFileName(nextCycle, fileName);
 				} catch (final IOException ex) {
 					MainProcess.LOGGER.error(ex, ex);
 					hasRunSuccessfully = false;

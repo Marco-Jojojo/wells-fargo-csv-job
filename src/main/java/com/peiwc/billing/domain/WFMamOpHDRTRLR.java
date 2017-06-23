@@ -1,7 +1,13 @@
 package com.peiwc.billing.domain;
 
-import javax.persistence.*;
 import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * this is the entity bean that contains the data related to master export of
@@ -11,102 +17,121 @@ import java.util.Date;
 @Table(name = "WF_MAM_OP_HDR_TRLR")
 public class WFMamOpHDRTRLR {
 
-    @Id
-    @Column(name = "CYCLE_NUMBER")
-    private Integer cycleNumber;
+	/**
+	 * @return the fileName
+	 */
+	public String getFileName() {
+		return fileName;
+	}
 
-    @Temporal(TemporalType.DATE)
-    @Column(name = "CREATION_DATE")
-    private Date creationDate;
+	/**
+	 * @param fileName
+	 *            the fileName to set
+	 */
+	public void setFileName(final String fileName) {
+		this.fileName = fileName;
+	}
 
-    @Column(name = "TOTAL_RECORD_COUNT")
-    private int totalRecordCount;
+	@Id
+	@Column(name = "CYCLE_NUMBER")
+	private Integer cycleNumber;
 
-    @Column(name = "FILENAME", length = 250)
-    private String fileName;
+	@Temporal(TemporalType.DATE)
+	@Column(name = "CREATION_DATE")
+	private Date creationDate;
 
-    @Column(name = "ERROR_MSG", length = 100)
-    private String errorMessage;
+	@Column(name = "TOTAL_RECORD_COUNT")
+	private int totalRecordCount;
 
+	@Column(name = "FILENAME", length = 250)
+	private String fileName;
 
-    @Column(name = "STATUS", length = 20)
-    private String status;
+	@Column(name = "ERROR_MSG", length = 100)
+	private String errorMessage;
 
-    /**
-     * @return the cycleNumber
-     */
-    public Integer getCycleNumber() {
-        return cycleNumber;
-    }
+	@Column(name = "STATUS", length = 20)
+	private String status;
 
-    /**
-     * @param cycleNumber the cycleNumber to set
-     */
-    public void setCycleNumber(final Integer cycleNumber) {
-        this.cycleNumber = cycleNumber;
-    }
+	/**
+	 * @return the cycleNumber
+	 */
+	public Integer getCycleNumber() {
+		return cycleNumber;
+	}
 
-    /**
-     * @return the creationDate
-     */
-    public Date getCreationDate() {
-        return creationDate;
-    }
+	/**
+	 * @param cycleNumber
+	 *            the cycleNumber to set
+	 */
+	public void setCycleNumber(final Integer cycleNumber) {
+		this.cycleNumber = cycleNumber;
+	}
 
-    /**
-     * @param creationDate the creationDate to set
-     */
-    public void setCreationDate(final Date creationDate) {
-        this.creationDate = creationDate;
-    }
+	/**
+	 * @return the creationDate
+	 */
+	public Date getCreationDate() {
+		return creationDate;
+	}
 
-    /**
-     * @return the totalRecordCount
-     */
-    public int getTotalRecordCount() {
-        return totalRecordCount;
-    }
+	/**
+	 * @param creationDate
+	 *            the creationDate to set
+	 */
+	public void setCreationDate(final Date creationDate) {
+		this.creationDate = creationDate;
+	}
 
-    /**
-     * @param totalRecordCount the totalRecordCount to set
-     */
-    public void setTotalRecordCount(final int totalRecordCount) {
-        this.totalRecordCount = totalRecordCount;
-    }
+	/**
+	 * @return the totalRecordCount
+	 */
+	public int getTotalRecordCount() {
+		return totalRecordCount;
+	}
 
-    /**
-     * gets the error message
-     *
-     * @return error message
-     */
-    public String getErrorMessage() {
-        return errorMessage;
-    }
+	/**
+	 * @param totalRecordCount
+	 *            the totalRecordCount to set
+	 */
+	public void setTotalRecordCount(final int totalRecordCount) {
+		this.totalRecordCount = totalRecordCount;
+	}
 
-    /**
-     * sets the error message
-     *
-     * @param errorMessage sets the error message
-     */
-    public void setErrorMessage(final String errorMessage) {
-        this.errorMessage = errorMessage;
-    }
+	/**
+	 * gets the error message
+	 *
+	 * @return error message
+	 */
+	public String getErrorMessage() {
+		return errorMessage;
+	}
 
-    /**
-     * gets the status
-     *
-     * @return status
-     */
-    public String getStatus() {
-        return status;
-    }
+	/**
+	 * sets the error message
+	 *
+	 * @param errorMessage
+	 *            sets the error message
+	 */
+	public void setErrorMessage(final String errorMessage) {
+		this.errorMessage = errorMessage;
+	}
 
-    /**
-     * sets the status
-     *
-     * @param status parameter
-     */
-    public void setStatus(final String status) {
-        this.status = status;
-    }
+	/**
+	 * gets the status
+	 *
+	 * @return status
+	 */
+	public String getStatus() {
+		return status;
+	}
+
+	/**
+	 * sets the status
+	 *
+	 * @param status
+	 *            parameter
+	 */
+	public void setStatus(final String status) {
+		this.status = status;
+	}
 }
