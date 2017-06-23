@@ -1,8 +1,5 @@
 package com.peiwc.billing.process;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.Date;
 
 import javax.transaction.Transactional;
@@ -14,10 +11,6 @@ import org.springframework.stereotype.Component;
 
 import com.peiwc.billing.dao.WFMamOpHDRTRLRRepository;
 import com.peiwc.billing.domain.WFMamOpHDRTRLR;
-
-import jcifs.smb.NtlmPasswordAuthentication;
-import jcifs.smb.SmbFile;
-import jcifs.smb.SmbFileOutputStream;
 
 /**
  * manages master table process for creating next run of wells fargo csv
@@ -112,63 +105,6 @@ public class WFMamOpHDRTRLRProcess {
 		final int lastCycleNumber = processManagerCheck.getLastCycleNumber();
 		this.setCurrentState(ProcessState.ALREADY_RUN, lastCycleNumber);
 		return lastCycleNumber;
-	}
-
-	/**
-	 * moves csv generated file to an external location.
-	 *
-	 * @param fileName
-	 *            csv generated file
-	 * @param fileNameLocation
-	 *            external folder.
-	 * @throws IOException
-	 *             when file could not be written.
-	 */
-	public void moveGeneratedFileToExternalLocation(final String fileName, final String fileNameLocation)
-			throws IOException {
-		if (processEnabled) {
-			SmbFileOutputStream sfos = null;
-			try {
-				final String userName = System.getProperty("access.win.username");
-				final String password = System.getProperty("access.win.password");
-				final String authentication = userName + ":" + password;
-				final NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(authentication);
-				final String path = "smb://" + fileNameLocation + "/" + fileName;
-				final SmbFile sFile = new SmbFile(path, auth);
-				sfos = new SmbFileOutputStream(sFile);
-				final byte[] data = readAllBytes(fileName);
-				sfos.write(data);
-			} finally {
-				if (sfos != null) {
-					try {
-						sfos.close();
-					} catch (final Exception e) {
-						WFMamOpHDRTRLRProcess.LOGGER.error(e, e);
-					}
-				}
-
-			}
-
-		}
-	}
-
-	private byte[] readAllBytes(final String fileName) throws IOException {
-		final File file = new File(fileName);
-		final byte[] bytesArray = new byte[(int) file.length()];
-		FileInputStream fis = null;
-		try {
-			fis = new FileInputStream(file);
-			fis.read(bytesArray);
-		} finally {
-			if (fis != null) {
-				try {
-					fis.close();
-				} catch (final Exception ex) {
-					WFMamOpHDRTRLRProcess.LOGGER.error(ex, ex);
-				}
-			}
-		}
-		return bytesArray;
 	}
 
 }

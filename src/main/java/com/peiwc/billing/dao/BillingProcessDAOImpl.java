@@ -7,6 +7,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.peiwc.billing.dao.mappers.WFUserInfoMapper;
 import com.peiwc.billing.domain.WFUserInfo;
 
 @Repository("billingDAOImpl")

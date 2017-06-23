@@ -8,8 +8,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.peiwc.billing.dao.mappers.SrcFileMapper;
 import com.peiwc.billing.domain.WFMamSrcFile;
-import com.peiwc.billing.process.billing1.SrcFileMapper;
 
 @Repository("calcUnclearedBilledAmtDAOImpl")
 public class CalcUnclearedBilledAmtDAOImpl implements CalcUnclearedBilledAmtDAO {

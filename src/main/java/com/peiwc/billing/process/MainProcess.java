@@ -67,9 +67,9 @@ public class MainProcess {
 				// here goes the main process where the data for WF_MAM_SRC_FILE
 				// table is filled.
 				this.wfMamSrcGenRecs.billingProcess(nextCycle);
+				billingPart2Process.updateUserInfo(nextCycle);
 				final String fileNameId = System.getProperty("csv.id.prefix");
 				final String fileNamePrefix = System.getProperty("csv.name.prefix");
-				final String fileNameLocation = System.getProperty("csv.path.location");
 				String fileName = "test.csv";
 				if (StringUtils.isNotEmpty(fileNamePrefix) && StringUtils.isNotEmpty(fileNameId)) {
 					fileName = fileNameId + "_" + fileNamePrefix + generateFileSuffix() + ".csv";
@@ -77,7 +77,6 @@ public class MainProcess {
 				try {
 					final int totalRecordCount = writeWFMAMSrcFileCSV.writeDataToCSV(nextCycle, fileName);
 					wfMamOpHDRTRLRProcess.saveTotalRecordsProcessed(nextCycle, totalRecordCount);
-					wfMamOpHDRTRLRProcess.moveGeneratedFileToExternalLocation(fileName, fileNameLocation);
 				} catch (final IOException ex) {
 					MainProcess.LOGGER.error(ex, ex);
 					hasRunSuccessfully = false;
@@ -99,11 +98,6 @@ public class MainProcess {
 			wfMamOpHDRTRLRProcess.setProcessAsAlreadyRunForToday();
 		}
 		return hasRunSuccessfully;
-	}
-
-	private void fillTables(final int nextCycle) {
-		billingPart2Process.updateUserInfo(nextCycle);
-
 	}
 
 	private String generateFileSuffix() {

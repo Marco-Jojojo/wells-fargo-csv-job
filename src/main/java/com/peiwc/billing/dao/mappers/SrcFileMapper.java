@@ -1,4 +1,4 @@
-package com.peiwc.billing.process.billing1;
+package com.peiwc.billing.dao.mappers;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;

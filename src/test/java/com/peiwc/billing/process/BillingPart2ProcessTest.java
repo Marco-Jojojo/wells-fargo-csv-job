@@ -15,7 +15,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.peiwc.billing.configuration.ConfigurationBeanMock;
 import com.peiwc.billing.dao.BillingProcessDAOImpl;
-import com.peiwc.billing.dao.WFUserInfoMapper;
+import com.peiwc.billing.dao.mappers.WFUserInfoMapper;
 import com.peiwc.billing.domain.WFUserInfo;
 
 @ContextConfiguration(classes = { ConfigurationBeanMock.class })

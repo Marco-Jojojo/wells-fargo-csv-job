@@ -68,13 +68,18 @@ public class WFMamSrcFilePK implements Serializable {
 	@Override
 	public boolean equals(final Object obj) {
 		boolean equals = true;
-		if (!(obj instanceof WFMamSrcFilePK)) {
+		if (obj == null) {
 			equals = false;
 		} else {
-			final WFMamSrcFilePK other = (WFMamSrcFilePK) obj;
-			equals = Objects.equal(other.getCycleNumber(), this.getCycleNumber())
-					&& Objects.equal(other.getSequenceNumber(), this.getSequenceNumber());
+			if (!(obj instanceof WFMamSrcFilePK)) {
+				equals = false;
+			} else {
+				final WFMamSrcFilePK other = (WFMamSrcFilePK) obj;
+				equals = Objects.equal(other.getCycleNumber(), this.getCycleNumber())
+						&& Objects.equal(other.getSequenceNumber(), this.getSequenceNumber());
+			}
 		}
+
 		return equals;
 	}
 

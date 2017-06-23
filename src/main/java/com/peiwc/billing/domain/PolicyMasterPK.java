@@ -5,6 +5,8 @@ import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
+import com.google.common.base.Objects;
+
 @Embeddable
 public class PolicyMasterPK implements Serializable {
 
@@ -33,6 +35,29 @@ public class PolicyMasterPK implements Serializable {
 
 	public void setPolicySuffix(final String policySuffix) {
 		this.policySuffix = policySuffix;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hashCode(policyNumber, policySuffix);
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+		boolean equals = true;
+		if (obj == null) {
+			equals = false;
+		} else {
+			if (obj instanceof PolicyMasterPK) {
+				equals = false;
+			} else {
+				final PolicyMasterPK other = (PolicyMasterPK) obj;
+				equals = Objects.equal(other.policyNumber, this.policyNumber)
+						&& Objects.equal(other.policySuffix, this.policySuffix);
+
+			}
+		}
+		return equals;
 	}
 
 }
