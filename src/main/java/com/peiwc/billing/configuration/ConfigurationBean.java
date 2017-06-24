@@ -2,11 +2,9 @@ package com.peiwc.billing.configuration;
 
 import java.util.Properties;
 
-import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp.BasicDataSource;
-import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.beans.factory.annotation.Value;
@@ -119,20 +117,18 @@ public class ConfigurationBean implements TransactionManagementConfigurer {
 		return hibernateVendor;
 	}
 
-	// /**
-	// * constructs a transaction manager for use when generating a transaction
-	// in
-	// * a DAO repository or component.
-	// *
-	// * @return a global transaction manager for use in the application.
-	// */
-	// @Bean("transactionManager")
-	// public JpaTransactionManager setTransactionManager() {
-	// final JpaTransactionManager transactionManager = new
-	// JpaTransactionManager();
-	// transactionManager.setDataSource(getDataSource());
-	// return transactionManager;
-	// }
+	/**
+	 * constructs a transaction manager for use when generating a transaction in
+	 * a DAO repository or component.
+	 *
+	 * @return a global transaction manager for use in the application.
+	 */
+	@Bean("transactionManager")
+	public JpaTransactionManager setTransactionManager() {
+		final JpaTransactionManager transactionManager = new JpaTransactionManager();
+		transactionManager.setDataSource(getDataSource());
+		return transactionManager;
+	}
 
 	/**
 	 * generates a spring jdbc template for global use in the application.
@@ -155,21 +151,24 @@ public class ConfigurationBean implements TransactionManagementConfigurer {
 		return new DataSourceTransactionManager(getDataSource());
 	}
 
-	/**
-	 * generates a transaction manager for use in @Transactional annotations
-	 *
-	 * @param entityManagerFactory
-	 *            entityManager Factory passed as parameter when building
-	 *            transaction manager method.
-	 * @return a transaction manager to use in jpa transactions.
-	 */
-	@Bean
-	JpaTransactionManager transactionManager(final EntityManagerFactory entityManagerFactory) {
-		ConfigurationBean.LOGGER
-				.info("Parameter Transaction Manager : " + ToStringBuilder.reflectionToString(entityManagerFactory));
-		final JpaTransactionManager transactionManager = new JpaTransactionManager();
-		transactionManager.setEntityManagerFactory(entityManagerFactory);
-		return transactionManager;
-	}
+	// /**
+	// * generates a transaction manager for use in @Transactional annotations
+	// *
+	// * @param entityManagerFactory
+	// * entityManager Factory passed as parameter when building
+	// * transaction manager method.
+	// * @return a transaction manager to use in jpa transactions.
+	// */
+	// @Bean
+	// public JpaTransactionManager transactionManager(final
+	// EntityManagerFactory entityManagerFactory) {
+	// ConfigurationBean.LOGGER
+	// .info("Parameter Transaction Manager : " +
+	// ToStringBuilder.reflectionToString(entityManagerFactory));
+	// final JpaTransactionManager transactionManager = new
+	// JpaTransactionManager();
+	// transactionManager.setEntityManagerFactory(entityManagerFactory);
+	// return transactionManager;
+	// }
 
 }
