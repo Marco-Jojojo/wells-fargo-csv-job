@@ -1,5 +1,7 @@
 package com.peiwc.billing.dao;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -61,13 +63,18 @@ public class WFMamOpHDRTRLRRepositoryImpl implements WFMamOpHDRTRLRRepository {
 	public WFMamOpHDRTRLR update(final WFMamOpHDRTRLR wfMamOpHdrTrlr) {
 		final MapSqlParameterSource params = new MapSqlParameterSource();
 		params.addValue("cycleNumber", wfMamOpHdrTrlr.getCycleNumber());
-		params.addValue("creationDate", wfMamOpHdrTrlr.getCreationDate());
+		params.addValue("creationDate", formatDate(wfMamOpHdrTrlr.getCreationDate()));
 		params.addValue("totalRecordCount", wfMamOpHdrTrlr.getTotalRecordCount());
 		params.addValue("fileName", wfMamOpHdrTrlr.getFileName());
 		params.addValue("errorMessage", wfMamOpHdrTrlr.getErrorMessage());
 		params.addValue("status", wfMamOpHdrTrlr.getStatus());
 		this.namedParameterJdbcTemplate.update(WFMamOpHDRTRLRRepositoryImpl.UPDATE_WFMAMOPHDRTRLR, params);
 		return wfMamOpHdrTrlr;
+	}
+
+	private String formatDate(final Date date) {
+		final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		return format.format(date);
 	}
 
 }
