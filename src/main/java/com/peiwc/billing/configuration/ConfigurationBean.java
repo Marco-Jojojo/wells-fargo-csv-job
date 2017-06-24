@@ -2,7 +2,6 @@ package com.peiwc.billing.configuration;
 
 import java.util.Properties;
 
-import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp.BasicDataSource;
@@ -17,7 +16,6 @@ import org.springframework.context.annotation.PropertySources;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaDialect;
@@ -151,19 +149,21 @@ public class ConfigurationBean implements TransactionManagementConfigurer {
 		return new DataSourceTransactionManager(getDataSource());
 	}
 
-	/**
-	 * generates a transaction manager for use in @Transactional annotations
-	 *
-	 * @param entityManagerFactory
-	 *            entityManager Factory passed as parameter when building
-	 *            transaction manager method.
-	 * @return a transaction manager to use in jpa transactions.
-	 */
-	@Bean
-	JpaTransactionManager transactionManager(final EntityManagerFactory entityManagerFactory) {
-		final JpaTransactionManager transactionManager = new JpaTransactionManager();
-		transactionManager.setEntityManagerFactory(entityManagerFactory);
-		return transactionManager;
-	}
+	// /**
+	// * generates a transaction manager for use in @Transactional annotations
+	// *
+	// * @param entityManagerFactory
+	// * entityManager Factory passed as parameter when building
+	// * transaction manager method.
+	// * @return a transaction manager to use in jpa transactions.
+	// */
+	// @Bean
+	// JpaTransactionManager transactionManager(final EntityManagerFactory
+	// entityManagerFactory) {
+	// final JpaTransactionManager transactionManager = new
+	// JpaTransactionManager();
+	// transactionManager.setEntityManagerFactory(entityManagerFactory);
+	// return transactionManager;
+	// }
 
 }
