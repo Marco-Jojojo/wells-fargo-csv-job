@@ -37,6 +37,12 @@ public class WFMamOpHDRTRLR {
 	@Column(name = "STATUS", length = 20)
 	private String status;
 
+	public WFMamOpHDRTRLR() {
+		fileName = "";
+		errorMessage = "";
+		status = "";
+	}
+
 	/**
 	 * @return the cycleNumber
 	 */
