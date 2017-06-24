@@ -3,7 +3,7 @@ package com.peiwc.billing;
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.FileSystemXmlApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.peiwc.billing.process.MainProcess;
 
@@ -25,7 +25,7 @@ public class App {
 		try {
 			// final AbstractApplicationContext ctx = new
 			// AnnotationConfigApplicationContext(ConfigurationBean.class);
-			final ApplicationContext ctx = new FileSystemXmlApplicationContext("applicationContext.xml");
+			final ApplicationContext ctx = new ClassPathXmlApplicationContext("applicationContext.xml");
 			final MainProcess mainProcess = ctx.getBean(MainProcess.class);
 			mainProcess.runWellsFargoCSVProcess();
 			// ctx.close();
