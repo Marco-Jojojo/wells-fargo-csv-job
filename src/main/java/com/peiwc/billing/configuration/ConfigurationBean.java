@@ -9,12 +9,6 @@ import org.apache.log4j.Logger;
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.ComponentScans;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.annotation.PropertySources;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.orm.jpa.JpaTransactionManager;
@@ -23,18 +17,19 @@ import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
 import org.springframework.orm.jpa.vendor.HibernateJpaDialect;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.transaction.annotation.TransactionManagementConfigurer;
 
 /**
  * this bean contains all the configuration managed across the current
  * application.
  */
-@Configuration
-@ComponentScans({ @ComponentScan("com.peiwc.billing") })
-@EnableJpaRepositories(entityManagerFactoryRef = "entityManagerFactory", basePackages = { "com.peiwc.billing.dao" })
-@EnableTransactionManagement
-@PropertySources({ @PropertySource("file:database.mssql.properties"), @PropertySource("file:common.properties") })
+// @Configuration
+// @ComponentScans({ @ComponentScan("com.peiwc.billing") })
+// @EnableJpaRepositories(entityManagerFactoryRef = "entityManagerFactory",
+// basePackages = { "com.peiwc.billing.dao" })
+// @EnableTransactionManagement
+// @PropertySources({ @PropertySource("file:database.mssql.properties"),
+// @PropertySource("file:common.properties") })
 public class ConfigurationBean implements TransactionManagementConfigurer {
 
 	private static Logger LOGGER = Logger.getLogger(ConfigurationBean.class);
