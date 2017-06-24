@@ -4,6 +4,7 @@ import java.util.Date;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,6 +45,8 @@ public class WFMamOpHDRTRLRProcess {
 		final WFMamOpHDRTRLR wfMamOpHDRTRLR = new WFMamOpHDRTRLR();
 		wfMamOpHDRTRLR.setCreationDate(currentDate);
 		wfMamOpHDRTRLR.setCycleNumber(nextCycle);
+		WFMamOpHDRTRLRProcess.LOGGER
+				.info("wfMamOpHDRTRLR before saving: " + ToStringBuilder.reflectionToString(wfMamOpHDRTRLR));
 		return this.wfMamOpHDRTRLRRepository.saveAndFlush(wfMamOpHDRTRLR);
 	}
 
