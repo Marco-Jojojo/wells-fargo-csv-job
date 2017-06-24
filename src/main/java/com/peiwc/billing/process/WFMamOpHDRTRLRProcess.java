@@ -47,7 +47,7 @@ public class WFMamOpHDRTRLRProcess {
 		wfMamOpHDRTRLR.setCycleNumber(nextCycle);
 		WFMamOpHDRTRLRProcess.LOGGER
 				.info("wfMamOpHDRTRLR before saving: " + ToStringBuilder.reflectionToString(wfMamOpHDRTRLR));
-		return this.wfMamOpHDRTRLRRepository.saveAndFlush(wfMamOpHDRTRLR);
+		return this.wfMamOpHDRTRLRRepository.insert(wfMamOpHDRTRLR);
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class WFMamOpHDRTRLRProcess {
 	public void saveTotalRecordsProcessed(final int nextCycle, final int totalRecordCount) {
 		final WFMamOpHDRTRLR wfMamOpHDRTRLR = wfMamOpHDRTRLRRepository.findOne(nextCycle);
 		wfMamOpHDRTRLR.setTotalRecordCount(totalRecordCount);
-		this.wfMamOpHDRTRLRRepository.saveAndFlush(wfMamOpHDRTRLR);
+		this.wfMamOpHDRTRLRRepository.update(wfMamOpHDRTRLR);
 	}
 
 	/**
@@ -74,14 +74,17 @@ public class WFMamOpHDRTRLRProcess {
 	 *            critical error caught during execution.
 	 */
 	public void saveErrorMessage(final int cycleNumber, final String errorMessage) {
-		/*
-		 * final WFMamOpHDRTRLR wfMamOpHDRTRLR =
-		 * wfMamOpHDRTRLRRepository.findOne(cycleNumber); String errMessage =
-		 * errorMessage; if (errorMessage.length() > 100) { errMessage =
-		 * errorMessage.substring(0, 99); }
-		 * wfMamOpHDRTRLR.setErrorMessage(errMessage);
-		 * wfMamOpHDRTRLRRepository.saveAndFlush(wfMamOpHDRTRLR);
-		 */
+
+		final WFMamOpHDRTRLR wfMamOpHDRTRLR = wfMamOpHDRTRLRRepository.findOne(cycleNumber);
+		if (wfMamOpHDRTRLR != null && errorMessage != null) {
+			String errMessage = errorMessage;
+			if (errorMessage.length() > 100) {
+				errMessage = errorMessage.substring(0, 99);
+			}
+			wfMamOpHDRTRLR.setErrorMessage(errMessage);
+			wfMamOpHDRTRLRRepository.update(wfMamOpHDRTRLR);
+		}
+
 	}
 
 	/**
@@ -96,7 +99,7 @@ public class WFMamOpHDRTRLRProcess {
 		final WFMamOpHDRTRLR wfMamOpHDRTRLR = wfMamOpHDRTRLRRepository.findOne(cycleNumber);
 		WFMamOpHDRTRLRProcess.LOGGER.info("Process State is: " + processState.getName());
 		wfMamOpHDRTRLR.setStatus(processState.getName());
-		wfMamOpHDRTRLRRepository.saveAndFlush(wfMamOpHDRTRLR);
+		wfMamOpHDRTRLRRepository.update(wfMamOpHDRTRLR);
 	}
 
 	/**
@@ -113,7 +116,7 @@ public class WFMamOpHDRTRLRProcess {
 	public void saveFileName(final int nextCycle, final String fileName) {
 		final WFMamOpHDRTRLR wfMamOpHDRTRLR = wfMamOpHDRTRLRRepository.findOne(nextCycle);
 		wfMamOpHDRTRLR.setFileName(fileName);
-		this.wfMamOpHDRTRLRRepository.saveAndFlush(wfMamOpHDRTRLR);
+		this.wfMamOpHDRTRLRRepository.update(wfMamOpHDRTRLR);
 	}
 
 }

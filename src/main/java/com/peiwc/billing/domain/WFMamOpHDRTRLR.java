@@ -17,21 +17,6 @@ import javax.persistence.TemporalType;
 @Table(name = "WF_MAM_OP_HDR_TRLR")
 public class WFMamOpHDRTRLR {
 
-	/**
-	 * @return the fileName
-	 */
-	public String getFileName() {
-		return fileName;
-	}
-
-	/**
-	 * @param fileName
-	 *            the fileName to set
-	 */
-	public void setFileName(final String fileName) {
-		this.fileName = fileName;
-	}
-
 	@Id
 	@Column(name = "CYCLE_NUMBER")
 	private Integer cycleNumber;
@@ -133,5 +118,20 @@ public class WFMamOpHDRTRLR {
 	 */
 	public void setStatus(final String status) {
 		this.status = status;
+	}
+
+	/**
+	 * @return the fileName
+	 */
+	public String getFileName() {
+		return fileName;
+	}
+
+	/**
+	 * @param fileName
+	 *            the fileName to set
+	 */
+	public void setFileName(final String fileName) {
+		this.fileName = fileName;
 	}
 }

@@ -62,13 +62,14 @@ public class BillingPart2Process {
 				srcFile.setState(user.getState());
 				srcFile.setZip(user.getZip());
 				String status = "";
-				if (user.getStatus() == "2")
+				if (user.getStatus() == "2") {
 					status = "Expired";
-				else
+				} else {
 					status = "Active";
+				}
 				srcFile.setStatus(status);
 
-				wfMamSrcFileDAO.saveAndFlush(srcFile);
+				wfMamSrcFileDAO.updateSrcFile(srcFile);
 			}
 		}
 
