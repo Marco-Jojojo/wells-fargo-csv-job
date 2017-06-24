@@ -35,6 +35,7 @@ public class WFMamOpHDRTRLRRepositoryImpl implements WFMamOpHDRTRLRRepository {
 		WFMamOpHDRTRLR wfMamOpHDRTRLR = null;
 		final List<WFMamOpHDRTRLR> wfMamOpHDRTRLRList = this.namedParameterJdbcTemplate
 				.query(WFMamOpHDRTRLRRepositoryImpl.FIND_BY_CYCLE_NUMBER, params, new WFMamOpHDRTRLRMapper());
+		WFMamOpHDRTRLRRepositoryImpl.LOGGER.info("Number of results = " + wfMamOpHDRTRLRList.size());
 		for (final WFMamOpHDRTRLR wfMamOpHDRTRLR2 : wfMamOpHDRTRLRList) {
 			wfMamOpHDRTRLR = wfMamOpHDRTRLR2;
 		}
