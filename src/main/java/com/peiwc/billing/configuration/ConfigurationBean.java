@@ -60,6 +60,7 @@ public class ConfigurationBean {
 		dataSource.setPassword(password);
 		dataSource.setMaxActive(Integer.parseInt(maxActive));
 		dataSource.setMinIdle(Integer.parseInt(minIdle));
+		dataSource.setDefaultAutoCommit(true);
 		return dataSource;
 	}
 
