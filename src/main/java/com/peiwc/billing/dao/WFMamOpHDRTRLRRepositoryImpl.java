@@ -1,5 +1,8 @@
 package com.peiwc.billing.dao;
 
+import java.util.List;
+
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -10,6 +13,8 @@ import com.peiwc.billing.domain.WFMamOpHDRTRLR;
 
 @Repository("wfMamOpHDRTRLRRepository")
 public class WFMamOpHDRTRLRRepositoryImpl implements WFMamOpHDRTRLRRepository {
+
+	private static final Logger LOGGER = Logger.getLogger(WFMamOpHDRTRLRRepositoryImpl.class);
 
 	private static final String FIND_BY_CYCLE_NUMBER = "select * from WF_MAM_OP_HDR_TRLR where CYCLE_NUMBER = :cycleNumber";
 
@@ -27,8 +32,12 @@ public class WFMamOpHDRTRLRRepositoryImpl implements WFMamOpHDRTRLRRepository {
 	public WFMamOpHDRTRLR findOne(final int nextCycle) {
 		final MapSqlParameterSource params = new MapSqlParameterSource();
 		params.addValue("cycleNumber", nextCycle);
-		final WFMamOpHDRTRLR wfMamOpHDRTRLR = this.namedParameterJdbcTemplate
-				.queryForObject(WFMamOpHDRTRLRRepositoryImpl.FIND_BY_CYCLE_NUMBER, params, new WFMamOpHDRTRLRMapper());
+		WFMamOpHDRTRLR wfMamOpHDRTRLR = null;
+		final List<WFMamOpHDRTRLR> wfMamOpHDRTRLRList = this.namedParameterJdbcTemplate
+				.query(WFMamOpHDRTRLRRepositoryImpl.FIND_BY_CYCLE_NUMBER, params, new WFMamOpHDRTRLRMapper());
+		for (final WFMamOpHDRTRLR wfMamOpHDRTRLR2 : wfMamOpHDRTRLRList) {
+			wfMamOpHDRTRLR = wfMamOpHDRTRLR2;
+		}
 		return wfMamOpHDRTRLR;
 	}
 
@@ -42,6 +51,8 @@ public class WFMamOpHDRTRLRRepositoryImpl implements WFMamOpHDRTRLRRepository {
 		params.addValue("errorMessage", wfMamOpHdrTrlr.getErrorMessage());
 		params.addValue("status", wfMamOpHdrTrlr.getStatus());
 		this.namedParameterJdbcTemplate.update(WFMamOpHDRTRLRRepositoryImpl.INSERT_WFMAMOPHDRTRLR, params);
+		WFMamOpHDRTRLRRepositoryImpl.LOGGER
+				.info("insert WFMamOpHDRTRL: " + WFMamOpHDRTRLRRepositoryImpl.INSERT_WFMAMOPHDRTRLR);
 		return wfMamOpHdrTrlr;
 	}
 
