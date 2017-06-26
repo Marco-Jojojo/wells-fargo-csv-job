@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -68,7 +69,11 @@ public class BillingPart2Process {
 					status = "Active";
 				}
 				srcFile.setStatus(status);
+				if (BillingPart2Process.LOGGER.isDebugEnabled()) {
+					BillingPart2Process.LOGGER.debug("srcFile null : " + srcFile == null);
+					BillingPart2Process.LOGGER.debug("srcFile values : " + ToStringBuilder.reflectionToString(srcFile));
 
+				}
 				wfMamSrcFileDAO.updateSrcFile(srcFile);
 			}
 		}

@@ -2,6 +2,8 @@ package com.peiwc.billing.dao;
 
 import java.util.List;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.jboss.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -12,6 +14,8 @@ import com.peiwc.billing.domain.WFMamSrcFile;
 
 @Repository("wfMamSrcFileDAO")
 public class WFMamSrcFileDAOImpl implements WFMamSrcFileDAO {
+
+	private static final Logger LOGGER = Logger.getLogger(WFMamSrcFileDAOImpl.class);
 
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -46,6 +50,9 @@ public class WFMamSrcFileDAOImpl implements WFMamSrcFileDAO {
 
 	@Override
 	public void updateSrcFile(final WFMamSrcFile srcFile) {
+		if (WFMamSrcFileDAOImpl.LOGGER.isDebugEnabled()) {
+			WFMamSrcFileDAOImpl.LOGGER.debug("srcFile: " + ToStringBuilder.reflectionToString(srcFile));
+		}
 		final MapSqlParameterSource params = new MapSqlParameterSource();
 		params.addValue("cycleNumber", srcFile.getId().getCycleNumber());
 		params.addValue("sequenceNumber", srcFile.getId().getSequenceNumber());
