@@ -23,6 +23,7 @@ public class CalcUnclearedBilledAmt {
 		CalcUnclearedBilledAmt.LOGGER.info("PROCESS STATUS: Starting CalcUnclearedBilledAmt.updWFMamSrcFileRec");
 		final List<WFMamSrcFile> rows = this.calcUnclearedBilledAmtDAO.findAll();
 		CalcUnclearedBilledAmt.LOGGER.info("PROCESS STATUS: Getting all records: " + rows.size());
+		int sequenceNumber = 1;
 		for (final WFMamSrcFile row : rows) {
 			final List<WFMamSrcFile> recordsFound = this.calcUnclearedBilledAmtDAO.isRecordInSrcFile(cycleNumber,
 					row.getSecondaryAuth(), row.getInvoiceNumber());
@@ -34,6 +35,8 @@ public class CalcUnclearedBilledAmt {
 			} else {
 				final WFMamSrcFilePK id = new WFMamSrcFilePK();
 				id.setCycleNumber(cycleNumber);
+				id.setSequenceNumber(sequenceNumber);
+				sequenceNumber += 1;
 				row.setId(id);
 				this.calcUnclearedBilledAmtDAO.create(row);
 			}
