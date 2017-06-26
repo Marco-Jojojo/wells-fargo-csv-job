@@ -2,60 +2,76 @@ package com.peiwc.billing.dao;
 
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.peiwc.billing.dao.mappers.SrcFileMapper;
+import com.peiwc.billing.dao.mappers.SrcFileMapperForTwoYearsPolicies;
 import com.peiwc.billing.domain.WFMamSrcFile;
-import com.peiwc.billing.process.billing1.SrcFileMapperForTwoYearsPolicies;
 
 @Repository("processPoliciesLessOrEqual2YearsOldDAOImpl")
-public class ProcessPoliciesLessOrEqual2YearsOldDAOImpl implements ProcessPoliciesLessOrEqual2YearsOldDAO{
-	
+public class ProcessPoliciesLessOrEqual2YearsOldDAOImpl implements ProcessPoliciesLessOrEqual2YearsOldDAO {
+
+	private static final Logger LOGGER = Logger.getLogger(ProcessPoliciesLessOrEqual2YearsOldDAO.class);
+
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-	
-	private static final String FIND_ALL = ""
-			+ "SELECT p.SUBMISSION_NUMBER, p.POLICY_NUMBER "
-			+ "FROM POLICY_MASTER p, SPR_FINANCIAL_FILE s "
-			+ "WHERE p.SUBMISSION_NUMBER = s.SUBMISSION_NUMBER AND s.QUOTE_NUMBER = p.WINNING_QUOTE_NUMBER "
-			+ "AND AGYDIRECT_BILL_CODE =:agyDirectBillCode AND EFFECTIVE_DATE BETWEEN :twoYearsBefore AND :today";
-	
-	private static final String FIND_ONE_IN_WF_MAM_SRC_FILE = ""
-			+ "SELECT * "
-			+ "FROM WF_MAM_SRC_FILE"
-			+ "WHERE CYCLE_NUMBER =:cycleNumber AND SECONDARY_AUTH =:secondaryAuth";
-	
-	private static final String SAVE_RECORD = ""
-			+ "INSERT INTO WF_MAM_SRC_FILE (CYCLE_NUMBER, SECONDARY_AUTH)"
-			+ "VALUES(:cycleNumber, :secondaryAuth";
 
+	private static final String FIND_ALL = " SELECT p.SUBMISSION_NUMBER as SECONDARY_AUTH, p.POLICY_NUMBER as REFERENCE_NUMBER "
+			+ " FROM POLICY_MASTER p, SPR_FINANCIAL_FILE s "
+			+ " WHERE p.SUBMISSION_NUMBER = s.SUBMISSION_NUMBER AND p.WINNING_QUOTE_NUMBER = s.QUOTE_NUMBER "
+			+ " AND s.AGYDIRECT_BILL_CODE =:agyDirectBillCode AND EFFECTIVE_DATE >= :twoYearsBefore ";
+
+	private static final String FIND_ONE_IN_WF_MAM_SRC_FILE = "SELECT * FROM WF_MAM_SRC_FILE "
+			+ " WHERE CYCLE_NUMBER =:cycleNumber AND SECONDARY_AUTH =:secondaryAuth";
+
+	private static final String SAVE_RECORD = "INSERT INTO WF_MAM_SRC_FILE (CYCLE_NUMBER, SEQUENCE_NUMBER, SECONDARY_AUTH, REFERENCE_NUMBER, CONSOLIDATED_NAME, AMOUNT_DUE, INVOICE_NUMBER, INVOICE_DATE)"
+			+ " VALUES(:cycleNumber, :sequenceNumber, :secondaryAuth, :referenceNumber, '',0.00,'0','1970-01-01')";
+
+	private static final String GET_OTHER_DATA_FIELDS = "SELECT c.SEQUENCENUMBER FROM COLLECTION_MASTER c, POLICY_MASTER p WHERE c.POLICY_NUMBER = :referenceNumber";
 
 	@Override
-	public List<WFMamSrcFile> findAll(String twoYearsBefore, String today) {
+	public List<WFMamSrcFile> findAll(final String twoYearsBefore) {
 		final MapSqlParameterSource parameters = new MapSqlParameterSource();
 		parameters.addValue("twoYearsBefore", twoYearsBefore);
-		parameters.addValue("today", today);
 		parameters.addValue("agyDirectBillCode", 'D');
-		return this.namedParameterJdbcTemplate.query(FIND_ALL, parameters, new SrcFileMapperForTwoYearsPolicies());
+		return this.namedParameterJdbcTemplate.query(ProcessPoliciesLessOrEqual2YearsOldDAOImpl.FIND_ALL, parameters,
+				new SrcFileMapperForTwoYearsPolicies());
 	}
-	
+
 	@Override
-	public List<WFMamSrcFile> findOneInWFSrcFile(int cycleNumber, String secondaryAuth) {
+	public List<WFMamSrcFile> findOneInWFSrcFile(final int cycleNumber, final String secondaryAuth) {
 		final MapSqlParameterSource parameters = new MapSqlParameterSource();
 		parameters.addValue("cycleNumber", cycleNumber);
 		parameters.addValue("secondaryAuth", secondaryAuth);
-		return this.namedParameterJdbcTemplate.queryForList(FIND_ONE_IN_WF_MAM_SRC_FILE, parameters, WFMamSrcFile.class);
+		return this.namedParameterJdbcTemplate.query(
+				ProcessPoliciesLessOrEqual2YearsOldDAOImpl.FIND_ONE_IN_WF_MAM_SRC_FILE, parameters,
+				new SrcFileMapper());
 	}
 
 	@Override
-	public void insert(WFMamSrcFile wfMamSrcFile) {
+	public void create(final WFMamSrcFile wfMamSrcFile) {
 		final MapSqlParameterSource parameters = new MapSqlParameterSource();
 		parameters.addValue("cycleNumber", wfMamSrcFile.getId().getCycleNumber());
+		parameters.addValue("sequenceNumber", wfMamSrcFile.getId().getSequenceNumber());
 		parameters.addValue("secondaryAuth", wfMamSrcFile.getSecondaryAuth());
-		this.namedParameterJdbcTemplate.update(SAVE_RECORD, parameters);
-		
+		parameters.addValue("referenceNumber", wfMamSrcFile.getReferenceNumber());
+		final int rowsAffected = this.namedParameterJdbcTemplate
+				.update(ProcessPoliciesLessOrEqual2YearsOldDAOImpl.SAVE_RECORD, parameters);
+		ProcessPoliciesLessOrEqual2YearsOldDAOImpl.LOGGER
+				.info("NUMBER OF ROWS AFFECTED IN THIS INSERT: " + rowsAffected);
+	}
+
+	@Override
+	public float getSequenceNumberFromCM(final String referenceNumber) {
+		final MapSqlParameterSource parameters = new MapSqlParameterSource();
+		final long refNum = Long.parseLong(referenceNumber);
+		parameters.addValue("referenceNumber", refNum);
+		return this.namedParameterJdbcTemplate.queryForObject(
+				ProcessPoliciesLessOrEqual2YearsOldDAOImpl.GET_OTHER_DATA_FIELDS, parameters, Long.class);
 	}
 
 }
