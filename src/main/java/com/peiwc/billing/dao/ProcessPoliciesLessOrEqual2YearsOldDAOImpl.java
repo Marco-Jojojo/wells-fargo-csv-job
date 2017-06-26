@@ -23,15 +23,15 @@ public class ProcessPoliciesLessOrEqual2YearsOldDAOImpl implements ProcessPolici
 	private static final String FIND_ALL = " SELECT p.SUBMISSION_NUMBER as SECONDARY_AUTH, p.POLICY_NUMBER as REFERENCE_NUMBER "
 			+ " FROM POLICY_MASTER p, SPR_FINANCIAL_FILE s "
 			+ " WHERE p.SUBMISSION_NUMBER = s.SUBMISSION_NUMBER AND p.WINNING_QUOTE_NUMBER = s.QUOTE_NUMBER "
-			+ " AND s.AGYDIRECT_BILL_CODE =:agyDirectBillCode AND EFFECTIVE_DATE >= :twoYearsBefore ";
+			+ " AND s.AGYDIRECT_BILL_CODE ='D' AND EFFECTIVE_DATE >= :twoYearsBefore ";
 
 	private static final String FIND_ONE_IN_WF_MAM_SRC_FILE = "SELECT * FROM WF_MAM_SRC_FILE "
 			+ " WHERE CYCLE_NUMBER =:cycleNumber AND SECONDARY_AUTH =:secondaryAuth";
 
 	private static final String SAVE_RECORD = "INSERT INTO WF_MAM_SRC_FILE (CYCLE_NUMBER, SEQUENCE_NUMBER, SECONDARY_AUTH, REFERENCE_NUMBER, CONSOLIDATED_NAME, AMOUNT_DUE, INVOICE_NUMBER, INVOICE_DATE)"
-			+ " VALUES(:cycleNumber, :sequenceNumber, :secondaryAuth, :referenceNumber, '',0.00,'0','1970-01-01')";
+			+ " VALUES(:cycleNumber, :sequenceNumber, :secondaryAuth, :referenceNumber, '',0.00,'0', :invoiceDate)";
 
-	private static final String GET_OTHER_DATA_FIELDS = "SELECT c.SEQUENCENUMBER FROM COLLECTION_MASTER c, POLICY_MASTER p WHERE c.POLICY_NUMBER = :referenceNumber";
+	private static final String GET_MAX_SEQUENCE_NUMBER = "SELECT MAX(SEQUENCE_NUMBER) FROM WF_MAM_SRC_FILE WHERE CYCLE_NUMBER = :cycleNumber";
 
 	@Override
 	public List<WFMamSrcFile> findAll(final String twoYearsBefore) {
@@ -59,6 +59,7 @@ public class ProcessPoliciesLessOrEqual2YearsOldDAOImpl implements ProcessPolici
 		parameters.addValue("sequenceNumber", wfMamSrcFile.getId().getSequenceNumber());
 		parameters.addValue("secondaryAuth", wfMamSrcFile.getSecondaryAuth());
 		parameters.addValue("referenceNumber", wfMamSrcFile.getReferenceNumber());
+		parameters.addValue("invoiceDate", wfMamSrcFile.getInvoiceDate());
 		final int rowsAffected = this.namedParameterJdbcTemplate
 				.update(ProcessPoliciesLessOrEqual2YearsOldDAOImpl.SAVE_RECORD, parameters);
 		ProcessPoliciesLessOrEqual2YearsOldDAOImpl.LOGGER
@@ -66,12 +67,11 @@ public class ProcessPoliciesLessOrEqual2YearsOldDAOImpl implements ProcessPolici
 	}
 
 	@Override
-	public float getSequenceNumberFromCM(final String referenceNumber) {
+	public int getMaxSequenceNumber(final int cycleNumber) {
 		final MapSqlParameterSource parameters = new MapSqlParameterSource();
-		final long refNum = Long.parseLong(referenceNumber);
-		parameters.addValue("referenceNumber", refNum);
+		parameters.addValue("cycleNumber", cycleNumber);
 		return this.namedParameterJdbcTemplate.queryForObject(
-				ProcessPoliciesLessOrEqual2YearsOldDAOImpl.GET_OTHER_DATA_FIELDS, parameters, Long.class);
+				ProcessPoliciesLessOrEqual2YearsOldDAOImpl.GET_MAX_SEQUENCE_NUMBER, parameters, Integer.class);
 	}
 
 }

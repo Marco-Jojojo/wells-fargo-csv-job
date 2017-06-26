@@ -12,5 +12,5 @@ public interface ProcessPoliciesLessOrEqual2YearsOldDAO {
 
 	void create(WFMamSrcFile wfMamSrcFile);
 
-	float getSequenceNumberFromCM(String referenceNumber);
+	int getMaxSequenceNumber(int cycleNumber);
 }

@@ -34,6 +34,7 @@ public class ProcessPoliciesLessOrEqual2YearsOld {
 				.findAll(twoYearsBeforeFormatted);
 		ProcessPoliciesLessOrEqual2YearsOld.LOGGER
 				.info("PROCESS STATUS: Getting records: " + recordsFromPolicyMaster.size());
+		int seqNumber = this.processPoliciesLessOrEqual2YearsOldDAO.getMaxSequenceNumber(cycleNumber);
 		for (final WFMamSrcFile recordFromPM : recordsFromPolicyMaster) {
 			final List<WFMamSrcFile> recordsFound = this.processPoliciesLessOrEqual2YearsOldDAO
 					.findOneInWFSrcFile(cycleNumber, recordFromPM.getSecondaryAuth());
@@ -41,11 +42,10 @@ public class ProcessPoliciesLessOrEqual2YearsOld {
 			if (CollectionUtils.isEmpty(recordsFound)) {
 				final WFMamSrcFilePK id = new WFMamSrcFilePK();
 				id.setCycleNumber(cycleNumber);
-				final float seqNumberFromCM = this.processPoliciesLessOrEqual2YearsOldDAO
-						.getSequenceNumberFromCM(recordFromPM.getReferenceNumber());
-				final int seqNum = Math.round(seqNumberFromCM);
-				id.setSequenceNumber(seqNum);
+				id.setSequenceNumber(seqNumber);
+				seqNumber += 1;
 				recordFromPM.setId(id);
+				recordFromPM.setInvoiceDate(null);
 				this.processPoliciesLessOrEqual2YearsOldDAO.create(recordFromPM);
 			}
 		}
