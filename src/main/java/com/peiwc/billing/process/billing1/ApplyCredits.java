@@ -25,6 +25,7 @@ public class ApplyCredits {
 		NegPosAmounts negPosAmounts = new NegPosAmounts();
 		for (final WFMamSrcFile wfMamSrcFile : recordsFromWFMamSrcFile) {
 			if (tempSecondaryAuth.equals(wfMamSrcFile.getSecondaryAuth())) {
+				tempSecondaryAuth = wfMamSrcFile.getSecondaryAuth();
 				negPosAmounts = this.setNegPosAmounts(wfMamSrcFile, negPosAmounts);
 			} else {
 				tempSecondaryAuth = wfMamSrcFile.getSecondaryAuth();
