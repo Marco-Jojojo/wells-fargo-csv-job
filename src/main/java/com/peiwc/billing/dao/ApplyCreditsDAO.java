@@ -8,7 +8,7 @@ public interface ApplyCreditsDAO {
 
 	List<WFMamSrcFile> findAll(int cycleNumber);
 
-	float getAmtDue(int cycleNumber, String secondaryAuth);
+	List<WFMamSrcFile> getAmountsDue(int cycleNumber, String secondaryAuth);
 
 	void updateAmtDue(WFMamSrcFile wfMamSrcFile);
 

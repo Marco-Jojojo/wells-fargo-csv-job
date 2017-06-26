@@ -31,11 +31,17 @@ public class ApplyCredits {
 				tempSecondaryAuth = wfMamSrcFile.getSecondaryAuth();
 				negPosAmounts.setTotalNegAmtDueBySubmission(0);
 				negPosAmounts.setTotalPosAmtDueBySubmission(0);
-				final float amtDue = wfMamSrcFile.getAmountDue();
-				if (amtDue < 0) {
-					negPosAmounts.setTotalNegAmtDueBySubmission(negPosAmounts.getTotalNegAmtDueBySubmission() + amtDue);
-				} else {
-					negPosAmounts.setTotalPosAmtDueBySubmission(negPosAmounts.getTotalPosAmtDueBySubmission() + amtDue);
+				final List<WFMamSrcFile> amountsFromSrcFile = this.applyCreditsDAO.getAmountsDue(cycleNumber,
+						wfMamSrcFile.getSecondaryAuth());
+				for (final WFMamSrcFile amountFromSF : amountsFromSrcFile) {
+					final float amtDue = amountFromSF.getAmountDue();
+					if (amtDue < 0) {
+						negPosAmounts
+								.setTotalNegAmtDueBySubmission(negPosAmounts.getTotalNegAmtDueBySubmission() + amtDue);
+					} else {
+						negPosAmounts
+								.setTotalPosAmtDueBySubmission(negPosAmounts.getTotalPosAmtDueBySubmission() + amtDue);
+					}
 				}
 				negPosAmounts = this.setNegPosAmounts(wfMamSrcFile, negPosAmounts);
 			}
