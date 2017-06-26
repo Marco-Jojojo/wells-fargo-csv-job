@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Component;
 
 import com.peiwc.billing.dao.CalcUnclearedUnBilledCreditAmtDAO;
@@ -62,8 +63,14 @@ public class CalcUnclearedUnBilledCreditAmt {
 					this.unBilledCreditAmtDAO.updateDBI0(cycleNumber, recordFromCM.getSecondaryAuth(),
 							recordFromCM.getInvoiceNumber(), amt_due);
 				} else {
-					final Date date = this.unBilledCreditAmtDAO.getInvoiceDate(recordFromCM.getInvoiceNumber());
-					recordFromCM.setInvoiceDate(date);
+					try {
+						final Date date = this.unBilledCreditAmtDAO.getInvoiceDate(recordFromCM.getInvoiceNumber());
+						recordFromCM.setInvoiceDate(date);
+					} catch (final EmptyResultDataAccessException e) {
+						final Date date = null;
+						recordFromCM.setInvoiceDate(date);
+					}
+					//final Date date = this.unBilledCreditAmtDAO.getInvoiceDate(recordFromCM.getInvoiceNumber());
 					final WFMamSrcFilePK id = new WFMamSrcFilePK();
 					id.setCycleNumber(cycleNumber);
 					id.setSequenceNumber(sequenceNumber);
