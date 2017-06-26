@@ -38,7 +38,6 @@ public class ProcessPoliciesLessOrEqual2YearsOld {
 		for (final WFMamSrcFile recordFromPM : recordsFromPolicyMaster) {
 			final List<WFMamSrcFile> recordsFound = this.processPoliciesLessOrEqual2YearsOldDAO
 					.findOneInWFSrcFile(cycleNumber, recordFromPM.getSecondaryAuth());
-			ProcessPoliciesLessOrEqual2YearsOld.LOGGER.info("PROCESS STATUS: Getting record: " + recordsFound.size());
 			if (CollectionUtils.isEmpty(recordsFound)) {
 				final WFMamSrcFilePK id = new WFMamSrcFilePK();
 				id.setCycleNumber(cycleNumber);
