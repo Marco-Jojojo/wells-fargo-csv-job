@@ -25,9 +25,9 @@ public class CalcUnclearedBilledAmtTest {
 
 	@Test
 	public void testIsRecordInSrcFile() {
-		final List<WFMamSrcFile> rows = this.unclearedBilledAmtDAO.isRecordInSrcFile(2006, "1", "0");
+		final List<WFMamSrcFile> rows = this.unclearedBilledAmtDAO.isRecordInSrcFile(2007, "1", "0");
 		Assert.assertNotEquals(0, rows.size());
 		final WFMamSrcFile row = rows.iterator().next();
-		Assert.assertEquals(2006, row.getId().getCycleNumber());
+		Assert.assertEquals(2007, row.getId().getCycleNumber());
 	}
 }
