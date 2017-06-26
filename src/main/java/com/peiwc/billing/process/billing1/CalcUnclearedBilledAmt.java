@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 
 import com.peiwc.billing.dao.CalcUnclearedBilledAmtDAO;
 import com.peiwc.billing.domain.WFMamSrcFile;
+import com.peiwc.billing.domain.WFMamSrcFilePK;
 
 @Component("calcUnclearedBilledAmt")
 public class CalcUnclearedBilledAmt {
@@ -31,6 +32,9 @@ public class CalcUnclearedBilledAmt {
 				this.calcUnclearedBilledAmtDAO.update(row.getId().getCycleNumber(), row.getSecondaryAuth(),
 						row.getInvoiceNumber(), record.getAmountDue());
 			} else {
+				final WFMamSrcFilePK id = new WFMamSrcFilePK();
+				id.setCycleNumber(cycleNumber);
+				row.setId(id);
 				this.calcUnclearedBilledAmtDAO.create(row);
 			}
 		}
