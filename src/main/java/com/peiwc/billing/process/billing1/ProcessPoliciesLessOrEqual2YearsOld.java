@@ -6,33 +6,51 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.peiwc.billing.dao.ProcessPoliciesLessOrEqual2YearsOldDAO;
 import com.peiwc.billing.domain.WFMamSrcFile;
+import com.peiwc.billing.domain.WFMamSrcFilePK;
 
 @Component("processPoliciesLessOrEqual2YearsOld")
 public class ProcessPoliciesLessOrEqual2YearsOld {
+
+	private static final Logger LOGGER = Logger.getLogger(ProcessPoliciesLessOrEqual2YearsOld.class);
 
 	@Autowired
 	private ProcessPoliciesLessOrEqual2YearsOldDAO processPoliciesLessOrEqual2YearsOldDAO;
 
 	public void processPolicies(final int cycleNumber) {
+		ProcessPoliciesLessOrEqual2YearsOld.LOGGER
+				.info("PROCESS STATUS: Starting ProcessPoliciesLessOrEqual2YearsOld.processPolicies");
 		final Calendar cal = Calendar.getInstance();
-		final Date today = cal.getTime();
 		cal.add(Calendar.YEAR, -2);
-		Date twoYearsBefore = cal.getTime();
-		SimpleDateFormat sqlFormat = new SimpleDateFormat("yyyy-MM-dd");
-		String todayFormatted = sqlFormat.format(today);
-		String twoYearsBeforeFormatted = sqlFormat.format(twoYearsBefore);
-		List<WFMamSrcFile> recordsFromPolicyMaster = this.processPoliciesLessOrEqual2YearsOldDAO.findAll(twoYearsBeforeFormatted, todayFormatted);
-		for (WFMamSrcFile recordFromPM : recordsFromPolicyMaster) {
-			List<WFMamSrcFile> recordsFound = this.processPoliciesLessOrEqual2YearsOldDAO.findOneInWFSrcFile(cycleNumber, recordFromPM.getSecondaryAuth());
+		final Date twoYearsBefore = cal.getTime();
+		final SimpleDateFormat sqlFormat = new SimpleDateFormat("yyyy-MM-dd");
+		final String twoYearsBeforeFormatted = sqlFormat.format(twoYearsBefore);
+		final List<WFMamSrcFile> recordsFromPolicyMaster = this.processPoliciesLessOrEqual2YearsOldDAO
+				.findAll(twoYearsBeforeFormatted);
+		ProcessPoliciesLessOrEqual2YearsOld.LOGGER
+				.info("PROCESS STATUS: Getting records: " + recordsFromPolicyMaster.size());
+		for (final WFMamSrcFile recordFromPM : recordsFromPolicyMaster) {
+			final List<WFMamSrcFile> recordsFound = this.processPoliciesLessOrEqual2YearsOldDAO
+					.findOneInWFSrcFile(cycleNumber, recordFromPM.getSecondaryAuth());
+			ProcessPoliciesLessOrEqual2YearsOld.LOGGER.info("PROCESS STATUS: Getting record: " + recordsFound.size());
 			if (CollectionUtils.isEmpty(recordsFound)) {
-				this.processPoliciesLessOrEqual2YearsOldDAO.insert(recordFromPM);
+				final WFMamSrcFilePK id = new WFMamSrcFilePK();
+				id.setCycleNumber(cycleNumber);
+				final float seqNumberFromCM = this.processPoliciesLessOrEqual2YearsOldDAO
+						.getSequenceNumberFromCM(recordFromPM.getReferenceNumber());
+				final int seqNum = Math.round(seqNumberFromCM);
+				id.setSequenceNumber(seqNum);
+				recordFromPM.setId(id);
+				this.processPoliciesLessOrEqual2YearsOldDAO.create(recordFromPM);
 			}
 		}
+		ProcessPoliciesLessOrEqual2YearsOld.LOGGER
+				.info("PROCESS STATUS: Ending ProcessPoliciesLessOrEqual2YearsOld.processPolicies");
 	}
 
 }
