@@ -18,10 +18,10 @@ public class CalcUnclearedBilledAmtDAOImpl implements CalcUnclearedBilledAmtDAO 
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	private static final String FIND_ALL = " SELECT c.POLICY_NUMBER as REFERENCE_NUMBER , "
-			+ "c.SUBMISSION_NUMBER as SECONDARY_AUTH , c.NET_PREMIUM_AMOUNT as AMOUNT_DUE , "
+			+ " c.SUBMISSION_NUMBER as SECONDARY_AUTH , c.NET_PREMIUM_AMOUNT as AMOUNT_DUE , "
 			+ " c.DIRECT_BILL_INVOICE as INVOICE_NUMBER , c.SEQUENCENUMBER as SEQUENCE_NUMBER"
 			+ " FROM COLLECTION_MASTER c, SP_BILL_STMT_CTRL s"
-			+ " WHERE CLEARED_RECEIVABLE=:clearedReceivable AND AGENCYDIRECT_BILL=:agencyDirectBill AND DIRECT_BILL_INVOICE>=:directBillInvoice "
+			+ " WHERE CLEARED_RECEIVABLE= 'N' AND AGENCYDIRECT_BILL= 'D' " + " AND DIRECT_BILL_INVOICE>= 1 "
 			+ " AND c.POLICY_PREFIX_1=s.POLICY_PREFIX_1 AND c.POLICY_PREFIX_2=s.POLICY_PREFIX_2  "
 			+ " AND c.POLICY_NUMBER=s.POLICY_NUMBER AND c.POLICY_SUFFIX=s.POLICY_SUFFIX "
 			+ " AND c.DIRECT_BILL_INVOICE=s.INVOICE_NUMBER";
@@ -42,9 +42,6 @@ public class CalcUnclearedBilledAmtDAOImpl implements CalcUnclearedBilledAmtDAO 
 	@Override
 	public List<WFMamSrcFile> findAll() {
 		final MapSqlParameterSource parameters = new MapSqlParameterSource();
-		parameters.addValue("clearedReceivable", 'N');
-		parameters.addValue("agencyDirectBill", 'D');
-		parameters.addValue("directBillInvoice", 1);
 		return this.namedParameterJdbcTemplate.query(CalcUnclearedBilledAmtDAOImpl.FIND_ALL, parameters,
 				new SrcFileMapper());
 	}
