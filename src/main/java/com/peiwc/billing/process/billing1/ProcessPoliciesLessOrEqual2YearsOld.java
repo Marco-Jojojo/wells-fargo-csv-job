@@ -34,7 +34,7 @@ public class ProcessPoliciesLessOrEqual2YearsOld {
 				.findAll(twoYearsBeforeFormatted);
 		ProcessPoliciesLessOrEqual2YearsOld.LOGGER
 				.info("PROCESS STATUS: Getting records: " + recordsFromPolicyMaster.size());
-		int seqNumber = this.processPoliciesLessOrEqual2YearsOldDAO.getMaxSequenceNumber(cycleNumber);
+		int seqNumber = this.processPoliciesLessOrEqual2YearsOldDAO.getMaxSequenceNumber(cycleNumber) + 1;
 		for (final WFMamSrcFile recordFromPM : recordsFromPolicyMaster) {
 			final List<WFMamSrcFile> recordsFound = this.processPoliciesLessOrEqual2YearsOldDAO
 					.findOneInWFSrcFile(cycleNumber, recordFromPM.getSecondaryAuth());
