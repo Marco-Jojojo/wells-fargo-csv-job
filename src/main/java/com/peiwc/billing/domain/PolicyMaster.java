@@ -1,35 +1,45 @@
 package com.peiwc.billing.domain;
 
 import javax.persistence.Column;
+import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "POLICY_MASTER")
 public class PolicyMaster {
 
-	@Id
-	@Column(name = "POLICY_NUMBER")
-	private String policy_number;
+	@EmbeddedId
+	private PolicyMasterPK id;
 
 	@Column(name = "SUBMISSION_NUMBER")
-	private String submission_number;
+	private int submissionNumber;
 
-	public String getPolicy_number() {
-		return policy_number;
+	@Column(name = "STATUS_CODE")
+	private int statusCode;
+
+	public PolicyMasterPK getId() {
+		return id;
 	}
 
-	public void setPolicy_number(String value) {
-		this.policy_number = value;
+	public void setId(final PolicyMasterPK id) {
+		this.id = id;
 	}
 
-	public String getSubmission_number() {
-		return submission_number;
+	public int getSubmissionNumber() {
+		return submissionNumber;
 	}
 
-	public void setSubmission_number(String value) {
-		this.submission_number = value;
+	public void setSubmissionNumber(final int submissionNumber) {
+		this.submissionNumber = submissionNumber;
+	}
+
+	public int getStatusCode() {
+		return statusCode;
+	}
+
+	public void setStatusCode(final int statusCode) {
+		this.statusCode = statusCode;
 	}
 
 }

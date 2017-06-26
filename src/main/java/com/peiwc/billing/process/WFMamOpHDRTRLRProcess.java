@@ -1,12 +1,10 @@
 package com.peiwc.billing.process;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.Date;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,10 +12,6 @@ import org.springframework.stereotype.Component;
 
 import com.peiwc.billing.dao.WFMamOpHDRTRLRRepository;
 import com.peiwc.billing.domain.WFMamOpHDRTRLR;
-
-import jcifs.smb.NtlmPasswordAuthentication;
-import jcifs.smb.SmbFile;
-import jcifs.smb.SmbFileOutputStream;
 
 /**
  * manages master table process for creating next run of wells fargo csv
@@ -51,7 +45,9 @@ public class WFMamOpHDRTRLRProcess {
 		final WFMamOpHDRTRLR wfMamOpHDRTRLR = new WFMamOpHDRTRLR();
 		wfMamOpHDRTRLR.setCreationDate(currentDate);
 		wfMamOpHDRTRLR.setCycleNumber(nextCycle);
-		return this.wfMamOpHDRTRLRRepository.saveAndFlush(wfMamOpHDRTRLR);
+		WFMamOpHDRTRLRProcess.LOGGER
+				.info("wfMamOpHDRTRLR before saving: " + ToStringBuilder.reflectionToString(wfMamOpHDRTRLR));
+		return this.wfMamOpHDRTRLRRepository.insert(wfMamOpHDRTRLR);
 	}
 
 	/**
@@ -66,7 +62,7 @@ public class WFMamOpHDRTRLRProcess {
 	public void saveTotalRecordsProcessed(final int nextCycle, final int totalRecordCount) {
 		final WFMamOpHDRTRLR wfMamOpHDRTRLR = wfMamOpHDRTRLRRepository.findOne(nextCycle);
 		wfMamOpHDRTRLR.setTotalRecordCount(totalRecordCount);
-		this.wfMamOpHDRTRLRRepository.saveAndFlush(wfMamOpHDRTRLR);
+		this.wfMamOpHDRTRLRRepository.update(wfMamOpHDRTRLR);
 	}
 
 	/**
@@ -78,14 +74,16 @@ public class WFMamOpHDRTRLRProcess {
 	 *            critical error caught during execution.
 	 */
 	public void saveErrorMessage(final int cycleNumber, final String errorMessage) {
-		// final WFMamOpHDRTRLR wfMamOpHDRTRLR =
-		// wfMamOpHDRTRLRRepository.findOne(cycleNumber);
-		// String errMessage = errorMessage;
-		// if (errorMessage.length() > 100) {
-		// errMessage = errorMessage.substring(0, 100);
-		// }
-		// wfMamOpHDRTRLR.setErrorMessage(errMessage);
-		// wfMamOpHDRTRLRRepository.saveAndFlush(wfMamOpHDRTRLR);
+
+		final WFMamOpHDRTRLR wfMamOpHDRTRLR = wfMamOpHDRTRLRRepository.findOne(cycleNumber);
+		if (wfMamOpHDRTRLR != null && errorMessage != null) {
+			String errMessage = errorMessage;
+			if (errorMessage.length() > 100) {
+				errMessage = errorMessage.substring(0, 99);
+			}
+			wfMamOpHDRTRLR.setErrorMessage(errMessage);
+			wfMamOpHDRTRLRRepository.update(wfMamOpHDRTRLR);
+		}
 
 	}
 
@@ -101,7 +99,7 @@ public class WFMamOpHDRTRLRProcess {
 		final WFMamOpHDRTRLR wfMamOpHDRTRLR = wfMamOpHDRTRLRRepository.findOne(cycleNumber);
 		WFMamOpHDRTRLRProcess.LOGGER.info("Process State is: " + processState.getName());
 		wfMamOpHDRTRLR.setStatus(processState.getName());
-		wfMamOpHDRTRLRRepository.saveAndFlush(wfMamOpHDRTRLR);
+		wfMamOpHDRTRLRRepository.update(wfMamOpHDRTRLR);
 	}
 
 	/**
@@ -115,61 +113,10 @@ public class WFMamOpHDRTRLRProcess {
 		return lastCycleNumber;
 	}
 
-	/**
-	 * moves csv generated file to an external location.
-	 *
-	 * @param fileName
-	 *            csv generated file
-	 * @param fileNameLocation
-	 *            external folder.
-	 * @throws IOException
-	 *             when file could not be written.
-	 */
-	public void moveGeneratedFileToExternalLocation(final String fileName, final String fileNameLocation)
-			throws IOException {
-		if (processEnabled) {
-			SmbFileOutputStream sfos = null;
-			try {
-				final String userName = System.getProperty("access.win.username");
-				final String password = System.getProperty("access.win.password");
-				final String authentication = userName + ":" + password;
-				final NtlmPasswordAuthentication auth = new NtlmPasswordAuthentication(authentication);
-				final String path = "smb://" + fileNameLocation + "/" + fileName;
-				final SmbFile sFile = new SmbFile(path, auth);
-				sfos = new SmbFileOutputStream(sFile);
-				final byte[] data = readAllBytes(fileName);
-				sfos.write(data);
-			} finally {
-				if (sfos != null) {
-					try {
-						sfos.close();
-					} catch (final Exception e) {
-						WFMamOpHDRTRLRProcess.LOGGER.error(e, e);
-					}
-				}
-
-			}
-
-		}
-	}
-
-	private byte[] readAllBytes(final String fileName) throws IOException {
-		final File file = new File(fileName);
-		final byte[] bytesArray = new byte[(int) file.length()];
-		FileInputStream fis = null;
-		try {
-			fis = new FileInputStream(file);
-			fis.read(bytesArray);
-		} finally {
-			if (fis != null) {
-				try {
-					fis.close();
-				} catch (final Exception ex) {
-					WFMamOpHDRTRLRProcess.LOGGER.error(ex, ex);
-				}
-			}
-		}
-		return bytesArray;
+	public void saveFileName(final int nextCycle, final String fileName) {
+		final WFMamOpHDRTRLR wfMamOpHDRTRLR = wfMamOpHDRTRLRRepository.findOne(nextCycle);
+		wfMamOpHDRTRLR.setFileName(fileName);
+		this.wfMamOpHDRTRLRRepository.update(wfMamOpHDRTRLR);
 	}
 
 }

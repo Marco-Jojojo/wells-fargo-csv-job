@@ -2,7 +2,7 @@
 -- creates master table wf mam, this table contains data of records 
 -- created in cycle number and error messages during the processing of data generated.
 
-CREATE CACHED TABLE PUBLIC.WF_MAM_OP_HDR_TRLR(
+CREATE TABLE WF_MAM_OP_HDR_TRLR(
     CYCLE_NUMBER DECIMAL(10, 0) NOT NULL,
     CREATION_DATE DATE NOT NULL,
     TOTAL_RECORD_COUNT DECIMAL(10, 0),
@@ -29,6 +29,8 @@ CREATE TABLE WF_MAM_SRC_FILE(
 	STATE char(2) NULL,
 	ZIP char(10) NULL,
 	PHONE varchar(20) NULL,
+	STATUS varchar(20) NULL,
+	STATUS_INVOICE varchar(50) NULL,
 	primary key(CYCLE_NUMBER, SEQUENCE_NUMBER )
 	);
 	
@@ -53,6 +55,14 @@ CREATE TABLE SPR_INSURED_CONTACT_(
 	PHONE_PREFIX int NOT NULL,
 	PHONE_SUFFIX int NOT NULL	
 	);
+	
+	CREATE TABLE POLICY_MASTER(
+		POLICY_NUMBER int NOT NULL,
+		POLICY_SUFFIX char(2) NOT NULL,
+		SUBMISSION_NUMBER int NOT NULL,
+		STATUS_CODE int NOT NULL
+	);
+
 
 
 

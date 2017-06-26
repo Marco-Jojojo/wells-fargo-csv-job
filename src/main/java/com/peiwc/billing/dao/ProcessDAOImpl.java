@@ -19,7 +19,7 @@ public class ProcessDAOImpl implements ProcessDAO {
 	private static final String CHECK_PROCESS_BY_DATE = "select count(0) as HAS_RUN from "
 			+ "WF_MAM_OP_HDR_TRLR where cast(creation_date as date)= :creationDate ";
 
-	private static final String GET_LAST_CYCLE_NUMBER = "select ifnull(max( cycle_number ),0) as cycle_number "
+	private static final String GET_LAST_CYCLE_NUMBER = "select isnull(max( cycle_number ),0) as cycle_number "
 			+ "from WF_MAM_OP_HDR_TRLR";
 
 	/**
@@ -29,8 +29,8 @@ public class ProcessDAOImpl implements ProcessDAO {
 	public boolean checkProcessDate(final Date creationDate) {
 		final MapSqlParameterSource parameters = new MapSqlParameterSource();
 		parameters.addValue("creationDate", creationDate);
-		final int runStatus = this.namedParameterJdbcTemplate.queryForObject(CHECK_PROCESS_BY_DATE, parameters,
-				Integer.class);
+		final int runStatus = this.namedParameterJdbcTemplate.queryForObject(ProcessDAOImpl.CHECK_PROCESS_BY_DATE,
+				parameters, Integer.class);
 		return runStatus == 1;
 	}
 
@@ -40,8 +40,8 @@ public class ProcessDAOImpl implements ProcessDAO {
 	@Override
 	public int getLastCycleNumber() {
 		final MapSqlParameterSource parameters = new MapSqlParameterSource();
-		final int lastCycleNumber = this.namedParameterJdbcTemplate.queryForObject(GET_LAST_CYCLE_NUMBER, parameters,
-				Integer.class);
+		final int lastCycleNumber = this.namedParameterJdbcTemplate.queryForObject(ProcessDAOImpl.GET_LAST_CYCLE_NUMBER,
+				parameters, Integer.class);
 		return lastCycleNumber;
 	}
 

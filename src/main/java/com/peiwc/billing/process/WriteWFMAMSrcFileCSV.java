@@ -89,7 +89,7 @@ public class WriteWFMAMSrcFileCSV {
 		OutputStream out = null;
 		final Set<WFMamSrcFilePK> errorList = this.getErrorsFromCycle(cycleNumber);
 		try {
-			out = new FileOutputStream(fileName, true);
+			out = new FileOutputStream(fileName);
 			final byte[] headers = (csvHeaders + WriteWFMAMSrcFileCSV.NEW_LINE).getBytes();
 			out.write(headers);
 			for (final WFMamSrcFile wfMamSrcFile : wfList) {
@@ -140,6 +140,8 @@ public class WriteWFMAMSrcFileCSV {
 		builder.append(formatString(wfMamSrcFile.getZip()));
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
 		builder.append(formatString(wfMamSrcFile.getPhone()));
+		builder.append(WriteWFMAMSrcFileCSV.COMMA);
+		builder.append(formatString(wfMamSrcFile.getStatus()));
 		builder.append(WriteWFMAMSrcFileCSV.NEW_LINE);
 		return builder.toString();
 	}
