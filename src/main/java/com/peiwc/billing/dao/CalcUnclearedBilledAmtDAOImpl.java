@@ -8,8 +8,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.peiwc.billing.dao.mappers.SrcFileMapper;
 import com.peiwc.billing.domain.WFMamSrcFile;
-import com.peiwc.billing.process.billing1.SrcFileMapper;
 
 @Repository("calcUnclearedBilledAmtDAOImpl")
 public class CalcUnclearedBilledAmtDAOImpl implements CalcUnclearedBilledAmtDAO {
@@ -26,11 +26,11 @@ public class CalcUnclearedBilledAmtDAOImpl implements CalcUnclearedBilledAmtDAO 
 			+ " AND c.POLICY_NUMBER=s.POLICY_NUMBER AND c.POLICY_SUFFIX=s.POLICY_SUFFIX "
 			+ " AND c.DIRECT_BILL_INVOICE=s.INVOICE_NUMBER";
 
-	private static final String IS_RECORD_IN_SRC_FILE = "" + "SELECT * " + "FROM WF_MAM_SRC_FILE "
-			+ " WHERE CYCLE_NUMBER=:cycleNumber AND SECONDARY_AUTH = :submissionNumber AND INVOICE_NUMBER = :invoiceNumber";
+	private static final String IS_RECORD_IN_SRC_FILE = "SELECT * FROM WF_MAM_SRC_FILE "
+			+ " WHERE CYCLE_NUMBER = :cycleNumber AND SECONDARY_AUTH = :submissionNumber AND INVOICE_NUMBER = :invoiceNumber";
 
-	private static final String UPDATE_WF_MAM_SRC_FILE = "" + "UPADATE WF_MAM_SRC_FILE " + "SET AMOUNT_DUE=:amountDue "
-			+ " WHERE CYCLE_NUMBER=:cycleNumber AND SECONDARY_AUTH = :submissionNumber AND INVOICE_NUMBER=:invoiceNumber";
+	private static final String UPDATE_WF_MAM_SRC_FILE = "UPDATE WF_MAM_SRC_FILE SET AMOUNT_DUE=:amountDue "
+			+ " WHERE CYCLE_NUMBER = :cycleNumber AND SECONDARY_AUTH = :submissionNumber AND INVOICE_NUMBER = :invoiceNumber";
 
 	private static final String GET_INVOICE_DATE = ""
 			+ " SELECT STATEMENT_DATE FROM BILLING_STATEMENT_CO where BILLING_INVOICE_NUMB=:invoiceNumber";
