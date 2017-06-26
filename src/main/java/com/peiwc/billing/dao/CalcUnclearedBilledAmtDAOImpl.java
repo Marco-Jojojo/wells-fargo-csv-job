@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.peiwc.billing.dao.mappers.SrcFileMapper;
+import com.peiwc.billing.dao.mappers.SrcFileMapperForFindAllUnclearedBilledAmt;
 import com.peiwc.billing.domain.WFMamSrcFile;
 
 @Repository("calcUnclearedBilledAmtDAOImpl")
@@ -19,7 +20,7 @@ public class CalcUnclearedBilledAmtDAOImpl implements CalcUnclearedBilledAmtDAO 
 
 	private static final String FIND_ALL = " SELECT c.POLICY_NUMBER  REFERENCE_NUMBER ,   "
 			+ "c.SUBMISSION_NUMBER  SECONDARY_AUTH ,  c.NET_PREMIUM_AMOUNT  AMOUNT_DUE ,   "
-			+ "c.DIRECT_BILL_INVOICE  INVOICE_NUMBER ,  c.SEQUENCENUMBER  SEQUENCE_NUMBER  FROM "
+			+ "c.DIRECT_BILL_INVOICE  INVOICE_NUMBER ,  c.SEQUENCENUMBER  SEQUENCE_NUMBER, s.STMT_DATE INVOICE_DATE  FROM "
 			+ "COLLECTION_MASTER c   join SP_BILL_STMT_CTRL s   on (c.POLICY_PREFIX_1 = s.POLICY_PREFIX_1  AND "
 			+ "c.POLICY_PREFIX_2 = s.POLICY_PREFIX_2   AND  c.POLICY_NUMBER = s.POLICY_NUMBER  AND "
 			+ "c.POLICY_SUFFIX=s.POLICY_SUFFIX   AND c.DIRECT_BILL_INVOICE=s.INVOICE_NUMBER) "
@@ -42,7 +43,7 @@ public class CalcUnclearedBilledAmtDAOImpl implements CalcUnclearedBilledAmtDAO 
 	public List<WFMamSrcFile> findAll() {
 		final MapSqlParameterSource parameters = new MapSqlParameterSource();
 		return this.namedParameterJdbcTemplate.query(CalcUnclearedBilledAmtDAOImpl.FIND_ALL, parameters,
-				new SrcFileMapper());
+				new SrcFileMapperForFindAllUnclearedBilledAmt());
 	}
 
 	@Override

@@ -31,7 +31,6 @@ public class CalcUnclearedBilledAmt {
 				this.calcUnclearedBilledAmtDAO.update(row.getId().getCycleNumber(), row.getSecondaryAuth(),
 						row.getInvoiceNumber(), record.getAmountDue());
 			} else {
-				row.setInvoiceDate(this.calcUnclearedBilledAmtDAO.getInvoiceDate(row.getInvoiceNumber()));
 				this.calcUnclearedBilledAmtDAO.create(row);
 			}
 		}
