@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import com.peiwc.billing.dao.CalcUnclearedUnBilledCreditAmtDAO;
 import com.peiwc.billing.domain.WFMamSrcFile;
+import com.peiwc.billing.domain.WFMamSrcFilePK;
 
 @Component("calcUnclearedUnBilledCreditAmt")
 public class CalcUnclearedUnBilledCreditAmt {
@@ -25,7 +26,7 @@ public class CalcUnclearedUnBilledCreditAmt {
 
 		final List<WFMamSrcFile> recordsFromCM = this.unBilledCreditAmtDAO.findAll();
 		CalcUnclearedUnBilledCreditAmt.LOGGER.info("PROCESS STATUS: Getting records from CM: " + recordsFromCM.size());
-
+		int sequenceNumber = this.unBilledCreditAmtDAO.getMaxSequenceNumber(cycleNumber) + 1;
 		for (final WFMamSrcFile recordFromCM : recordsFromCM) {
 
 			final List<WFMamSrcFile> recordsFromSrcFileDBI1 = this.unBilledCreditAmtDAO.findOneByDBI1(cycleNumber,
@@ -63,6 +64,11 @@ public class CalcUnclearedUnBilledCreditAmt {
 				} else {
 					final Date date = this.unBilledCreditAmtDAO.getInvoiceDate(recordFromCM.getInvoiceNumber());
 					recordFromCM.setInvoiceDate(date);
+					final WFMamSrcFilePK id = new WFMamSrcFilePK();
+					id.setCycleNumber(cycleNumber);
+					id.setSequenceNumber(sequenceNumber);
+					sequenceNumber += 1;
+					recordFromCM.setId(id);
 					this.unBilledCreditAmtDAO.create(recordFromCM);
 				}
 			}

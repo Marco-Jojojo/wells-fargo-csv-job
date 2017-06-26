@@ -47,6 +47,8 @@ public class CalcUnclearedUnBilledCreditAmtDAOImpl implements CalcUnclearedUnBil
 	private static final String GET_INVOICE_DATE = ""
 			+ " SELECT STATEMENT_DATE FROM BILLING_STATEMENT_CO where BILLING_INVOICE_NUMB = :invoiceNumber";
 
+	private static final String GET_MAX_SEQUENCE_NUMBER = "SELECT MAX(SEQUENCE_NUMBER) FROM WF_MAM_SRC_FILE WHERE CYCLE_NUMBER = :cycleNumber";
+
 	@Override
 	public List<WFMamSrcFile> findAll() {
 		final MapSqlParameterSource parameters = new MapSqlParameterSource();
@@ -120,6 +122,14 @@ public class CalcUnclearedUnBilledCreditAmtDAOImpl implements CalcUnclearedUnBil
 		return this.namedParameterJdbcTemplate.queryForObject(CalcUnclearedUnBilledCreditAmtDAOImpl.GET_INVOICE_DATE,
 				parameters, Date.class);
 
+	}
+
+	@Override
+	public int getMaxSequenceNumber(final int cycleNumber) {
+		final MapSqlParameterSource parameters = new MapSqlParameterSource();
+		parameters.addValue("cycleNumber", cycleNumber);
+		return this.namedParameterJdbcTemplate.queryForObject(
+				CalcUnclearedUnBilledCreditAmtDAOImpl.GET_MAX_SEQUENCE_NUMBER, parameters, Integer.class);
 	}
 
 }

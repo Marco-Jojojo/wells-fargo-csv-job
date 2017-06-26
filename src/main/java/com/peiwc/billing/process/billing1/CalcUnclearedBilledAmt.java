@@ -33,7 +33,7 @@ public class CalcUnclearedBilledAmt {
 				this.calcUnclearedBilledAmtDAO.update(row.getId().getCycleNumber(), row.getSecondaryAuth(),
 						row.getInvoiceNumber(), record.getAmountDue());
 			} else {
-				final WFMamSrcFilePK id = new WFMamSrcFilePK();
+				WFMamSrcFilePK id = new WFMamSrcFilePK();
 				id.setCycleNumber(cycleNumber);
 				id.setSequenceNumber(sequenceNumber);
 				sequenceNumber += 1;
