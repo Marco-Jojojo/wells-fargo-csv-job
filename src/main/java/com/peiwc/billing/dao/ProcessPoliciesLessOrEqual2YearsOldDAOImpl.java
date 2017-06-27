@@ -60,10 +60,7 @@ public class ProcessPoliciesLessOrEqual2YearsOldDAOImpl implements ProcessPolici
 		parameters.addValue("secondaryAuth", wfMamSrcFile.getSecondaryAuth());
 		parameters.addValue("referenceNumber", wfMamSrcFile.getReferenceNumber());
 		parameters.addValue("invoiceDate", wfMamSrcFile.getInvoiceDate());
-		final int rowsAffected = this.namedParameterJdbcTemplate
-				.update(ProcessPoliciesLessOrEqual2YearsOldDAOImpl.SAVE_RECORD, parameters);
-		ProcessPoliciesLessOrEqual2YearsOldDAOImpl.LOGGER
-				.info("NUMBER OF ROWS AFFECTED IN THIS INSERT: " + rowsAffected);
+		this.namedParameterJdbcTemplate.update(ProcessPoliciesLessOrEqual2YearsOldDAOImpl.SAVE_RECORD, parameters);
 	}
 
 	@Override
