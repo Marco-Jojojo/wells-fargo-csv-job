@@ -60,7 +60,7 @@ public class BillingPart2Process {
 				srcFile.setEmail(user.getEmail().trim());
 				srcFile.setAddress(user.getAddress().trim());
 				srcFile.setAddress2(user.getAddress2().trim());
-				srcFile.setCity(user.getCity());
+				srcFile.setCity(user.getCity().trim());
 				srcFile.setState(user.getState());
 				srcFile.setZip(user.getZip());
 				String status = "";
