@@ -51,9 +51,18 @@ public class BillingPart2Process {
 						user.getPhoneSuffix());
 				srcFile.setConsolidatedName(consolidatedName);
 				srcFile.setPhone(phone);
-				srcFile.setEmail(user.getEmail().trim());
+				final String email = " ";
+				if (user.getEmail().isEmpty())
+					srcFile.setEmail(email);
+				else
+					srcFile.setEmail(user.getEmail().trim());
+
 				srcFile.setAddress(user.getAddress().trim());
-				srcFile.setAddress2(user.getAddress2().trim());
+				final String address2 = " ";
+				if (user.getAddress2().isEmpty())
+					srcFile.setAddress2(address2);
+				else
+					srcFile.setAddress2(user.getAddress2().trim());
 				srcFile.setCity(user.getCity().trim());
 				srcFile.setState(user.getState());
 				srcFile.setZip(user.getZip());
