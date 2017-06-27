@@ -20,8 +20,8 @@ public class CalcUnclearedBilledAmtDAOImpl implements CalcUnclearedBilledAmtDAO 
 
 	private static final String FIND_ALL = " SELECT c.POLICY_NUMBER  REFERENCE_NUMBER ,   "
 			+ "c.SUBMISSION_NUMBER  SECONDARY_AUTH ,  c.NET_PREMIUM_AMOUNT  AMOUNT_DUE ,   "
-			+ "c.DIRECT_BILL_INVOICE  INVOICE_NUMBER ,  c.SEQUENCENUMBER  SEQUENCE_NUMBER, s.STMT_DATE INVOICE_DATE  FROM "
-			+ "COLLECTION_MASTER c   join SP_BILL_STMT_CTRL s   on (c.POLICY_PREFIX_1 = s.POLICY_PREFIX_1  AND "
+			+ "c.DIRECT_BILL_INVOICE  INVOICE_NUMBER ,  c.SEQUENCENUMBER  SEQUENCE_NUMBER, s.STMT_DATE INVOICE_DATE,  "
+			+ "s.DUE_DATE FROM COLLECTION_MASTER c   join SP_BILL_STMT_CTRL s   on (c.POLICY_PREFIX_1 = s.POLICY_PREFIX_1  AND "
 			+ "c.POLICY_PREFIX_2 = s.POLICY_PREFIX_2   AND  c.POLICY_NUMBER = s.POLICY_NUMBER  AND "
 			+ "c.POLICY_SUFFIX=s.POLICY_SUFFIX   AND c.DIRECT_BILL_INVOICE=s.INVOICE_NUMBER) "
 			+ "WHERE  CLEARED_RECEIVABLE= 'N'  AND AGENCYDIRECT_BILL= 'D'  AND DIRECT_BILL_INVOICE >= 1 ";
@@ -36,8 +36,8 @@ public class CalcUnclearedBilledAmtDAOImpl implements CalcUnclearedBilledAmtDAO 
 			+ " SELECT STATEMENT_DATE FROM BILLING_STATEMENT_CO where BILLING_INVOICE_NUMB=:invoiceNumber";
 
 	private static final String SAVE_RECORD = "INSERT INTO WF_MAM_SRC_FILE(CYCLE_NUMBER,SEQUENCE_NUMBER,"
-			+ "REFERENCE_NUMBER,SECONDARY_AUTH,AMOUNT_DUE,INVOICE_NUMBER,INVOICE_DATE,CONSOLIDATED_NAME)VALUES"
-			+ "(:cycleNumber,:sequenceNumber,:referenceNumber,:secondaryAuth,:amountDue,:invoiceNumber,:invoiceDate,'')";
+			+ "REFERENCE_NUMBER,SECONDARY_AUTH,AMOUNT_DUE,INVOICE_NUMBER,INVOICE_DATE,CONSOLIDATED_NAME, DUE_DATE)VALUES"
+			+ "(:cycleNumber,:sequenceNumber,:referenceNumber,:secondaryAuth,:amountDue,:invoiceNumber,:invoiceDate,'', :dueDate)";
 
 	@Override
 	public List<WFMamSrcFile> findAll() {
@@ -84,6 +84,7 @@ public class CalcUnclearedBilledAmtDAOImpl implements CalcUnclearedBilledAmtDAO 
 		parameters.addValue("amountDue", wfMamSrcFile.getAmountDue());
 		parameters.addValue("invoiceNumber", wfMamSrcFile.getInvoiceNumber());
 		parameters.addValue("invoiceDate", wfMamSrcFile.getInvoiceDate());
+		parameters.addValue("dueDate", wfMamSrcFile.getDueDate());
 
 		this.namedParameterJdbcTemplate.update(CalcUnclearedBilledAmtDAOImpl.SAVE_RECORD, parameters);
 	}
