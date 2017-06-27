@@ -39,66 +39,74 @@ public class BillingPart2Process {
 			final List<WFUserInfo> users = billingInformationProcess.getUserInformation(submissionNumber);
 			final List<WFDBAName> dbaNames = billingInformationProcess.getDBAName(submissionNumber);
 			final List<WFSPRName> sprNames = billingInformationProcess.getSPRName(submissionNumber);
+			String consolidatedName = "";
 
-			if (CollectionUtils.isEmpty(users)) {
-				BillingPart2Process.LOGGER.debug("Billing error, could not get user information");
-				final WFMamErrLog error = new WFMamErrLog();
-				error.setCycleNumber(cycleNumber);
-				error.setSequenceNumber(srcFile.getId().getSequenceNumber());
-				error.setDescription("Could not get user information");
-				error.setStatus("PENDING_REC");
-				wfMamErrLogRepository.saveAndFlush(error);
-			} else {
-				final WFUserInfo user = users.iterator().next();
+			if (!CollectionUtils.isEmpty(dbaNames)) {
+
 				final WFDBAName dbaName = dbaNames.iterator().next();
-				final WFSPRName sprName = sprNames.iterator().next();
 
-				String consolidatedName = "";
 				if (!StringUtils.isEmpty(dbaName.getDbaName())) {
-					consolidatedName = dbaName.getDbaName();
+					consolidatedName = StringUtils.trim(dbaName.getDbaName());
 				} else {
-					if (!StringUtils.isEmpty(sprName.getEntityName())) {
-						consolidatedName = sprName.getEntityName();
+					if (!CollectionUtils.isEmpty(sprNames)) {
+						final WFSPRName sprName = sprNames.iterator().next();
+						if (!StringUtils.isEmpty(sprName.getEntityName())) {
+							consolidatedName = StringUtils.trim(sprName.getEntityName());
+						}
 					}
 				}
-				srcFile.setConsolidatedName(consolidatedName);
 
-				final String phone = StringUtils.join(user.getPhoneArea(), user.getPhonePrefix(),
-						user.getPhoneSuffix());
-				srcFile.setPhone(phone);
-
-				final String email = StringUtils.EMPTY;
-				if (!StringUtils.isEmpty(user.getEmail())) {
-					srcFile.setEmail(StringUtils.trim(user.getEmail()));
+				if (CollectionUtils.isEmpty(users)) {
+					BillingPart2Process.LOGGER.debug("Billing error, could not get user information");
+					final WFMamErrLog error = new WFMamErrLog();
+					error.setCycleNumber(cycleNumber);
+					error.setSequenceNumber(srcFile.getId().getSequenceNumber());
+					error.setDescription("Could not get user information");
+					error.setStatus("PENDING_REC");
+					wfMamErrLogRepository.saveAndFlush(error);
 				} else {
-					srcFile.setEmail(email);
-				}
+					final WFUserInfo user = users.iterator().next();
 
-				srcFile.setAddress(StringUtils.trim(user.getAddress()));
+					srcFile.setConsolidatedName(consolidatedName);
 
-				final String address2 = StringUtils.EMPTY;
-				if (!StringUtils.isEmpty(user.getAddress2())) {
-					srcFile.setAddress2(StringUtils.trim(user.getAddress2()));
-				} else {
-					srcFile.setAddress2(address2);
-				}
+					final String phone = StringUtils.join(user.getPhoneArea(), user.getPhonePrefix(),
+							user.getPhoneSuffix());
+					srcFile.setPhone(phone);
 
-				srcFile.setCity(StringUtils.trim(user.getCity()));
-				srcFile.setState(user.getState());
-				srcFile.setZip(StringUtils.trim(user.getZip()));
+					final String email = StringUtils.EMPTY;
+					if (!StringUtils.isEmpty(user.getEmail())) {
+						srcFile.setEmail(StringUtils.trim(user.getEmail()));
+					} else {
+						srcFile.setEmail(email);
+					}
 
-				String status = StringUtils.EMPTY;
-				if ("2".equals(user.getStatus())) {
-					status = "Expired";
-				} else {
-					status = "Active";
+					srcFile.setAddress(StringUtils.trim(user.getAddress()));
+
+					final String address2 = StringUtils.EMPTY;
+					if (!StringUtils.isEmpty(user.getAddress2())) {
+						srcFile.setAddress2(StringUtils.trim(user.getAddress2()));
+					} else {
+						srcFile.setAddress2(address2);
+					}
+
+					srcFile.setCity(StringUtils.trim(user.getCity()));
+					srcFile.setState(user.getState());
+					srcFile.setZip(StringUtils.trim(user.getZip()));
+
+					String status = StringUtils.EMPTY;
+					if ("2".equals(user.getStatus())) {
+						status = "Expired";
+					} else {
+						status = "Active";
+					}
+					srcFile.setStatusInvoice(status);
+					if (BillingPart2Process.LOGGER.isDebugEnabled()) {
+						BillingPart2Process.LOGGER.debug("srcFile null : " + srcFile == null);
+						BillingPart2Process.LOGGER
+								.debug("srcFile values : " + ToStringBuilder.reflectionToString(srcFile));
+					}
+					wfMamSrcFileDAO.updateSrcFile(srcFile);
 				}
-				srcFile.setStatusInvoice(status);
-				if (BillingPart2Process.LOGGER.isDebugEnabled()) {
-					BillingPart2Process.LOGGER.debug("srcFile null : " + srcFile == null);
-					BillingPart2Process.LOGGER.debug("srcFile values : " + ToStringBuilder.reflectionToString(srcFile));
-				}
-				wfMamSrcFileDAO.updateSrcFile(srcFile);
 			}
 		}
 	}
