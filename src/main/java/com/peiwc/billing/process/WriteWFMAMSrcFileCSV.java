@@ -180,7 +180,8 @@ public class WriteWFMAMSrcFileCSV {
 	}
 
 	private String formatNumber(final Number numberValue) {
-		return WriteWFMAMSrcFileCSV.QUOT + numberFormat.format(numberValue) + WriteWFMAMSrcFileCSV.QUOT;
+		final String finalFormat = numberFormat.format(numberValue).replaceAll(",", "");
+		return WriteWFMAMSrcFileCSV.QUOT + finalFormat + WriteWFMAMSrcFileCSV.QUOT;
 	}
 
 }
