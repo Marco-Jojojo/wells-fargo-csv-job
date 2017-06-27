@@ -6,7 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "POLICY_MASTER")
+@Table(name = "SPR_DBA")
 public class SprDba {
 
 	@EmbeddedId
@@ -14,5 +14,21 @@ public class SprDba {
 
 	@Column(name = "DBA_NAME")
 	private String dbaName;
+
+	public SprDbaPK getId() {
+		return id;
+	}
+
+	public void setId(final SprDbaPK id) {
+		this.id = id;
+	}
+
+	public String getDbaName() {
+		return dbaName;
+	}
+
+	public void setDbaName(final String dbaName) {
+		this.dbaName = dbaName;
+	}
 
 }

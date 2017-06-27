@@ -10,8 +10,8 @@ public interface BillingProcessDAO {
 
 	List<WFUserInfo> getUserInformation(int submissionNumber);
 
-	List<WFDBAName> getUserDBAName(final int submissionNumber);
+	List<WFDBAName> getUserDBAName(int submissionNumber);
 
-	List<WFSPRName> getUserSPRName(final int submissionNumber);
+	List<WFSPRName> getUserSPRName(int submissionNumber);
 
 }
