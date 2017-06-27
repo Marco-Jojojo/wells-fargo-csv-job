@@ -63,7 +63,7 @@ public class BillingPart2Process {
 				} else {
 					status = "Active";
 				}
-				srcFile.setStatus(status);
+				srcFile.setStatusInvoice(status);
 				if (BillingPart2Process.LOGGER.isDebugEnabled()) {
 					BillingPart2Process.LOGGER.debug("srcFile null : " + srcFile == null);
 					BillingPart2Process.LOGGER.debug("srcFile values : " + ToStringBuilder.reflectionToString(srcFile));
