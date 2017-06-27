@@ -32,7 +32,7 @@ public class WFMamSrcFileDAOImpl implements WFMamSrcFileDAO {
 			+ ":dueDate,:amountDue,:invoiceNumber,:invoiceDate,:email,:address,:address2,"
 			+ ":city,:state,:zip,:phone,:status,:statusInvoice )";
 
-	private static final String UPDATE_WFMAMSRCFILE = "UPDATE  WF_MAM_SRC_FILE  REFERENCE_NUMBER = :referenceNumber ,"
+	private static final String UPDATE_WFMAMSRCFILE = "UPDATE  WF_MAM_SRC_FILE set  REFERENCE_NUMBER = :referenceNumber ,"
 			+ " SECONDARY_AUTH = :secondaryAuth , CONSOLIDATED_NAME =  :consolidatedName, "
 			+ " DUE_DATE = :dueDate, AMOUNT_DUE = :amountDue, INVOICE_NUMBER = :invoiceNumber, "
 			+ " INVOICE_DATE = :invoiceDate ,  EMAIL = :email, ADDRESS = :address, ADDRESS_2 =  :address2,"
