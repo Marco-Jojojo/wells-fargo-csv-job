@@ -30,6 +30,18 @@ import com.peiwc.billing.domain.WFMamSrcFilePK;
 @Component("writeWFMAMSrcFileCSV")
 public class WriteWFMAMSrcFileCSV {
 
+	/**
+	 * new line
+	 */
+	public static final String NEW_LINE = "\r\n";
+
+	/**
+	 * comma
+	 */
+	public static final String COMMA = ",";
+
+	public static final String QUOT = "\"";
+
 	@Autowired
 	private WFMamSrcFileDAO wfMamSrcFileDAO;
 
@@ -60,16 +72,6 @@ public class WriteWFMAMSrcFileCSV {
 		numberFormat = new DecimalFormat();
 		numberFormat.setMinimumFractionDigits(minFractionDigits);
 	}
-
-	/**
-	 * new line
-	 */
-	public static final String NEW_LINE = "\r\n";
-
-	/**
-	 * comma
-	 */
-	public static final String COMMA = ",";
 
 	/**
 	 * writes Data Retrieved from cycle number to database.
@@ -171,9 +173,10 @@ public class WriteWFMAMSrcFileCSV {
 	private String formatString(final String stringValue) {
 		String resultFormat = "";
 		if (stringValue != null) {
-			resultFormat = stringValue;
+			resultFormat = stringValue.replaceAll(WriteWFMAMSrcFileCSV.QUOT,
+					WriteWFMAMSrcFileCSV.QUOT + WriteWFMAMSrcFileCSV.QUOT);
 		}
-		return resultFormat;
+		return WriteWFMAMSrcFileCSV.QUOT + resultFormat + WriteWFMAMSrcFileCSV.QUOT;
 	}
 
 }
