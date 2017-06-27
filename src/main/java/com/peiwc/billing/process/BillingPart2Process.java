@@ -50,9 +50,7 @@ public class BillingPart2Process {
 				wfMamErrLogRepository.saveAndFlush(error);
 			} else {
 				final WFUserInfo user = users.iterator().next();
-
 				final WFDBAName dbaName = dbaNames.iterator().next();
-
 				final WFSPRName sprName = sprNames.iterator().next();
 
 				String consolidatedName = "";
@@ -65,26 +63,31 @@ public class BillingPart2Process {
 				}
 				srcFile.setConsolidatedName(consolidatedName);
 
-				final String phone = StringUtils.join(user.getPhoneArea(), " ", user.getPhonePrefix(),
+				final String phone = StringUtils.join(user.getPhoneArea(), user.getPhonePrefix(),
 						user.getPhoneSuffix());
-
 				srcFile.setPhone(phone);
-				final String email = " ";
-				if (user.getEmail().isEmpty())
-					srcFile.setEmail(email);
-				else
-					srcFile.setEmail(user.getEmail().trim());
 
-				srcFile.setAddress(user.getAddress().trim());
-				final String address2 = " ";
-				if (user.getAddress2().isEmpty())
+				final String email = StringUtils.EMPTY;
+				if (!StringUtils.isEmpty(user.getEmail())) {
+					srcFile.setEmail(StringUtils.trim(user.getEmail()));
+				} else {
+					srcFile.setEmail(email);
+				}
+
+				srcFile.setAddress(StringUtils.trim(user.getAddress()));
+
+				final String address2 = StringUtils.EMPTY;
+				if (!StringUtils.isEmpty(user.getAddress2())) {
+					srcFile.setAddress2(StringUtils.trim(user.getAddress2()));
+				} else {
 					srcFile.setAddress2(address2);
-				else
-					srcFile.setAddress2(user.getAddress2().trim());
-				srcFile.setCity(user.getCity().trim());
+				}
+
+				srcFile.setCity(StringUtils.trim(user.getCity()));
 				srcFile.setState(user.getState());
-				srcFile.setZip(user.getZip());
-				String status = "";
+				srcFile.setZip(StringUtils.trim(user.getZip()));
+
+				String status = StringUtils.EMPTY;
 				if ("2".equals(user.getStatus())) {
 					status = "Expired";
 				} else {
