@@ -32,24 +32,18 @@ public class BillingPart2Process {
 	public void updateUserInfo(final int cycleNumber) {
 		BillingPart2Process.LOGGER.info("Begin billing part2 for current cycle");
 		final List<WFMamSrcFile> wfMamList = wfMamSrcFileDAO.findByCycleNumber(cycleNumber);
-
-		for (final WFMamSrcFile wfMamSrcFile : wfMamList) {
-
-			final int submissionNumber = Integer.parseInt(wfMamSrcFile.getSecondaryAuth());
+		for (final WFMamSrcFile srcFile : wfMamList) {
+			final int submissionNumber = Integer.parseInt(srcFile.getSecondaryAuth());
 			final List<WFUserInfo> users = billingInformationProcess.getUserInformation(submissionNumber);
-			final WFMamSrcFile srcFile = new WFMamSrcFile();
 			if (CollectionUtils.isEmpty(users)) {
 				BillingPart2Process.LOGGER.info("Billing error, could not get user information");
 				final WFMamErrLog error = new WFMamErrLog();
 				error.setCycleNumber(cycleNumber);
-				error.setSequenceNumber(wfMamSrcFile.getId().getSequenceNumber());
+				error.setSequenceNumber(srcFile.getId().getSequenceNumber());
 				error.setDescription("Billing 2 error");
 				error.setStatus("N");
 				wfMamErrLogRepository.saveAndFlush(error);
-			}
-
-			else {
-
+			} else {
 				final WFUserInfo user = users.iterator().next();
 				final String consolidatedName = StringUtils.join(user.getFirstName().trim(), " ",
 						user.getLastName().trim());
@@ -73,12 +67,10 @@ public class BillingPart2Process {
 				if (BillingPart2Process.LOGGER.isDebugEnabled()) {
 					BillingPart2Process.LOGGER.debug("srcFile null : " + srcFile == null);
 					BillingPart2Process.LOGGER.debug("srcFile values : " + ToStringBuilder.reflectionToString(srcFile));
-
 				}
 				wfMamSrcFileDAO.updateSrcFile(srcFile);
 			}
 		}
-
 	}
 
 }
