@@ -11,8 +11,10 @@ import org.springframework.stereotype.Component;
 
 import com.peiwc.billing.dao.WFMamErrLogRepository;
 import com.peiwc.billing.dao.WFMamSrcFileDAO;
+import com.peiwc.billing.domain.WFDBAName;
 import com.peiwc.billing.domain.WFMamErrLog;
 import com.peiwc.billing.domain.WFMamSrcFile;
+import com.peiwc.billing.domain.WFSPRName;
 import com.peiwc.billing.domain.WFUserInfo;
 
 @Component
@@ -35,6 +37,9 @@ public class BillingPart2Process {
 		for (final WFMamSrcFile srcFile : wfMamList) {
 			final int submissionNumber = Integer.parseInt(srcFile.getSecondaryAuth());
 			final List<WFUserInfo> users = billingInformationProcess.getUserInformation(submissionNumber);
+			final List<WFDBAName> dbaNames = billingInformationProcess.getDBAName(submissionNumber);
+			final List<WFSPRName> sprNames = billingInformationProcess.getSPRName(submissionNumber);
+
 			if (CollectionUtils.isEmpty(users)) {
 				BillingPart2Process.LOGGER.debug("Billing error, could not get user information");
 				final WFMamErrLog error = new WFMamErrLog();
@@ -45,11 +50,24 @@ public class BillingPart2Process {
 				wfMamErrLogRepository.saveAndFlush(error);
 			} else {
 				final WFUserInfo user = users.iterator().next();
-				final String consolidatedName = StringUtils.join(user.getFirstName().trim(), " ",
-						user.getLastName().trim());
+
+				final WFDBAName dbaName = dbaNames.iterator().next();
+
+				final WFSPRName sprName = sprNames.iterator().next();
+
+				String consolidatedName = "";
+				if (!StringUtils.isEmpty(dbaName.getDbaName())) {
+					consolidatedName = dbaName.getDbaName();
+				} else {
+					if (!StringUtils.isEmpty(sprName.getEntityName())) {
+						consolidatedName = sprName.getEntityName();
+					}
+				}
+				srcFile.setConsolidatedName(consolidatedName);
+
 				final String phone = StringUtils.join(user.getPhoneArea(), " ", user.getPhonePrefix(),
 						user.getPhoneSuffix());
-				srcFile.setConsolidatedName(consolidatedName);
+
 				srcFile.setPhone(phone);
 				final String email = " ";
 				if (user.getEmail().isEmpty())
@@ -67,7 +85,7 @@ public class BillingPart2Process {
 				srcFile.setState(user.getState());
 				srcFile.setZip(user.getZip());
 				String status = "";
-				if (user.getStatus() == "2") {
+				if ("2".equals(user.getStatus())) {
 					status = "Expired";
 				} else {
 					status = "Active";
@@ -81,5 +99,4 @@ public class BillingPart2Process {
 			}
 		}
 	}
-
 }

@@ -14,8 +14,6 @@ public class WFUserInfoMapper implements RowMapper<WFUserInfo> {
 
 		final WFUserInfo user = new WFUserInfo();
 
-		user.setFirstName(rs.getString("FIRST_NAME"));
-		user.setLastName(rs.getString("LAST_NAME"));
 		user.setPhoneArea(rs.getString("PHONE_AREA_CODE"));
 		user.setPhonePrefix(rs.getString("PHONE_PREFIX"));
 		user.setPhoneSuffix(rs.getString("PHONE_SUFFIX"));

@@ -2,8 +2,6 @@ package com.peiwc.billing.domain;
 
 public class WFUserInfo {
 
-	private String firstName;
-	private String lastName;
 	private String phoneArea;
 	private String phonePrefix;
 	private String phoneSuffix;
@@ -15,22 +13,6 @@ public class WFUserInfo {
 	private String zip;
 	private String phone;
 	private String status;
-
-	public String getFirstName() {
-		return firstName;
-	}
-
-	public void setFirstName(final String firstName) {
-		this.firstName = firstName;
-	}
-
-	public String getLastName() {
-		return lastName;
-	}
-
-	public void setLastName(final String lastName) {
-		this.lastName = lastName;
-	}
 
 	public String getPhoneArea() {
 		return phoneArea;
