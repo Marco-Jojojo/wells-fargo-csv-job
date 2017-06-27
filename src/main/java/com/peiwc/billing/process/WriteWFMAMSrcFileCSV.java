@@ -123,7 +123,7 @@ public class WriteWFMAMSrcFileCSV {
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
 		builder.append(formatDate(wfMamSrcFile.getDueDate()));
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
-		builder.append(numberFormat.format(wfMamSrcFile.getAmountDue()));
+		builder.append(formatNumber(wfMamSrcFile.getAmountDue()));
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
 		builder.append(wfMamSrcFile.getInvoiceNumber());
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
@@ -177,6 +177,10 @@ public class WriteWFMAMSrcFileCSV {
 					WriteWFMAMSrcFileCSV.QUOT + WriteWFMAMSrcFileCSV.QUOT);
 		}
 		return WriteWFMAMSrcFileCSV.QUOT + resultFormat + WriteWFMAMSrcFileCSV.QUOT;
+	}
+
+	private String formatNumber(final Number numberValue) {
+		return WriteWFMAMSrcFileCSV.QUOT + numberFormat.format(numberValue) + WriteWFMAMSrcFileCSV.QUOT;
 	}
 
 }
