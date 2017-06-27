@@ -51,14 +51,15 @@ public class BillingPart2Process {
 			else {
 
 				final WFUserInfo user = users.iterator().next();
-				final String consolidatedName = StringUtils.join(user.getFirstName(), " ", user.getLastName());
+				final String consolidatedName = StringUtils.join(user.getFirstName().trim(), " ",
+						user.getLastName().trim());
 				final String phone = StringUtils.join(user.getPhoneArea(), " ", user.getPhonePrefix(),
 						user.getPhoneSuffix());
 				srcFile.setConsolidatedName(consolidatedName);
 				srcFile.setPhone(phone);
-				srcFile.setEmail(user.getEmail());
-				srcFile.setAddress(user.getAddress());
-				srcFile.setAddress2(user.getAddress2());
+				srcFile.setEmail(user.getEmail().trim());
+				srcFile.setAddress(user.getAddress().trim());
+				srcFile.setAddress2(user.getAddress2().trim());
 				srcFile.setCity(user.getCity());
 				srcFile.setState(user.getState());
 				srcFile.setZip(user.getZip());
