@@ -41,7 +41,7 @@ public class BillingPart2Process {
 				error.setCycleNumber(cycleNumber);
 				error.setSequenceNumber(srcFile.getId().getSequenceNumber());
 				error.setDescription("Billing 2 error");
-				error.setStatus("N");
+				error.setStatus("PENDING_REC");
 				wfMamErrLogRepository.saveAndFlush(error);
 			} else {
 				final WFUserInfo user = users.iterator().next();
