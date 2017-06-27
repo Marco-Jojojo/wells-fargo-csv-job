@@ -40,7 +40,7 @@ public class BillingPart2Process {
 				final WFMamErrLog error = new WFMamErrLog();
 				error.setCycleNumber(cycleNumber);
 				error.setSequenceNumber(srcFile.getId().getSequenceNumber());
-				error.setDescription("Billing 2 error");
+				error.setDescription("Could not get user information");
 				error.setStatus("PENDING_REC");
 				wfMamErrLogRepository.saveAndFlush(error);
 			} else {
