@@ -30,13 +30,13 @@ public class BillingPart2Process {
 	private BillingInformationProcess billingInformationProcess;
 
 	public void updateUserInfo(final int cycleNumber) {
-		BillingPart2Process.LOGGER.info("Begin billing part2 for current cycle");
+		BillingPart2Process.LOGGER.debug("Begin billing part2 for current cycle");
 		final List<WFMamSrcFile> wfMamList = wfMamSrcFileDAO.findByCycleNumber(cycleNumber);
 		for (final WFMamSrcFile srcFile : wfMamList) {
 			final int submissionNumber = Integer.parseInt(srcFile.getSecondaryAuth());
 			final List<WFUserInfo> users = billingInformationProcess.getUserInformation(submissionNumber);
 			if (CollectionUtils.isEmpty(users)) {
-				BillingPart2Process.LOGGER.info("Billing error, could not get user information");
+				BillingPart2Process.LOGGER.debug("Billing error, could not get user information");
 				final WFMamErrLog error = new WFMamErrLog();
 				error.setCycleNumber(cycleNumber);
 				error.setSequenceNumber(srcFile.getId().getSequenceNumber());
