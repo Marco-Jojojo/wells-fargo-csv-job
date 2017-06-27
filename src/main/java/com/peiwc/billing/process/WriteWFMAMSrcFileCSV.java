@@ -143,7 +143,7 @@ public class WriteWFMAMSrcFileCSV {
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
 		builder.append(formatString(wfMamSrcFile.getPhone()));
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
-		builder.append(formatString(wfMamSrcFile.getStatus()));
+		builder.append(formatString(wfMamSrcFile.getStatusInvoice()));
 		builder.append(WriteWFMAMSrcFileCSV.NEW_LINE);
 		return builder.toString();
 	}
