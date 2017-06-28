@@ -41,30 +41,31 @@ public class BillingPart2Process {
 			final List<WFSPRName> sprNames = billingInformationProcess.getSPRName(submissionNumber);
 			String consolidatedName = "";
 
-			if (!CollectionUtils.isEmpty(dbaNames)) {
+			if (CollectionUtils.isEmpty(users)) {
+				BillingPart2Process.LOGGER.debug("Billing error, could not get user information");
+				final WFMamErrLog error = new WFMamErrLog();
+				error.setCycleNumber(cycleNumber);
+				error.setSequenceNumber(srcFile.getId().getSequenceNumber());
+				error.setDescription("Could not get user information");
+				error.setStatus("PENDING_REC");
+				wfMamErrLogRepository.saveAndFlush(error);
+			} else {
 
-				final WFDBAName dbaName = dbaNames.iterator().next();
+				if (!CollectionUtils.isEmpty(dbaNames)) {
 
-				if (!StringUtils.isEmpty(dbaName.getDbaName())) {
-					consolidatedName = StringUtils.trim(dbaName.getDbaName());
-				} else {
-					if (!CollectionUtils.isEmpty(sprNames)) {
-						final WFSPRName sprName = sprNames.iterator().next();
-						if (!StringUtils.isEmpty(sprName.getEntityName())) {
-							consolidatedName = StringUtils.trim(sprName.getEntityName());
+					final WFDBAName dbaName = dbaNames.iterator().next();
+
+					if (!StringUtils.isEmpty(dbaName.getDbaName())) {
+						consolidatedName = StringUtils.trim(dbaName.getDbaName());
+					} else {
+						if (!CollectionUtils.isEmpty(sprNames)) {
+							final WFSPRName sprName = sprNames.iterator().next();
+							if (!StringUtils.isEmpty(sprName.getEntityName())) {
+								consolidatedName = StringUtils.trim(sprName.getEntityName());
+							}
 						}
 					}
-				}
 
-				if (CollectionUtils.isEmpty(users)) {
-					BillingPart2Process.LOGGER.debug("Billing error, could not get user information");
-					final WFMamErrLog error = new WFMamErrLog();
-					error.setCycleNumber(cycleNumber);
-					error.setSequenceNumber(srcFile.getId().getSequenceNumber());
-					error.setDescription("Could not get user information");
-					error.setStatus("PENDING_REC");
-					wfMamErrLogRepository.saveAndFlush(error);
-				} else {
 					final WFUserInfo user = users.iterator().next();
 
 					srcFile.setConsolidatedName(consolidatedName);
