@@ -22,6 +22,18 @@ public class BillingPart2Process {
 
 	private static final Logger LOGGER = Logger.getLogger(BillingPart2Process.class);
 
+	private static final String USER_NOT_FOUND = "Could not get user information";
+
+	private static final String NAME_NOT_FOUND = "Could not get consolidated name";
+
+	private static final String PENDING_REC = "PENDING_REC";
+
+	private static final String STATUS_CODE_EXPIRED = "2";
+
+	private static final String STATUS_EXPIRED = "Expired";
+
+	private static final String STATUS_ACTIVE = "Active";
+
 	@Autowired
 	private WFMamSrcFileDAO wfMamSrcFileDAO;
 
@@ -38,29 +50,33 @@ public class BillingPart2Process {
 			final int submissionNumber = Integer.parseInt(srcFile.getSecondaryAuth());
 			final List<WFUserInfo> users = billingInformationProcess.getUserInformation(submissionNumber);
 			final List<WFDBAName> dbaNames = billingInformationProcess.getDBAName(submissionNumber);
-			final List<WFSPRName> sprNames = billingInformationProcess.getSPRName(submissionNumber);
+
+			String consolidatedName = StringUtils.EMPTY;
 
 			if (CollectionUtils.isEmpty(users)) {
-				BillingPart2Process.LOGGER.debug("Billing error, could not get user information");
-				final WFMamErrLog error = new WFMamErrLog();
-				error.setCycleNumber(cycleNumber);
-				error.setSequenceNumber(srcFile.getId().getSequenceNumber());
-				error.setDescription("Could not get user information");
-				error.setStatus("PENDING_REC");
-				wfMamErrLogRepository.saveAndFlush(error);
-			} else {
-				final WFUserInfo user = users.iterator().next();
-				final WFDBAName dbaName = dbaNames.iterator().next();
-				final WFSPRName sprName = sprNames.iterator().next();
+				sendError(cycleNumber, srcFile.getId().getSequenceNumber(), BillingPart2Process.USER_NOT_FOUND);
 
-				String consolidatedName = "";
-				if (!StringUtils.isEmpty(dbaName.getDbaName())) {
-					consolidatedName = dbaName.getDbaName();
+			} else {
+
+				if (!CollectionUtils.isEmpty(dbaNames)) {
+					final WFDBAName dbaName = dbaNames.iterator().next();
+					if (!StringUtils.isEmpty(dbaName.getDbaName())) {
+						consolidatedName = StringUtils.trim(dbaName.getDbaName());
+					}
 				} else {
-					if (!StringUtils.isEmpty(sprName.getEntityName())) {
-						consolidatedName = sprName.getEntityName();
+					final List<WFSPRName> sprNames = billingInformationProcess.getSPRName(submissionNumber);
+					if (!CollectionUtils.isEmpty(sprNames)) {
+						final WFSPRName sprName = sprNames.iterator().next();
+						if (!StringUtils.isEmpty(sprName.getEntityName())) {
+							consolidatedName = StringUtils.trim(sprName.getEntityName());
+						}
+					} else {
+						sendError(cycleNumber, srcFile.getId().getSequenceNumber(), BillingPart2Process.NAME_NOT_FOUND);
 					}
 				}
+
+				final WFUserInfo user = users.iterator().next();
+
 				srcFile.setConsolidatedName(consolidatedName);
 
 				final String phone = StringUtils.join(user.getPhoneArea(), user.getPhonePrefix(),
@@ -88,10 +104,10 @@ public class BillingPart2Process {
 				srcFile.setZip(StringUtils.trim(user.getZip()));
 
 				String status = StringUtils.EMPTY;
-				if ("2".equals(user.getStatus())) {
-					status = "Expired";
+				if (BillingPart2Process.STATUS_CODE_EXPIRED.equals(user.getStatus())) {
+					status = BillingPart2Process.STATUS_EXPIRED;
 				} else {
-					status = "Active";
+					status = BillingPart2Process.STATUS_ACTIVE;
 				}
 				srcFile.setStatusInvoice(status);
 				if (BillingPart2Process.LOGGER.isDebugEnabled()) {
@@ -101,5 +117,16 @@ public class BillingPart2Process {
 				wfMamSrcFileDAO.updateSrcFile(srcFile);
 			}
 		}
+	}
+
+	private void sendError(final int cycleNumber, final int sequenceNumber, final String errorMsg) {
+		BillingPart2Process.LOGGER.debug("Billing error, could not get user information");
+		final WFMamErrLog error = new WFMamErrLog();
+		error.setCycleNumber(cycleNumber);
+		error.setSequenceNumber(sequenceNumber);
+		error.setDescription(errorMsg);
+		error.setStatus(BillingPart2Process.PENDING_REC);
+		wfMamErrLogRepository.saveAndFlush(error);
+
 	}
 }
