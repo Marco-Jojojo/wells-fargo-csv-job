@@ -31,7 +31,6 @@ public class WFMamSrcFileMapper implements RowMapper<WFMamSrcFile> {
 		file.setState(rs.getString("STATE"));
 		file.setZip(rs.getString("ZIP"));
 		file.setPhone(rs.getString("PHONE"));
-		file.setStatus(rs.getString("STATUS"));
 		file.setStatusInvoice(rs.getString("STATUS_INVOICE"));
 		return file;
 	}
