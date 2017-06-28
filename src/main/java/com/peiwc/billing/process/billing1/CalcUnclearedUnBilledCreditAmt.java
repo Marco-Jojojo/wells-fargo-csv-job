@@ -35,20 +35,21 @@ public class CalcUnclearedUnBilledCreditAmt {
 
 			if (!CollectionUtils.isEmpty(recordsFromSrcFileDBI1)) {
 
-				final float amtDueWFSrcFile = recordsFromSrcFileDBI1.iterator().next().getAmountDue();
 				float amtApplied;
 				float amt_due;
-
-				if (amtDueWFSrcFile <= Math.abs(recordFromCM.getAmountDue())) {
-					amtApplied = amtDueWFSrcFile * -1;
-					amt_due = amtDueWFSrcFile + amtApplied;
-					this.unBilledCreditAmtDAO.updateDBI1(cycleNumber,
-							recordsFromSrcFileDBI1.iterator().next().getSecondaryAuth(), amt_due);
-				} else {
-					amtApplied = recordFromCM.getAmountDue();
-					amt_due = amtDueWFSrcFile + amtApplied;
-					this.unBilledCreditAmtDAO.updateDBI1(cycleNumber,
-							recordsFromSrcFileDBI1.iterator().next().getSecondaryAuth(), amt_due);
+				for (final WFMamSrcFile recordDBI1 : recordsFromSrcFileDBI1) {
+					final float amtDueWFSrcFile = recordDBI1.getAmountDue();
+					if (amtDueWFSrcFile <= Math.abs(recordFromCM.getAmountDue())) {
+						amtApplied = amtDueWFSrcFile * -1;
+						amt_due = amtDueWFSrcFile + amtApplied;
+						this.unBilledCreditAmtDAO.updateDBI1(cycleNumber,
+								recordsFromSrcFileDBI1.iterator().next().getSecondaryAuth(), amt_due);
+					} else {
+						amtApplied = recordFromCM.getAmountDue();
+						amt_due = amtDueWFSrcFile + amtApplied;
+						this.unBilledCreditAmtDAO.updateDBI1(cycleNumber,
+								recordsFromSrcFileDBI1.iterator().next().getSecondaryAuth(), amt_due);
+					}
 				}
 			} else {
 
@@ -70,7 +71,8 @@ public class CalcUnclearedUnBilledCreditAmt {
 						final Date date = null;
 						recordFromCM.setInvoiceDate(date);
 					}
-					//final Date date = this.unBilledCreditAmtDAO.getInvoiceDate(recordFromCM.getInvoiceNumber());
+					// final Date date =
+					// this.unBilledCreditAmtDAO.getInvoiceDate(recordFromCM.getInvoiceNumber());
 					final WFMamSrcFilePK id = new WFMamSrcFilePK();
 					id.setCycleNumber(cycleNumber);
 					id.setSequenceNumber(sequenceNumber);

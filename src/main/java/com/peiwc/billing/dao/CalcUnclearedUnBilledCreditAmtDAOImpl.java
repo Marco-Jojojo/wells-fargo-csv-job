@@ -33,7 +33,7 @@ public class CalcUnclearedUnBilledCreditAmtDAOImpl implements CalcUnclearedUnBil
 
 	private static final String FIND_BY_DBI0 = ""
 			+ " SELECT CYCLE_NUMBER, SECONDARY_AUTH, INVOICE_NUMBER, SEQUENCE_NUMBER, REFERENCE_NUMBER, AMOUNT_DUE, DUE_DATE "
-			+ "FROM WF_MAM_SRC_FILE "
+			+ " FROM WF_MAM_SRC_FILE "
 			+ " WHERE CYCLE_NUMBER = :cycleNumber AND SECONDARY_AUTH = :secondaryAuth AND INVOICE_NUMBER >= :invoiceNumber";
 
 	private static final String UPDATE_DBI0 = "" + "UPDATE WF_MAM_SRC_FILE " + "SET AMOUNT_DUE = :amtDue "
