@@ -8,7 +8,7 @@ public interface ProcessPoliciesLessOrEqual2YearsOldDAO {
 
 	List<WFMamSrcFile> findAll(String twoYearsBefore, String today);
 
-	List<WFMamSrcFile> findOneInWFSrcFile(int cycleNumber, String secondaryAuth);
+	List<WFMamSrcFile> findOneInWFSrcFile(int cycleNumber, int submissionNumber);
 
 	void create(WFMamSrcFile wfMamSrcFile);
 

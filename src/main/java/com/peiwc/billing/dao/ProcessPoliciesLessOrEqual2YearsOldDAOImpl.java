@@ -46,10 +46,10 @@ public class ProcessPoliciesLessOrEqual2YearsOldDAOImpl implements ProcessPolici
 	}
 
 	@Override
-	public List<WFMamSrcFile> findOneInWFSrcFile(final int cycleNumber, final String secondaryAuth) {
+	public List<WFMamSrcFile> findOneInWFSrcFile(final int cycleNumber, final int submissionNumber) {
 		final MapSqlParameterSource parameters = new MapSqlParameterSource();
 		parameters.addValue("cycleNumber", cycleNumber);
-		parameters.addValue("secondaryAuth", secondaryAuth);
+		parameters.addValue("submissionNumber", submissionNumber);
 		return this.namedParameterJdbcTemplate.query(
 				ProcessPoliciesLessOrEqual2YearsOldDAOImpl.FIND_ONE_IN_WF_MAM_SRC_FILE, parameters,
 				new SrcFileMapper());

@@ -39,7 +39,7 @@ public class ProcessPoliciesLessOrEqual2YearsOld {
 		int seqNumber = this.processPoliciesLessOrEqual2YearsOldDAO.getMaxSequenceNumber(cycleNumber) + 1;
 		for (final WFMamSrcFile recordFromPM : recordsFromPolicyMaster) {
 			final List<WFMamSrcFile> recordsFound = this.processPoliciesLessOrEqual2YearsOldDAO
-					.findOneInWFSrcFile(cycleNumber, recordFromPM.getSecondaryAuth());
+					.findOneInWFSrcFile(cycleNumber, recordFromPM.getSubmissionNumber());
 			if (CollectionUtils.isEmpty(recordsFound)) {
 				final WFMamSrcFilePK id = new WFMamSrcFilePK();
 				id.setCycleNumber(cycleNumber);
