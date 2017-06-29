@@ -73,7 +73,7 @@ public class WFMamOpHDRTRLRProcess {
 	 * @param errorMessage
 	 *            critical error caught during execution.
 	 */
-	public void saveErrorMessage(final int cycleNumber, final String errorMessage) {
+	public void saveStatusMessage(final int cycleNumber, final String errorMessage) {
 
 		final WFMamOpHDRTRLR wfMamOpHDRTRLR = wfMamOpHDRTRLRRepository.findOne(cycleNumber);
 		if (wfMamOpHDRTRLR != null && errorMessage != null) {
@@ -81,7 +81,7 @@ public class WFMamOpHDRTRLRProcess {
 			if (errorMessage.length() > 100) {
 				errMessage = errorMessage.substring(0, 99);
 			}
-			wfMamOpHDRTRLR.setErrorMessage(errMessage);
+			wfMamOpHDRTRLR.setStatusMessage(errMessage);
 			wfMamOpHDRTRLRRepository.update(wfMamOpHDRTRLR);
 		}
 
@@ -119,4 +119,7 @@ public class WFMamOpHDRTRLRProcess {
 		this.wfMamOpHDRTRLRRepository.update(wfMamOpHDRTRLR);
 	}
 
+	
+	
+	
 }

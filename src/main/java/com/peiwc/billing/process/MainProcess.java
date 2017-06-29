@@ -44,6 +44,9 @@ public class MainProcess {
 
 	@Autowired
 	private MailSender mailSender;
+	
+	
+	private static  final String PROCESS_SUCCESS = "The process has been run for today";
 
 	/**
 	 * this is the main process that checks if the process has already run and
@@ -78,18 +81,20 @@ public class MainProcess {
 					final int totalRecordCount = writeWFMAMSrcFileCSV.writeDataToCSV(nextCycle, fileName);
 					wfMamOpHDRTRLRProcess.saveTotalRecordsProcessed(nextCycle, totalRecordCount);
 					wfMamOpHDRTRLRProcess.saveFileName(nextCycle, fileName);
+					
 				} catch (final IOException ex) {
 					MainProcess.LOGGER.error(ex, ex);
 					hasRunSuccessfully = false;
-					wfMamOpHDRTRLRProcess.saveErrorMessage(nextCycle, ex.getMessage());
+					wfMamOpHDRTRLRProcess.saveStatusMessage(nextCycle, ex.getMessage());
 				}
 				if (hasRunSuccessfully) {
 					wfMamOpHDRTRLRProcess.setCurrentState(ProcessState.FINISHED, nextCycle);
+					wfMamOpHDRTRLRProcess.saveStatusMessage(nextCycle,  PROCESS_SUCCESS );
 					mailSender.sendMailMessage("Process #" + nextCycle + "has run successfully ");
 				}
 			} catch (final Exception ex) {
 				hasRunSuccessfully = false;
-				wfMamOpHDRTRLRProcess.saveErrorMessage(nextCycle, ex.getMessage());
+				wfMamOpHDRTRLRProcess.saveStatusMessage(nextCycle, ex.getMessage());
 				mailSender.sendMailMessage("Process # " + nextCycle + " , has failed: " + ex.getMessage());
 				MainProcess.LOGGER.error(ex, ex);
 			}

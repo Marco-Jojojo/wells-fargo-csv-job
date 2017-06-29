@@ -20,10 +20,10 @@ public class WFMamOpHDRTRLRRepositoryImpl implements WFMamOpHDRTRLRRepository {
 	private static final String FIND_BY_CYCLE_NUMBER = "select * from WF_MAM_OP_HDR_TRLR where CYCLE_NUMBER = :cycleNumber";
 
 	private static final String UPDATE_WFMAMOPHDRTRLR = "	update WF_MAM_OP_HDR_TRLR set  CREATION_DATE = :creationDate ,  "
-			+ " TOTAL_RECORD_COUNT = :totalRecordCount , FILENAME = :fileName , ERROR_MSG = :errorMessage , "
+			+ " TOTAL_RECORD_COUNT = :totalRecordCount , FILENAME = :fileName , STATUS_MESSAGE = :errorMessage , "
 			+ " STATUS = :status where CYCLE_NUMBER = :cycleNumber";
 
-	private static final String INSERT_WFMAMOPHDRTRLR = "	insert into WF_MAM_OP_HDR_TRLR (CYCLE_NUMBER,CREATION_DATE,TOTAL_RECORD_COUNT,FILENAME,ERROR_MSG,STATUS) "
+	private static final String INSERT_WFMAMOPHDRTRLR = "	insert into WF_MAM_OP_HDR_TRLR (CYCLE_NUMBER,CREATION_DATE,TOTAL_RECORD_COUNT,FILENAME,STATUS_MESSAGE,STATUS) "
 			+ "values( :cycleNumber , :creationDate , :totalRecordCount , :fileName , :errorMessage , :status )";
 
 	@Autowired
@@ -50,7 +50,7 @@ public class WFMamOpHDRTRLRRepositoryImpl implements WFMamOpHDRTRLRRepository {
 		params.addValue("creationDate", wfMamOpHdrTrlr.getCreationDate());
 		params.addValue("totalRecordCount", wfMamOpHdrTrlr.getTotalRecordCount());
 		params.addValue("fileName", wfMamOpHdrTrlr.getFileName());
-		params.addValue("errorMessage", wfMamOpHdrTrlr.getErrorMessage());
+		params.addValue("errorMessage", wfMamOpHdrTrlr.getStatusMessage());
 		params.addValue("status", wfMamOpHdrTrlr.getStatus());
 		this.namedParameterJdbcTemplate.update(WFMamOpHDRTRLRRepositoryImpl.INSERT_WFMAMOPHDRTRLR, params);
 		WFMamOpHDRTRLRRepositoryImpl.LOGGER
@@ -65,7 +65,7 @@ public class WFMamOpHDRTRLRRepositoryImpl implements WFMamOpHDRTRLRRepository {
 		params.addValue("creationDate", DateFormatUtil.formatDate(wfMamOpHdrTrlr.getCreationDate()));
 		params.addValue("totalRecordCount", wfMamOpHdrTrlr.getTotalRecordCount());
 		params.addValue("fileName", wfMamOpHdrTrlr.getFileName());
-		params.addValue("errorMessage", wfMamOpHdrTrlr.getErrorMessage());
+		params.addValue("errorMessage", wfMamOpHdrTrlr.getStatusMessage());
 		params.addValue("status", wfMamOpHdrTrlr.getStatus());
 		this.namedParameterJdbcTemplate.update(WFMamOpHDRTRLRRepositoryImpl.UPDATE_WFMAMOPHDRTRLR, params);
 		return wfMamOpHdrTrlr;

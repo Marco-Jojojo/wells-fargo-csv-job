@@ -16,7 +16,7 @@ public class WFMamOpHDRTRLRMapper implements RowMapper<WFMamOpHDRTRLR> {
 		wfMamOpHdrTrlr.setCreationDate(rs.getDate("CREATION_DATE"));
 		wfMamOpHdrTrlr.setTotalRecordCount(rs.getInt("TOTAL_RECORD_COUNT"));
 		wfMamOpHdrTrlr.setFileName(rs.getString("FILENAME"));
-		wfMamOpHdrTrlr.setErrorMessage(rs.getString("ERROR_MSG"));
+		wfMamOpHdrTrlr.setStatusMessage(rs.getString("STATUS_MESSAGE"));
 		wfMamOpHdrTrlr.setStatus(rs.getString("STATUS"));
 		return wfMamOpHdrTrlr;
 	}

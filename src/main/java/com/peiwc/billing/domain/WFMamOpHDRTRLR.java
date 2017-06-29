@@ -32,14 +32,14 @@ public class WFMamOpHDRTRLR {
 	private String fileName;
 
 	@Column(name = "ERROR_MSG", length = 100)
-	private String errorMessage;
+	private String statusMessage;
 
 	@Column(name = "STATUS", length = 20)
 	private String status;
 
 	public WFMamOpHDRTRLR() {
 		fileName = "";
-		errorMessage = "";
+		statusMessage = "";
 		status = "";
 	}
 
@@ -88,23 +88,12 @@ public class WFMamOpHDRTRLR {
 		this.totalRecordCount = totalRecordCount;
 	}
 
-	/**
-	 * gets the error message
-	 *
-	 * @return error message
-	 */
-	public String getErrorMessage() {
-		return errorMessage;
+	public String getStatusMessage() {
+		return statusMessage;
 	}
 
-	/**
-	 * sets the error message
-	 *
-	 * @param errorMessage
-	 *            sets the error message
-	 */
-	public void setErrorMessage(final String errorMessage) {
-		this.errorMessage = errorMessage;
+	public void setStatusMessage(String statusMessage) {
+		this.statusMessage = statusMessage;
 	}
 
 	/**
