@@ -1,5 +1,7 @@
 package com.peiwc.billing.dao;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -42,8 +44,8 @@ public class CalcUnclearedUnBilledCreditAmtDAOImpl implements CalcUnclearedUnBil
 
 	private static final String SAVE_RECORD = ""
 			+ " INSERT INTO WF_MAM_SRC_FILE (CYCLE_NUMBER, SUBMISSION_NUMBER, SEQUENCE_NUMBER, REFERENCE_NUMBER, SECONDARY_AUTH "
-			+ " ,AMOUNT_DUE, INVOICE_NUMBER,INVOICE_DATE, CONSOLIDATED_NAME) "
-			+ " VALUES(:cycleNumber, :submissionNumber, :sequenceNumber, :referenceNumber, :secondaryAuth, :amountDue, :invoiceNumber, :invoiceDate, '')";
+			+ " ,AMOUNT_DUE, INVOICE_NUMBER,INVOICE_DATE, CONSOLIDATED_NAME, DUE_DATE) "
+			+ " VALUES(:cycleNumber, :submissionNumber, :sequenceNumber, :referenceNumber, :secondaryAuth, :amountDue, :invoiceNumber, :invoiceDate, '', :dueDate)";
 
 	private static final String GET_INVOICE_DATE = ""
 			+ " SELECT STATEMENT_DATE FROM BILLING_STATEMENT_CO where BILLING_INVOICE_NUMB = :invoiceNumber";
@@ -104,6 +106,10 @@ public class CalcUnclearedUnBilledCreditAmtDAOImpl implements CalcUnclearedUnBil
 
 	@Override
 	public void create(final WFMamSrcFile wfMamSrcFile) {
+		final Calendar cal = Calendar.getInstance();
+		final Date todayCal = cal.getTime();
+		final SimpleDateFormat sqlFormat = new SimpleDateFormat("yyyy-MM-dd");
+		final String dueDate = sqlFormat.format(todayCal);
 		final MapSqlParameterSource parameters = new MapSqlParameterSource();
 		parameters.addValue("cycleNumber", wfMamSrcFile.getId().getCycleNumber());
 		parameters.addValue("sequenceNumber", wfMamSrcFile.getId().getSequenceNumber());
@@ -112,6 +118,7 @@ public class CalcUnclearedUnBilledCreditAmtDAOImpl implements CalcUnclearedUnBil
 		parameters.addValue("amountDue", wfMamSrcFile.getAmountDue());
 		parameters.addValue("submissionNumber", wfMamSrcFile.getSubmissionNumber());
 		parameters.addValue("invoiceNumber", wfMamSrcFile.getInvoiceNumber());
+		parameters.addValue("dueDate", dueDate);
 		parameters.addValue("invoiceDate", wfMamSrcFile.getInvoiceDate());
 
 		this.namedParameterJdbcTemplate.update(CalcUnclearedUnBilledCreditAmtDAOImpl.SAVE_RECORD, parameters);
