@@ -9,13 +9,13 @@ public interface CalcUnclearedUnBilledCreditAmtDAO {
 
 	List<WFMamSrcFile> findAll();
 
-	List<WFMamSrcFile> findOneByDBI1(int cycleNumber, String secondaryAuth);
+	List<WFMamSrcFile> findOneByDBI1(int cycleNumber, int submissionNumber);
 
-	List<WFMamSrcFile> findOneByDBI0(int cycleNumber, String secondaryAuth, String invoiceNumber);
+	List<WFMamSrcFile> findOneByDBI0(int cycleNumber, int submissionNumber, String invoiceNumber);
 
-	void updateDBI1(int cycleNumber, String secondaryAuth, float amtDue);
+	void updateDBI1(int cycleNumber, int submissionNumber, float amtDue);
 
-	void updateDBI0(int cycleNumber, String secondaryAuth, String invoiceNumber, float amtDue);
+	void updateDBI0(int cycleNumber, int submissionNumber, String invoiceNumber, float amtDue);
 
 	void create(WFMamSrcFile wfMamSrcFile);
 

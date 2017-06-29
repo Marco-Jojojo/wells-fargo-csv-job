@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.peiwc.billing.dao.mappers.SrcFileMapper;
+import com.peiwc.billing.dao.mappers.SrcFileMapperForFindOneUnBilledCreditAmt;
 import com.peiwc.billing.domain.WFMamSrcFile;
 
 @Repository("calcUnclearedUnBilledCreditAmtDAOImpl")
@@ -18,31 +19,31 @@ public class CalcUnclearedUnBilledCreditAmtDAOImpl implements CalcUnclearedUnBil
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	private static final String FIND_ALL = " SELECT POLICY_NUMBER as REFERENCE_NUMBER , "
-			+ " SUBMISSION_NUMBER as SECONDARY_AUTH , NET_PREMIUM_AMOUNT as AMOUNT_DUE , "
+			+ " SUBMISSION_NUMBER as SUBMISSION_NUMBER , NET_PREMIUM_AMOUNT as AMOUNT_DUE , "
 			+ " DIRECT_BILL_INVOICE as INVOICE_NUMBER , SEQUENCENUMBER as SEQUENCE_NUMBER FROM COLLECTION_MASTER "
 			+ " WHERE CLEARED_RECEIVABLE = 'N' AND AGENCYDIRECT_BILL = 'D' AND DIRECT_BILL_INVOICE = 0 AND TRANSFER_FLAG <> 'T' "
 			+ " AND (TRANSACTION_CODE = 200 OR TRANSACTION_CODE = 202 OR TRANSACTION_CODE = 205 OR TRANSACTION_CODE = 216 "
 			+ " OR TRANSACTION_CODE = 217 OR TRANSACTION_CODE = 220)";
 
 	private static final String FIND_BY_DBI1 = ""
-			+ " SELECT CYCLE_NUMBER, SECONDARY_AUTH, INVOICE_NUMBER, SEQUENCE_NUMBER, REFERENCE_NUMBER, AMOUNT_DUE, DUE_DATE FROM WF_MAM_SRC_FILE "
-			+ " WHERE CYCLE_NUMBER = :cycleNumber AND SECONDARY_AUTH = :secondaryAuth AND INVOICE_NUMBER >= 1 AND AMOUNT_DUE <> 0";
+			+ " SELECT CYCLE_NUMBER, SUBMISSION_NUMBER,SECONDARY_AUTH, INVOICE_NUMBER, SEQUENCE_NUMBER, REFERENCE_NUMBER, AMOUNT_DUE, DUE_DATE FROM WF_MAM_SRC_FILE "
+			+ " WHERE CYCLE_NUMBER = :cycleNumber AND SUBMISSION_NUMBER = :submissionNumber AND INVOICE_NUMBER >= 1 AND AMOUNT_DUE <> 0";
 
 	private static final String UPDATE_DBI1 = "" + "UPDATE WF_MAM_SRC_FILE " + "SET AMOUNT_DUE =:amtDue "
-			+ " WHERE CYCLE_NUMBER = :cycleNumber AND SECONDARY_AUTH = :secondaryAuth AND INVOICE_NUMBER >= 1 AND AMOUNT_DUE <> 0";
+			+ " WHERE CYCLE_NUMBER = :cycleNumber AND SUBMISSION_NUMBER = :submissionNumber AND INVOICE_NUMBER >= 1 AND AMOUNT_DUE <> 0";
 
 	private static final String FIND_BY_DBI0 = ""
-			+ " SELECT CYCLE_NUMBER, SECONDARY_AUTH, INVOICE_NUMBER, SEQUENCE_NUMBER, REFERENCE_NUMBER, AMOUNT_DUE, DUE_DATE "
+			+ " SELECT CYCLE_NUMBER, SUBMISSION_NUMBER, SECONDARY_AUTH, INVOICE_NUMBER, SEQUENCE_NUMBER, REFERENCE_NUMBER, AMOUNT_DUE, DUE_DATE "
 			+ " FROM WF_MAM_SRC_FILE "
-			+ " WHERE CYCLE_NUMBER = :cycleNumber AND SECONDARY_AUTH = :secondaryAuth AND INVOICE_NUMBER >= :invoiceNumber";
+			+ " WHERE CYCLE_NUMBER = :cycleNumber AND SUBMISSION_NUMBER = :submissionNumber AND INVOICE_NUMBER >= :invoiceNumber";
 
 	private static final String UPDATE_DBI0 = "" + "UPDATE WF_MAM_SRC_FILE " + "SET AMOUNT_DUE = :amtDue "
-			+ " WHERE CYCLE_NUMBER = :cycleNumber AND SECONDARY_AUTH = :secondaryAuth AND INVOICE_NUMBER >= :invoiceNumber";
+			+ " WHERE CYCLE_NUMBER = :cycleNumber AND SUBMISSION_NUMBER = :submissionNumber AND INVOICE_NUMBER >= :invoiceNumber";
 
 	private static final String SAVE_RECORD = ""
-			+ " INSERT INTO WF_MAM_SRC_FILE (CYCLE_NUMBER, SEQUENCE_NUMBER, REFERENCE_NUMBER, SECONDARY_AUTH "
+			+ " INSERT INTO WF_MAM_SRC_FILE (CYCLE_NUMBER, SUBMISSION_NUMBER, SEQUENCE_NUMBER, REFERENCE_NUMBER, SECONDARY_AUTH "
 			+ " ,AMOUNT_DUE, INVOICE_NUMBER,INVOICE_DATE, CONSOLIDATED_NAME) "
-			+ " VALUES(:cycleNumber, :sequenceNumber, :referenceNumber, :secondaryAuth, :amountDue, :invoiceNumber, :invoiceDate, '')";
+			+ " VALUES(:cycleNumber, :submissionNumber, :sequenceNumber, :referenceNumber, :secondaryAuth, :amountDue, :invoiceNumber, :invoiceDate, '')";
 
 	private static final String GET_INVOICE_DATE = ""
 			+ " SELECT STATEMENT_DATE FROM BILLING_STATEMENT_CO where BILLING_INVOICE_NUMB = :invoiceNumber";
@@ -60,41 +61,41 @@ public class CalcUnclearedUnBilledCreditAmtDAOImpl implements CalcUnclearedUnBil
 	}
 
 	@Override
-	public List<WFMamSrcFile> findOneByDBI1(final int cycleNumber, final String secondaryAuth) {
+	public List<WFMamSrcFile> findOneByDBI1(final int cycleNumber, final int submissionNumber) {
 		final MapSqlParameterSource parameters = new MapSqlParameterSource();
 		parameters.addValue("cycleNumber", cycleNumber);
-		parameters.addValue("secondaryAuth", secondaryAuth);
+		parameters.addValue("submissionNumber", submissionNumber);
 		return this.namedParameterJdbcTemplate.query(CalcUnclearedUnBilledCreditAmtDAOImpl.FIND_BY_DBI1, parameters,
-				new SrcFileMapper());
+				new SrcFileMapperForFindOneUnBilledCreditAmt());
 	}
 
 	@Override
-	public List<WFMamSrcFile> findOneByDBI0(final int cycleNumber, final String secondaryAuth,
+	public List<WFMamSrcFile> findOneByDBI0(final int cycleNumber, final int submissionNumber,
 			final String invoiceNumber) {
 		final MapSqlParameterSource parameters = new MapSqlParameterSource();
 		parameters.addValue("cycleNumber", cycleNumber);
-		parameters.addValue("secondaryAuth", secondaryAuth);
+		parameters.addValue("submissionNumber", submissionNumber);
 		parameters.addValue("invoiceNumber", invoiceNumber);
 		return this.namedParameterJdbcTemplate.query(CalcUnclearedUnBilledCreditAmtDAOImpl.FIND_BY_DBI0, parameters,
-				new SrcFileMapper());
+				new SrcFileMapperForFindOneUnBilledCreditAmt());
 	}
 
 	@Override
-	public void updateDBI1(final int cycleNumber, final String secondaryAuth, final float amtDue) {
+	public void updateDBI1(final int cycleNumber, final int submissionNumber, final float amtDue) {
 		final MapSqlParameterSource parameters = new MapSqlParameterSource();
 		parameters.addValue("cycleNumber", cycleNumber);
-		parameters.addValue("secondaryAuth", secondaryAuth);
+		parameters.addValue("submissionNumber", submissionNumber);
 		parameters.addValue("amtDue", amtDue);
 		this.namedParameterJdbcTemplate.update(CalcUnclearedUnBilledCreditAmtDAOImpl.UPDATE_DBI1, parameters);
 
 	}
 
 	@Override
-	public void updateDBI0(final int cycleNumber, final String secondaryAuth, final String invoiceNumber,
+	public void updateDBI0(final int cycleNumber, final int submissionNumber, final String invoiceNumber,
 			final float amtDue) {
 		final MapSqlParameterSource parameters = new MapSqlParameterSource();
 		parameters.addValue("cycleNumber", cycleNumber);
-		parameters.addValue("secondaryAuth", secondaryAuth);
+		parameters.addValue("submissionNumber", submissionNumber);
 		parameters.addValue("invoiceNumber", invoiceNumber);
 		parameters.addValue("amtDue", amtDue);
 		this.namedParameterJdbcTemplate.update(CalcUnclearedUnBilledCreditAmtDAOImpl.UPDATE_DBI0, parameters);
@@ -109,6 +110,7 @@ public class CalcUnclearedUnBilledCreditAmtDAOImpl implements CalcUnclearedUnBil
 		parameters.addValue("referenceNumber", wfMamSrcFile.getReferenceNumber());
 		parameters.addValue("secondaryAuth", wfMamSrcFile.getSecondaryAuth());
 		parameters.addValue("amountDue", wfMamSrcFile.getAmountDue());
+		parameters.addValue("submissionNumber", wfMamSrcFile.getSubmissionNumber());
 		parameters.addValue("invoiceNumber", wfMamSrcFile.getInvoiceNumber());
 		parameters.addValue("invoiceDate", wfMamSrcFile.getInvoiceDate());
 
