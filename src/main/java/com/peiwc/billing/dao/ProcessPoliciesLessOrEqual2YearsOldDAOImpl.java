@@ -8,7 +8,6 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import com.peiwc.billing.dao.mappers.SrcFileMapper;
 import com.peiwc.billing.dao.mappers.SrcFileMapperForTwoYearsPolicies;
 import com.peiwc.billing.domain.WFMamSrcFile;
 
@@ -52,7 +51,7 @@ public class ProcessPoliciesLessOrEqual2YearsOldDAOImpl implements ProcessPolici
 		parameters.addValue("submissionNumber", submissionNumber);
 		return this.namedParameterJdbcTemplate.query(
 				ProcessPoliciesLessOrEqual2YearsOldDAOImpl.FIND_ONE_IN_WF_MAM_SRC_FILE, parameters,
-				new SrcFileMapper());
+				new SrcFileMapperForTwoYearsPolicies());
 	}
 
 	@Override
