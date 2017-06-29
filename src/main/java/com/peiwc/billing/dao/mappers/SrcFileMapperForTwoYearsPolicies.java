@@ -14,6 +14,7 @@ public class SrcFileMapperForTwoYearsPolicies implements RowMapper<WFMamSrcFile>
 		final WFMamSrcFile wfMamSrcFile = new WFMamSrcFile();
 		wfMamSrcFile.setReferenceNumber(Integer.toString(rs.getInt("REFERENCE_NUMBER")));
 		wfMamSrcFile.setSecondaryAuth("");
+		wfMamSrcFile.setSubmissionNumber(rs.getInt("SUBMISSION_NUMBER"));
 		wfMamSrcFile.setAmountDue(rs.getFloat("AMOUNT_DUE"));
 		return wfMamSrcFile;
 	}
