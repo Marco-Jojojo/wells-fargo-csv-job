@@ -13,7 +13,8 @@ public class SrcFileMapperForTwoYearsPolicies implements RowMapper<WFMamSrcFile>
 	public WFMamSrcFile mapRow(final ResultSet rs, final int rowNumber) throws SQLException {
 		final WFMamSrcFile wfMamSrcFile = new WFMamSrcFile();
 		wfMamSrcFile.setReferenceNumber(Integer.toString(rs.getInt("REFERENCE_NUMBER")));
-		wfMamSrcFile.setSecondaryAuth(Integer.toString(rs.getInt("SECONDARY_AUTH")));
+		wfMamSrcFile.setSecondaryAuth("");
+		wfMamSrcFile.setAmountDue(rs.getFloat("AMOUNT_DUE"));
 		return wfMamSrcFile;
 	}
 

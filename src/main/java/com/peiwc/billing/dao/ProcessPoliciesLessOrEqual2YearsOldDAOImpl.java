@@ -20,22 +20,25 @@ public class ProcessPoliciesLessOrEqual2YearsOldDAOImpl implements ProcessPolici
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	private static final String FIND_ALL = " SELECT p.SUBMISSION_NUMBER as SECONDARY_AUTH, p.POLICY_NUMBER as REFERENCE_NUMBER "
-			+ " FROM POLICY_MASTER p, SPR_FINANCIAL_FILE s "
-			+ " WHERE p.SUBMISSION_NUMBER = s.SUBMISSION_NUMBER AND p.WINNING_QUOTE_NUMBER = s.QUOTE_NUMBER "
-			+ " AND s.AGYDIRECT_BILL_CODE ='D' AND EFFECTIVE_DATE >= :twoYearsBefore ";
+	private static final String FIND_ALL = "SELECT p.SUBMISSION_NUMBER as SUBMISSION_NUMBER , p.POLICY_NUMBER as REFERENCE_NUMBER, sum(c.NET_PREMIUM_AMOUNT) as AMOUNT_DUE FROM POLICY_MASTER p, SPR_FINANCIAL_FILE s, "
+			+ "COLLECTION_MASTER c WHERE p.SUBMISSION_NUMBER = s.SUBMISSION_NUMBER AND p.POLICY_PREFIX_1 = s.POLICY_PREFIX_1 AND p.POLICY_PREFIX_2 = s.POLICY_PREFIX_2 "
+			+ "AND p.SUBMISSION_NUMBER = c.SUBMISSION_NUMBER AND p.POLICY_NUMBER = c.POLICY_NUMBER	AND p.POLICY_PREFIX_1 = c.POLICY_PREFIX_1	AND p.POLICY_PREFIX_2 = c.POLICY_PREFIX_2 "
+			+ "AND p.POLICY_SUFFIX = c.POLICY_SUFFIX AND p.WINNING_QUOTE_NUMBER = s.QUOTE_NUMBER AND s.AGYDIRECT_BILL_CODE ='D' AND (( p.EFFECTIVE_DATE > '2017-06-29' AND "
+			+ "p.EFFECTIVE_DATE = c.ENTRY_DATE) OR (p.EFFECTIVE_DATE <= '2017-06-29' AND p.EFFECTIVE_DATE >= :twoYearsBefore)) AND c.CLEARED_RECEIVABLE='N' AND c.TRANSFER_FLAG='' "
+			+ "GROUP BY p.SUBMISSION_NUMBER, p.POLICY_NUMBER";
 
 	private static final String FIND_ONE_IN_WF_MAM_SRC_FILE = "SELECT * FROM WF_MAM_SRC_FILE "
-			+ " WHERE CYCLE_NUMBER =:cycleNumber AND SECONDARY_AUTH =:secondaryAuth";
+			+ " WHERE CYCLE_NUMBER =:cycleNumber AND SUBMISSION_NUMBER =:submissionNumber";
 
 	private static final String SAVE_RECORD = "INSERT INTO WF_MAM_SRC_FILE (CYCLE_NUMBER, SEQUENCE_NUMBER, SECONDARY_AUTH, REFERENCE_NUMBER, CONSOLIDATED_NAME, AMOUNT_DUE, INVOICE_NUMBER, INVOICE_DATE)"
-			+ " VALUES(:cycleNumber, :sequenceNumber, :secondaryAuth, :referenceNumber, '',0.00,'0', :invoiceDate)";
+			+ " VALUES(:cycleNumber, :sequenceNumber, :secondaryAuth, :referenceNumber, '',:amountDue,'0', :invoiceDate)";
 
 	private static final String GET_MAX_SEQUENCE_NUMBER = "SELECT MAX(SEQUENCE_NUMBER) FROM WF_MAM_SRC_FILE WHERE CYCLE_NUMBER = :cycleNumber";
 
 	@Override
-	public List<WFMamSrcFile> findAll(final String twoYearsBefore) {
+	public List<WFMamSrcFile> findAll(final String twoYearsBefore, final String today) {
 		final MapSqlParameterSource parameters = new MapSqlParameterSource();
+		parameters.addValue("today", today);
 		parameters.addValue("twoYearsBefore", twoYearsBefore);
 		parameters.addValue("agyDirectBillCode", 'D');
 		return this.namedParameterJdbcTemplate.query(ProcessPoliciesLessOrEqual2YearsOldDAOImpl.FIND_ALL, parameters,
@@ -57,9 +60,11 @@ public class ProcessPoliciesLessOrEqual2YearsOldDAOImpl implements ProcessPolici
 		final MapSqlParameterSource parameters = new MapSqlParameterSource();
 		parameters.addValue("cycleNumber", wfMamSrcFile.getId().getCycleNumber());
 		parameters.addValue("sequenceNumber", wfMamSrcFile.getId().getSequenceNumber());
+		parameters.addValue("submissionNumber", wfMamSrcFile.getSubmissionNumber());
 		parameters.addValue("secondaryAuth", wfMamSrcFile.getSecondaryAuth());
 		parameters.addValue("referenceNumber", wfMamSrcFile.getReferenceNumber());
 		parameters.addValue("invoiceDate", wfMamSrcFile.getInvoiceDate());
+		parameters.addValue("amountDue", wfMamSrcFile.getAmountDue());
 		this.namedParameterJdbcTemplate.update(ProcessPoliciesLessOrEqual2YearsOldDAOImpl.SAVE_RECORD, parameters);
 	}
 

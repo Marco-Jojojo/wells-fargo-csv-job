@@ -18,11 +18,12 @@ public class SrcFileMapperForFindAllUnclearedBilledAmt implements RowMapper<WFMa
 			id.setCycleNumber(rs.getInt("CYCLE_NUMBER"));
 		} catch (final Exception ignore) {
 		}
-		id.setSequenceNumber(rs.getInt("SEQUENCE_NUMBER"));
+		// id.setSequenceNumber(rs.getInt("SEQUENCE_NUMBER"));
 		wfMamSrcFile.setId(id);
-		wfMamSrcFile.setReferenceNumber(rs.getString("REFERENCE_NUMBER"));
-		wfMamSrcFile.setSecondaryAuth(Integer.toString(rs.getInt("SECONDARY_AUTH")));
-		wfMamSrcFile.setInvoiceNumber(Integer.toString(rs.getInt("INVOICE_NUMBER")));
+		wfMamSrcFile.setReferenceNumber(Integer.toString(rs.getInt("REFERENCE_NUMBER")));
+		wfMamSrcFile.setSubmissionNumber(rs.getInt("SUBMISSION_NUMBER"));
+		wfMamSrcFile.setSecondaryAuth("");
+		wfMamSrcFile.setInvoiceNumber(rs.getString("INVOICE_NUMBER"));
 		wfMamSrcFile.setInvoiceDate(rs.getDate("INVOICE_DATE"));
 		wfMamSrcFile.setDueDate(rs.getDate("DUE_DATE"));
 		wfMamSrcFile.setAmountDue(rs.getFloat("AMOUNT_DUE"));

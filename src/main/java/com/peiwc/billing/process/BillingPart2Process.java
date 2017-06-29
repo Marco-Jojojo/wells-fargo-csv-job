@@ -47,7 +47,7 @@ public class BillingPart2Process {
 		BillingPart2Process.LOGGER.debug("Begin billing part2 for current cycle");
 		final List<WFMamSrcFile> wfMamList = wfMamSrcFileDAO.findByCycleNumber(cycleNumber);
 		for (final WFMamSrcFile srcFile : wfMamList) {
-			final int submissionNumber = Integer.parseInt(srcFile.getSecondaryAuth());
+			final int submissionNumber = srcFile.getSubmissionNumber();
 			final List<WFUserInfo> users = billingInformationProcess.getUserInformation(submissionNumber);
 			final List<WFDBAName> dbaNames = billingInformationProcess.getDBAName(submissionNumber);
 

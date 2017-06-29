@@ -52,6 +52,8 @@ public class WFMamSrcFile {
 	private String phone;
 	@Column(name = "STATUS_INVOICE")
 	private String statusInvoice;
+	@Column(name = "SUBMISSION_NUMBER")
+	private int submissionNumber;
 
 	/**
 	 * @return the id
@@ -278,8 +280,6 @@ public class WFMamSrcFile {
 		this.phone = phone;
 	}
 
-	
-
 	/**
 	 * @return the statusInvoice
 	 */
@@ -293,6 +293,21 @@ public class WFMamSrcFile {
 	 */
 	public void setStatusInvoice(final String statusInvoice) {
 		this.statusInvoice = statusInvoice;
+	}
+
+	/**
+	 * @return the submissionNumber
+	 */
+	public int getSubmissionNumber() {
+		return submissionNumber;
+	}
+
+	/**
+	 * @param submissionNumber
+	 *            the submissionNumber to set
+	 */
+	public void setSubmissionNumber(final int submissionNumber) {
+		this.submissionNumber = submissionNumber;
 	}
 
 }

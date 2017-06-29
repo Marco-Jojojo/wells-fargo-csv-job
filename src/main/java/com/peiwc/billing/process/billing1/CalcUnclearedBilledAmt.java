@@ -2,7 +2,6 @@ package com.peiwc.billing.process.billing1;
 
 import java.util.List;
 
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,21 +24,12 @@ public class CalcUnclearedBilledAmt {
 		CalcUnclearedBilledAmt.LOGGER.info("PROCESS STATUS: Getting all records: " + rows.size());
 		int sequenceNumber = 1;
 		for (final WFMamSrcFile row : rows) {
-			final List<WFMamSrcFile> recordsFound = this.calcUnclearedBilledAmtDAO.isRecordInSrcFile(cycleNumber,
-					row.getSecondaryAuth(), row.getInvoiceNumber());
-			if (!CollectionUtils.isEmpty(recordsFound)) {
-				final WFMamSrcFile record = recordsFound.iterator().next();
-				record.setAmountDue(record.getAmountDue() + row.getAmountDue());
-				this.calcUnclearedBilledAmtDAO.update(row.getId().getCycleNumber(), row.getSecondaryAuth(),
-						row.getInvoiceNumber(), record.getAmountDue());
-			} else {
-				WFMamSrcFilePK id = new WFMamSrcFilePK();
-				id.setCycleNumber(cycleNumber);
-				id.setSequenceNumber(sequenceNumber);
-				sequenceNumber += 1;
-				row.setId(id);
-				this.calcUnclearedBilledAmtDAO.create(row);
-			}
+			final WFMamSrcFilePK id = new WFMamSrcFilePK();
+			id.setCycleNumber(cycleNumber);
+			id.setSequenceNumber(sequenceNumber);
+			sequenceNumber += 1;
+			row.setId(id);
+			this.calcUnclearedBilledAmtDAO.create(row);
 		}
 		CalcUnclearedBilledAmt.LOGGER.info("PROCESS STATUS: Ending CalcUnclearedBilledAmt.updWFMamSrcFileRec");
 	}

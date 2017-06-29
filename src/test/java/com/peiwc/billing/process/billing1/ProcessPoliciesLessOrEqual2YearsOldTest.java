@@ -29,11 +29,14 @@ public class ProcessPoliciesLessOrEqual2YearsOldTest {
 	@Test
 	public void testFindAll() {
 		final Calendar cal = Calendar.getInstance();
+		final Date today = cal.getTime();
 		cal.add(Calendar.YEAR, -2);
 		final Date twoYearsBefore = cal.getTime();
 		final SimpleDateFormat sqlFormat = new SimpleDateFormat("yyyy-MM-dd");
+		final String todayFormatted = sqlFormat.format(today);
 		final String twoYearsBeforeFormatted = sqlFormat.format(twoYearsBefore);
-		final List<WFMamSrcFile> rows = this.processPoliciesLessOrEqual2YearsOldDAO.findAll(twoYearsBeforeFormatted);
+		final List<WFMamSrcFile> rows = this.processPoliciesLessOrEqual2YearsOldDAO.findAll(twoYearsBeforeFormatted,
+				todayFormatted);
 		Assert.assertNotEquals(0, rows.size());
 	}
 }
