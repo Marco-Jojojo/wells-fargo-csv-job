@@ -31,7 +31,7 @@ public class CalcUnclearedUnBilledCreditAmt {
 		for (final WFMamSrcFile recordFromCM : recordsFromCM) {
 
 			final List<WFMamSrcFile> recordsFromSrcFileDBI1 = this.unBilledCreditAmtDAO.findOneByDBI1(cycleNumber,
-					recordFromCM.getSecondaryAuth());
+					recordFromCM.getSubmissionNumber());
 
 			if (!CollectionUtils.isEmpty(recordsFromSrcFileDBI1)) {
 
@@ -43,25 +43,25 @@ public class CalcUnclearedUnBilledCreditAmt {
 						amtApplied = amtDueWFSrcFile * -1;
 						amt_due = amtDueWFSrcFile + amtApplied;
 						this.unBilledCreditAmtDAO.updateDBI1(cycleNumber,
-								recordsFromSrcFileDBI1.iterator().next().getSecondaryAuth(), amt_due);
+								recordsFromSrcFileDBI1.iterator().next().getSubmissionNumber(), amt_due);
 					} else {
 						amtApplied = recordFromCM.getAmountDue();
 						amt_due = amtDueWFSrcFile + amtApplied;
 						this.unBilledCreditAmtDAO.updateDBI1(cycleNumber,
-								recordsFromSrcFileDBI1.iterator().next().getSecondaryAuth(), amt_due);
+								recordsFromSrcFileDBI1.iterator().next().getSubmissionNumber(), amt_due);
 					}
 				}
 			} else {
 
 				final List<WFMamSrcFile> recordsFromSrcFileDBI0 = this.unBilledCreditAmtDAO.findOneByDBI0(cycleNumber,
-						recordFromCM.getSecondaryAuth(), recordFromCM.getInvoiceNumber());
+						recordFromCM.getSubmissionNumber(), recordFromCM.getInvoiceNumber());
 
 				if (!CollectionUtils.isEmpty(recordsFromSrcFileDBI0)) {
 
 					final float amtDueWFSrcFile = recordsFromSrcFileDBI0.iterator().next().getAmountDue();
 					final float amt_due = amtDueWFSrcFile + recordFromCM.getAmountDue();
 
-					this.unBilledCreditAmtDAO.updateDBI0(cycleNumber, recordFromCM.getSecondaryAuth(),
+					this.unBilledCreditAmtDAO.updateDBI0(cycleNumber, recordFromCM.getSubmissionNumber(),
 							recordFromCM.getInvoiceNumber(), amt_due);
 				} else {
 					try {
