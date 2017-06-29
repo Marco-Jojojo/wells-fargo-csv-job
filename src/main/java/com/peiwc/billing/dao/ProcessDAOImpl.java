@@ -31,7 +31,7 @@ public class ProcessDAOImpl implements ProcessDAO {
 		parameters.addValue("creationDate", creationDate);
 		final int runStatus = this.namedParameterJdbcTemplate.queryForObject(ProcessDAOImpl.CHECK_PROCESS_BY_DATE,
 				parameters, Integer.class);
-		return runStatus == 1;
+		return runStatus > 0;
 	}
 
 	/**
