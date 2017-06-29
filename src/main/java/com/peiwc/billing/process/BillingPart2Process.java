@@ -44,7 +44,8 @@ public class BillingPart2Process {
 	@Autowired
 	private BillingInformationProcess billingInformationProcess;
 
-	public void updateUserInfo(final int cycleNumber) {
+	public boolean updateUserInfo(final int cycleNumber) {
+		final boolean hasRunSuccessfully = true;
 		BillingPart2Process.LOGGER.debug("Begin billing part2 for current cycle");
 		final List<WFMamSrcFile> wfMamList = wfMamSrcFileDAO.findByCycleNumber(cycleNumber);
 		for (final WFMamSrcFile srcFile : wfMamList) {
@@ -133,6 +134,7 @@ public class BillingPart2Process {
 				wfMamSrcFileDAO.updateSrcFile(srcFile);
 			}
 		}
+		return hasRunSuccessfully;
 	}
 
 	private void sendError(final int cycleNumber, final int sequenceNumber, final String errorMsg) {
