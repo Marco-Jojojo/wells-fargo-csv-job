@@ -28,6 +28,7 @@ public class CalcUnclearedUnBilledCreditAmt {
 		final List<WFMamSrcFile> recordsFromCM = this.unBilledCreditAmtDAO.findAll();
 		CalcUnclearedUnBilledCreditAmt.LOGGER.info("PROCESS STATUS: Getting records from CM: " + recordsFromCM.size());
 		int sequenceNumber = this.unBilledCreditAmtDAO.getMaxSequenceNumber(cycleNumber) + 1;
+		int createCounter = 0;
 		for (final WFMamSrcFile recordFromCM : recordsFromCM) {
 
 			final List<WFMamSrcFile> recordsFromSrcFileDBI1 = this.unBilledCreditAmtDAO.findOneByDBI1(cycleNumber,
@@ -79,9 +80,11 @@ public class CalcUnclearedUnBilledCreditAmt {
 					sequenceNumber += 1;
 					recordFromCM.setId(id);
 					this.unBilledCreditAmtDAO.create(recordFromCM);
+					createCounter += 1;
 				}
 			}
 		}
+		CalcUnclearedUnBilledCreditAmt.LOGGER.info("PROCESS STATUS: created: " + createCounter);
 		CalcUnclearedUnBilledCreditAmt.LOGGER
 				.info("PROCESS STATUS: Ending CalcUnclearedUnBilledCreditAmtDAO.wfMamSrcFileUpdRecDBI1");
 	}

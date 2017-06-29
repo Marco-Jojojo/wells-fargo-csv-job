@@ -23,6 +23,7 @@ public class CalcUnclearedBilledAmt {
 		final List<WFMamSrcFile> rows = this.calcUnclearedBilledAmtDAO.findAll();
 		CalcUnclearedBilledAmt.LOGGER.info("PROCESS STATUS: Getting all records: " + rows.size());
 		int sequenceNumber = 1;
+		int createCounter = 0;
 		for (final WFMamSrcFile row : rows) {
 			final WFMamSrcFilePK id = new WFMamSrcFilePK();
 			id.setCycleNumber(cycleNumber);
@@ -30,7 +31,9 @@ public class CalcUnclearedBilledAmt {
 			sequenceNumber += 1;
 			row.setId(id);
 			this.calcUnclearedBilledAmtDAO.create(row);
+			createCounter += 1;
 		}
+		CalcUnclearedBilledAmt.LOGGER.info("PROCESS STATUS: created: " + createCounter);
 		CalcUnclearedBilledAmt.LOGGER.info("PROCESS STATUS: Ending CalcUnclearedBilledAmt.updWFMamSrcFileRec");
 	}
 }
