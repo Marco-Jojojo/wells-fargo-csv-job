@@ -27,11 +27,14 @@ public class SprLocation {
 	@Column(name = "ZIP1")
 	private String zip1;
 
+	@Column(name = "PRIMARY_ADDRESS_IND")
+	private String primary;
+
 	public SprLocationPK getId() {
 		return id;
 	}
 
-	public void setId(SprLocationPK id) {
+	public void setId(final SprLocationPK id) {
 		this.id = id;
 	}
 
@@ -39,7 +42,7 @@ public class SprLocation {
 		return addr1;
 	}
 
-	public void setAddr1(String addr1) {
+	public void setAddr1(final String addr1) {
 		this.addr1 = addr1;
 	}
 
@@ -47,7 +50,7 @@ public class SprLocation {
 		return addr2;
 	}
 
-	public void setAddr2(String addr2) {
+	public void setAddr2(final String addr2) {
 		this.addr2 = addr2;
 	}
 
@@ -55,7 +58,7 @@ public class SprLocation {
 		return city;
 	}
 
-	public void setCity(String city) {
+	public void setCity(final String city) {
 		this.city = city;
 	}
 
@@ -63,7 +66,7 @@ public class SprLocation {
 		return state;
 	}
 
-	public void setState(String state) {
+	public void setState(final String state) {
 		this.state = state;
 	}
 
@@ -71,8 +74,16 @@ public class SprLocation {
 		return zip1;
 	}
 
-	public void setZip1(String zip1) {
+	public void setZip1(final String zip1) {
 		this.zip1 = zip1;
+	}
+
+	public String getPrimary() {
+		return primary;
+	}
+
+	public void setPrimary(final String primary) {
+		this.primary = primary;
 	}
 
 }
