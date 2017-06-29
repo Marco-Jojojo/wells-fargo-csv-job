@@ -21,7 +21,7 @@ public class ProcessManagerCheck {
      * today.
      */
     public boolean checkIfProcessHasAlreadyRun(final Date currentDate) {
-        return this.processDAO.checkProcessDate(currentDate);
+        return processDAO.checkProcessDate(currentDate);
     }
 
     /**

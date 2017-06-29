@@ -2,10 +2,13 @@ package com.peiwc.billing.dao;
 
 import java.util.Date;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import com.peiwc.billing.helpers.DateFormatUtil;
 
 /**
  * implementation of {@link ProcessDAO}
@@ -13,6 +16,8 @@ import org.springframework.stereotype.Repository;
 @Repository("processDAOImpl")
 public class ProcessDAOImpl implements ProcessDAO {
 
+	private static final Logger LOGGER = Logger.getLogger( ProcessDAOImpl.class );
+	
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -28,10 +33,16 @@ public class ProcessDAOImpl implements ProcessDAO {
 	@Override
 	public boolean checkProcessDate(final Date creationDate) {
 		final MapSqlParameterSource parameters = new MapSqlParameterSource();
-		parameters.addValue("creationDate", creationDate);
-		final int runStatus = this.namedParameterJdbcTemplate.queryForObject(ProcessDAOImpl.CHECK_PROCESS_BY_DATE,
+		final String compareDate =  DateFormatUtil.formatDate(creationDate);
+		parameters.addValue("creationDate", compareDate);
+		final int runTimes = this.namedParameterJdbcTemplate.queryForObject(ProcessDAOImpl.CHECK_PROCESS_BY_DATE,
 				parameters, Integer.class);
-		return runStatus > 0;
+		LOGGER.info("process has been run: " +  runTimes);
+		boolean hasBeenRun = false;
+		if(runTimes != 0){
+			hasBeenRun = true;
+		}
+		return hasBeenRun;
 	}
 
 	/**
