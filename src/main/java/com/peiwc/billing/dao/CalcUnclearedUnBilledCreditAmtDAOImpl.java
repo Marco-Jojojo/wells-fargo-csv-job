@@ -9,6 +9,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.peiwc.billing.dao.mappers.SrcFileMapper;
+import com.peiwc.billing.dao.mappers.SrcFileMapperForFindOneUnBilledCreditAmt;
 import com.peiwc.billing.domain.WFMamSrcFile;
 
 @Repository("calcUnclearedUnBilledCreditAmtDAOImpl")
@@ -65,7 +66,7 @@ public class CalcUnclearedUnBilledCreditAmtDAOImpl implements CalcUnclearedUnBil
 		parameters.addValue("cycleNumber", cycleNumber);
 		parameters.addValue("submissionNumber", submissionNumber);
 		return this.namedParameterJdbcTemplate.query(CalcUnclearedUnBilledCreditAmtDAOImpl.FIND_BY_DBI1, parameters,
-				new SrcFileMapper());
+				new SrcFileMapperForFindOneUnBilledCreditAmt());
 	}
 
 	@Override
@@ -76,7 +77,7 @@ public class CalcUnclearedUnBilledCreditAmtDAOImpl implements CalcUnclearedUnBil
 		parameters.addValue("submissionNumber", submissionNumber);
 		parameters.addValue("invoiceNumber", invoiceNumber);
 		return this.namedParameterJdbcTemplate.query(CalcUnclearedUnBilledCreditAmtDAOImpl.FIND_BY_DBI0, parameters,
-				new SrcFileMapper());
+				new SrcFileMapperForFindOneUnBilledCreditAmt());
 	}
 
 	@Override
