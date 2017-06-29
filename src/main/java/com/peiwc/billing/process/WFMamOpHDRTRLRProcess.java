@@ -28,6 +28,8 @@ public class WFMamOpHDRTRLRProcess {
 
 	private static final Logger LOGGER = Logger.getLogger(WFMamOpHDRTRLRProcess.class);
 
+	private static final String PROC_ALREADY_RUN = "PROCESS HAS ALREADY BEEN RUN FOR TODAY";
+
 	@Value("${cifs.process.enabled}")
 	private boolean processEnabled;
 
@@ -110,7 +112,14 @@ public class WFMamOpHDRTRLRProcess {
 	public int setProcessAsAlreadyRunForToday() {
 		final int lastCycleNumber = processManagerCheck.getLastCycleNumber();
 		this.setCurrentState(ProcessState.ALREADY_RUN, lastCycleNumber);
+		this.setProcessAlreadyRun( lastCycleNumber );
 		return lastCycleNumber;
+	}
+
+	private void setProcessAlreadyRun(int lastCycleNumber) {
+		 WFMamOpHDRTRLR wfMamOpHrdTrlr = this.wfMamOpHDRTRLRRepository.findOne(lastCycleNumber);
+		 wfMamOpHrdTrlr.setStatusMessage(PROC_ALREADY_RUN);
+		 wfMamOpHDRTRLRRepository.update(wfMamOpHrdTrlr);
 	}
 
 	public void saveFileName(final int nextCycle, final String fileName) {

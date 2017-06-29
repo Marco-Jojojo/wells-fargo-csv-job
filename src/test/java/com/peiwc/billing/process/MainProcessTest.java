@@ -39,6 +39,8 @@ public class MainProcessTest {
 	public void testRunWellsFargoCSVProcess() {
 		final boolean success = this.mainProcess.runWellsFargoCSVProcess();
 		Assert.assertTrue(success);
+		final boolean failure = this.mainProcess.runWellsFargoCSVProcess();
+		Assert.assertFalse(failure);
 	}
 
 }
