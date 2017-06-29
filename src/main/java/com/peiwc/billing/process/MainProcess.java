@@ -46,7 +46,6 @@ public class MainProcess {
 	private MailSender mailSender;
 	
 	
-	private static  final String PROCESS_SUCCESS = "The process has been run for today";
 
 	/**
 	 * this is the main process that checks if the process has already run and
@@ -89,7 +88,6 @@ public class MainProcess {
 				}
 				if (hasRunSuccessfully) {
 					wfMamOpHDRTRLRProcess.setCurrentState(ProcessState.FINISHED, nextCycle);
-					wfMamOpHDRTRLRProcess.saveStatusMessage(nextCycle,  PROCESS_SUCCESS );
 					mailSender.sendMailMessage("Process #" + nextCycle + "has run successfully ");
 				}
 			} catch (final Exception ex) {
