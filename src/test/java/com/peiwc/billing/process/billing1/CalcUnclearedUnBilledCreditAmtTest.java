@@ -3,6 +3,7 @@ package com.peiwc.billing.process.billing1;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,7 @@ public class CalcUnclearedUnBilledCreditAmtTest {
 	@Autowired
 	private CalcUnclearedUnBilledCreditAmtDAO unclearedUnBilledCreditAmtDAO;
 
+	@Ignore
 	@Test
 	public void testFindAll() {
 		final List<WFMamSrcFile> rows = this.unclearedUnBilledCreditAmtDAO.findAll();
