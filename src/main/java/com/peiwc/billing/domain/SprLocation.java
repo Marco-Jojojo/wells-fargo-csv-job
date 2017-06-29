@@ -27,9 +27,6 @@ public class SprLocation {
 	@Column(name = "ZIP1")
 	private String zip1;
 
-	@Column(name = "PRIMARY_ADDRESS_IND")
-	private String primary;
-
 	public SprLocationPK getId() {
 		return id;
 	}
@@ -77,13 +74,4 @@ public class SprLocation {
 	public void setZip1(final String zip1) {
 		this.zip1 = zip1;
 	}
-
-	public String getPrimary() {
-		return primary;
-	}
-
-	public void setPrimary(final String primary) {
-		this.primary = primary;
-	}
-
 }
