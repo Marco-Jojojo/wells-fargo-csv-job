@@ -77,6 +77,8 @@ public class BillingPart2Process {
 
 				final WFUserInfo user = users.iterator().next();
 
+				srcFile.setSecondaryAuth(StringUtils.trim(user.getZip()));
+
 				srcFile.setConsolidatedName(consolidatedName);
 
 				final String phone = StringUtils.join(user.getPhoneArea(), user.getPhonePrefix(),
