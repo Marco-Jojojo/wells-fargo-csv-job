@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import com.peiwc.billing.dao.BillingProcessDAO;
 import com.peiwc.billing.domain.WFDBAName;
 import com.peiwc.billing.domain.WFSPRName;
+import com.peiwc.billing.domain.WFSPROptional;
 import com.peiwc.billing.domain.WFUserInfo;
 
 @Component
@@ -30,6 +31,12 @@ public class BillingInformationProcess {
 
 	public List<WFSPRName> getSPRName(final int submissionNumber) {
 		final List<WFSPRName> result = billingProcessDAO.getUserSPRName(submissionNumber);
+
+		return result;
+	}
+
+	public List<WFSPROptional> getOptional(final int submissionNumber) {
+		final List<WFSPROptional> result = billingProcessDAO.getUserOptional(submissionNumber);
 
 		return result;
 	}

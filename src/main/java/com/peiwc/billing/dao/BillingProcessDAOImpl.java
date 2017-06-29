@@ -9,9 +9,11 @@ import org.springframework.stereotype.Repository;
 
 import com.peiwc.billing.dao.mappers.WFDBANameMapper;
 import com.peiwc.billing.dao.mappers.WFSPRNameMapper;
+import com.peiwc.billing.dao.mappers.WFSPROptionalMapper;
 import com.peiwc.billing.dao.mappers.WFUserInfoMapper;
 import com.peiwc.billing.domain.WFDBAName;
 import com.peiwc.billing.domain.WFSPRName;
+import com.peiwc.billing.domain.WFSPROptional;
 import com.peiwc.billing.domain.WFUserInfo;
 
 @Repository("billingDAOImpl")
@@ -21,10 +23,13 @@ public class BillingProcessDAOImpl implements BillingProcessDAO {
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	public static final String GET_USER_INFORMATION = "SELECT "
-			+ "PHONE_AREA_CODE, PHONE_PREFIX, PHONE_SUFFIX, EMAIL_ADDRESS, "
-			+ "ADDR_1, ADDR_2, CITY, STATE, ZIP1, STATUS_CODE FROM SPR_INSURED_CONTACT_ as p JOIN SPR_LOCATION as b "
-			+ "ON b.SUBMISSION_NUMBER = p.SUBMISSION_NUMBER  JOIN POLICY_MASTER as r ON r.SUBMISSION_NUMBER = p.SUBMISSION_NUMBER "
-			+ "WHERE p.SUBMISSION_NUMBER = :submissionNumber AND b.PRIMARY_ADDRESS_IND = 'Y'";
+			+ "ADDR_1, ADDR_2, CITY, STATE, ZIP1, STATUS_CODE FROM SPR_LOCATION as b "
+			+ "JOIN POLICY_MASTER as r ON r.SUBMISSION_NUMBER = b.SUBMISSION_NUMBER "
+			+ "WHERE b.SUBMISSION_NUMBER = :submissionNumber AND b.PRIMARY_ADDRESS_IND = 'Y'";
+
+	public static final String GET_OPTIONAL_INFORMATION = "SELECT "
+			+ "PHONE_AREA_CODE, PHONE_PREFIX, PHONE_SUFFIX, EMAIL_ADDRESS "
+			+ "FROM SPR_INSURED_CONTACT_ WHERE SUBMISSION_NUMBER = :submissionNumber";
 
 	public static final String GET_NAME_FROM_SPR_DBA = "SELECT DBA_NAME FROM SPR_DBA WHERE SUBMISSION_NUMBER = :submissionNumber";
 
@@ -57,6 +62,16 @@ public class BillingProcessDAOImpl implements BillingProcessDAO {
 		parameters.addValue("submissionNumber", submissionNumber);
 		final List<WFSPRName> result = namedParameterJdbcTemplate
 				.query(BillingProcessDAOImpl.GET_NAME_FROM_SPR_ENTITY_FILE, parameters, new WFSPRNameMapper());
+
+		return result;
+	}
+
+	@Override
+	public List<WFSPROptional> getUserOptional(final int submissionNumber) {
+		final MapSqlParameterSource parameters = new MapSqlParameterSource();
+		parameters.addValue("submissionNumber", submissionNumber);
+		final List<WFSPROptional> result = namedParameterJdbcTemplate
+				.query(BillingProcessDAOImpl.GET_OPTIONAL_INFORMATION, parameters, new WFSPROptionalMapper());
 
 		return result;
 	}

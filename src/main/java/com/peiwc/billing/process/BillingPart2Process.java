@@ -15,6 +15,7 @@ import com.peiwc.billing.domain.WFDBAName;
 import com.peiwc.billing.domain.WFMamErrLog;
 import com.peiwc.billing.domain.WFMamSrcFile;
 import com.peiwc.billing.domain.WFSPRName;
+import com.peiwc.billing.domain.WFSPROptional;
 import com.peiwc.billing.domain.WFUserInfo;
 
 @Component
@@ -81,17 +82,6 @@ public class BillingPart2Process {
 
 				srcFile.setConsolidatedName(consolidatedName);
 
-				final String phone = StringUtils.join(user.getPhoneArea(), user.getPhonePrefix(),
-						user.getPhoneSuffix());
-				srcFile.setPhone(phone);
-
-				final String email = StringUtils.EMPTY;
-				if (!StringUtils.isEmpty(user.getEmail())) {
-					srcFile.setEmail(StringUtils.trim(user.getEmail()));
-				} else {
-					srcFile.setEmail(email);
-				}
-
 				srcFile.setAddress(StringUtils.trim(user.getAddress()));
 
 				final String address2 = StringUtils.EMPTY;
@@ -116,6 +106,30 @@ public class BillingPart2Process {
 					BillingPart2Process.LOGGER.debug("srcFile null : " + srcFile == null);
 					BillingPart2Process.LOGGER.debug("srcFile values : " + ToStringBuilder.reflectionToString(srcFile));
 				}
+
+				final List<WFSPROptional> optionals = billingInformationProcess.getOptional(submissionNumber);
+				if (!CollectionUtils.isEmpty(optionals)) {
+
+					final WFSPROptional optional = optionals.iterator().next();
+
+					final String phone = StringUtils.EMPTY;
+
+					if (!StringUtils.isEmpty(optional.getPhoneArea())) {
+						srcFile.setPhone(StringUtils.join(optional.getPhoneArea(), optional.getPhonePrefix(),
+								optional.getPhoneSuffix()));
+					} else {
+						srcFile.setPhone(phone);
+					}
+
+					final String email = StringUtils.EMPTY;
+
+					if (!StringUtils.isEmpty(StringUtils.trim(optional.getEmail()))) {
+						srcFile.setEmail(StringUtils.trim(optional.getEmail()));
+					} else {
+						srcFile.setEmail(email);
+					}
+				}
+
 				wfMamSrcFileDAO.updateSrcFile(srcFile);
 			}
 		}
