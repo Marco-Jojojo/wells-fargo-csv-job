@@ -26,8 +26,8 @@ public class CalcUnclearedBilledAmtDAOImpl implements CalcUnclearedBilledAmtDAO 
 			+ "c.POLICY_PREFIX_2, c.POLICY_SUFFIX, c.SUBMISSION_NUMBER";
 
 	private static final String SAVE_RECORD = "INSERT INTO WF_MAM_SRC_FILE(CYCLE_NUMBER,SEQUENCE_NUMBER,"
-			+ "REFERENCE_NUMBER,SECONDARY_AUTH,AMOUNT_DUE,INVOICE_NUMBER,INVOICE_DATE,CONSOLIDATED_NAME, DUE_DATE)VALUES"
-			+ "(:cycleNumber,:sequenceNumber,:referenceNumber,:secondaryAuth,:amountDue,:invoiceNumber,:invoiceDate,'', :dueDate)";
+			+ "REFERENCE_NUMBER,SECONDARY_AUTH,AMOUNT_DUE,INVOICE_NUMBER,INVOICE_DATE,CONSOLIDATED_NAME, DUE_DATE, SUBMISSION_NUMBER)VALUES"
+			+ "(:cycleNumber,:sequenceNumber,:referenceNumber,:secondaryAuth,:amountDue,:invoiceNumber,:invoiceDate,'', :dueDate, :submissionNumber)";
 
 	@Override
 	public List<WFMamSrcFile> findAll() {
@@ -47,6 +47,7 @@ public class CalcUnclearedBilledAmtDAOImpl implements CalcUnclearedBilledAmtDAO 
 		parameters.addValue("invoiceNumber", wfMamSrcFile.getInvoiceNumber());
 		parameters.addValue("invoiceDate", wfMamSrcFile.getInvoiceDate());
 		parameters.addValue("dueDate", wfMamSrcFile.getDueDate());
+		parameters.addValue("submissionNumber", wfMamSrcFile.getSubmissionNumber());
 
 		this.namedParameterJdbcTemplate.update(CalcUnclearedBilledAmtDAOImpl.SAVE_RECORD, parameters);
 	}
