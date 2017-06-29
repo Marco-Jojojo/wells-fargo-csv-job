@@ -22,7 +22,7 @@ public class WFMamSrcFileDAOImpl implements WFMamSrcFileDAO {
 
 	private static final String FIND_BY_CYCLE_NUMBER = "SELECT CYCLE_NUMBER ,SEQUENCE_NUMBER ,REFERENCE_NUMBER ,"
 			+ "SECONDARY_AUTH ,CONSOLIDATED_NAME ,DUE_DATE ,AMOUNT_DUE ,INVOICE_NUMBER ,INVOICE_DATE ,"
-			+ "EMAIL ,ADDRESS ,ADDRESS_2 ,CITY ,STATE,ZIP ,PHONE ,"
+			+ "EMAIL ,ADDRESS ,ADDRESS_2 ,CITY ,STATE,ZIP ,PHONE ,SUBMISSION_NUMBER, "
 			+ "STATUS_INVOICE FROM WF_MAM_SRC_FILE where cycle_number = :cycleNumber ";
 
 	private static final String INSERT_WFMAMSRCFILE = "INSERT INTO WF_MAM_SRC_FILE ( CYCLE_NUMBER ,SEQUENCE_NUMBER ,REFERENCE_NUMBER ,SECONDARY_AUTH ,"
@@ -71,6 +71,7 @@ public class WFMamSrcFileDAOImpl implements WFMamSrcFileDAO {
 		params.addValue("zip", srcFile.getZip());
 		params.addValue("phone", srcFile.getPhone());
 		params.addValue("statusInvoice", srcFile.getStatusInvoice());
+		params.addValue("submissionNumber", srcFile.getSubmissionNumber());
 		this.namedParameterJdbcTemplate.update(WFMamSrcFileDAOImpl.UPDATE_WFMAMSRCFILE, params);
 
 	}
@@ -94,7 +95,7 @@ public class WFMamSrcFileDAOImpl implements WFMamSrcFileDAO {
 		params.addValue("state", srcFile.getState());
 		params.addValue("zip", srcFile.getZip());
 		params.addValue("phone", srcFile.getPhone());
-		params.addValue("statusInvoice", srcFile.getStatusInvoice());
+		params.addValue("statusInvoice", srcFile.getSubmissionNumber());
 		this.namedParameterJdbcTemplate.update(WFMamSrcFileDAOImpl.INSERT_WFMAMSRCFILE, params);
 	}
 
