@@ -33,11 +33,10 @@ public class ProcessPoliciesLessOrEqual2YearsOld {
 		final String todayFormatted = sqlFormat.format(today);
 		final String twoYearsBeforeFormatted = sqlFormat.format(twoYearsBefore);
 		final List<WFMamSrcFile> recordsFromPolicyMaster = this.processPoliciesLessOrEqual2YearsOldDAO
-				.findAll(twoYearsBeforeFormatted, todayFormatted);
+				.findAllTwoYearsOldPolicies(twoYearsBeforeFormatted, todayFormatted);
 		ProcessPoliciesLessOrEqual2YearsOld.LOGGER
 				.info("PROCESS STATUS: Getting records: " + recordsFromPolicyMaster.size());
 		int seqNumber = this.processPoliciesLessOrEqual2YearsOldDAO.getMaxSequenceNumber(cycleNumber) + 1;
-		final int sequenceNumber = 1;
 		int createCounter = 0;
 		for (final WFMamSrcFile recordFromPM : recordsFromPolicyMaster) {
 			final List<WFMamSrcFile> recordsFound = this.processPoliciesLessOrEqual2YearsOldDAO
@@ -48,7 +47,6 @@ public class ProcessPoliciesLessOrEqual2YearsOld {
 				id.setSequenceNumber(seqNumber);
 				seqNumber += 1;
 				recordFromPM.setId(id);
-				recordFromPM.setInvoiceDate(null);
 				this.processPoliciesLessOrEqual2YearsOldDAO.create(recordFromPM);
 				createCounter += 1;
 			}
@@ -56,6 +54,37 @@ public class ProcessPoliciesLessOrEqual2YearsOld {
 		ProcessPoliciesLessOrEqual2YearsOld.LOGGER.info("PROCESS STATUS: created: " + createCounter);
 		ProcessPoliciesLessOrEqual2YearsOld.LOGGER
 				.info("PROCESS STATUS: Ending ProcessPoliciesLessOrEqual2YearsOld.processPolicies");
+	}
+
+	public void futurePolicies(final int cycleNumber) {
+		ProcessPoliciesLessOrEqual2YearsOld.LOGGER
+				.info("PROCESS STATUS: Starting ProcessPoliciesLessOrEqual2YearsOld.futurePolicies");
+		final Calendar cal = Calendar.getInstance();
+		final Date today = cal.getTime();
+		final SimpleDateFormat sqlFormat = new SimpleDateFormat("yyyy-MM-dd");
+		final String todayFormatted = sqlFormat.format(today);
+		final List<WFMamSrcFile> recordsFromPolicyMaster = this.processPoliciesLessOrEqual2YearsOldDAO
+				.findAllFuturePolicies(todayFormatted);
+		ProcessPoliciesLessOrEqual2YearsOld.LOGGER
+				.info("PROCESS STATUS: Getting records: " + recordsFromPolicyMaster.size());
+		int seqNumber = this.processPoliciesLessOrEqual2YearsOldDAO.getMaxSequenceNumber(cycleNumber) + 1;
+		int createCounter = 0;
+		for (final WFMamSrcFile recordFromPM : recordsFromPolicyMaster) {
+			final List<WFMamSrcFile> recordsFound = this.processPoliciesLessOrEqual2YearsOldDAO
+					.findOneInWFSrcFile(cycleNumber, recordFromPM.getSubmissionNumber());
+			if (CollectionUtils.isEmpty(recordsFound)) {
+				final WFMamSrcFilePK id = new WFMamSrcFilePK();
+				id.setCycleNumber(cycleNumber);
+				id.setSequenceNumber(seqNumber);
+				seqNumber += 1;
+				recordFromPM.setId(id);
+				this.processPoliciesLessOrEqual2YearsOldDAO.create(recordFromPM);
+				createCounter += 1;
+			}
+		}
+		ProcessPoliciesLessOrEqual2YearsOld.LOGGER.info("PROCESS STATUS: created: " + createCounter);
+		ProcessPoliciesLessOrEqual2YearsOld.LOGGER
+				.info("PROCESS STATUS: Ending ProcessPoliciesLessOrEqual2YearsOld.futurePolicies");
 	}
 
 }
