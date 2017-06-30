@@ -35,6 +35,8 @@ public class BillingPart2Process {
 
 	private static final String STATUS_ACTIVE = "Active";
 
+	private static final String STATUS_DASH = "-";
+
 	@Autowired
 	private WFMamSrcFileDAO wfMamSrcFileDAO;
 
@@ -116,8 +118,8 @@ public class BillingPart2Process {
 					final String phone = StringUtils.EMPTY;
 
 					if (!StringUtils.isEmpty(optional.getPhoneArea())) {
-						srcFile.setPhone(StringUtils.join(optional.getPhoneArea(), optional.getPhonePrefix(),
-								optional.getPhoneSuffix()));
+						srcFile.setPhone(StringUtils.join(optional.getPhoneArea(), BillingPart2Process.STATUS_DASH,
+								optional.getPhonePrefix(), BillingPart2Process.STATUS_DASH, optional.getPhoneSuffix()));
 					} else {
 						srcFile.setPhone(phone);
 					}
