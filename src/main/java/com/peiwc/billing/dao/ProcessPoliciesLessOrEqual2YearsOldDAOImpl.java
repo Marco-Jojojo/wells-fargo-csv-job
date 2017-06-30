@@ -1,8 +1,5 @@
 package com.peiwc.billing.dao;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -82,10 +79,6 @@ public class ProcessPoliciesLessOrEqual2YearsOldDAOImpl implements ProcessPolici
 
 	@Override
 	public void create(final WFMamSrcFile wfMamSrcFile) {
-		final Calendar cal = Calendar.getInstance();
-		final Date todayCal = cal.getTime();
-		final SimpleDateFormat sqlFormat = new SimpleDateFormat("yyyy-MM-dd");
-		final String dueDate = sqlFormat.format(todayCal);
 		final MapSqlParameterSource parameters = new MapSqlParameterSource();
 		parameters.addValue("cycleNumber", wfMamSrcFile.getId().getCycleNumber());
 		parameters.addValue("sequenceNumber", wfMamSrcFile.getId().getSequenceNumber());
@@ -93,7 +86,7 @@ public class ProcessPoliciesLessOrEqual2YearsOldDAOImpl implements ProcessPolici
 		parameters.addValue("secondaryAuth", wfMamSrcFile.getSecondaryAuth());
 		parameters.addValue("referenceNumber", wfMamSrcFile.getReferenceNumber());
 		parameters.addValue("invoiceDate", wfMamSrcFile.getInvoiceDate());
-		parameters.addValue("dueDate", dueDate);
+		parameters.addValue("dueDate", wfMamSrcFile.getDueDate());
 		parameters.addValue("invoiceNumber", wfMamSrcFile.getInvoiceNumber());
 		parameters.addValue("amountDue", wfMamSrcFile.getAmountDue());
 		this.namedParameterJdbcTemplate.update(ProcessPoliciesLessOrEqual2YearsOldDAOImpl.SAVE_RECORD, parameters);

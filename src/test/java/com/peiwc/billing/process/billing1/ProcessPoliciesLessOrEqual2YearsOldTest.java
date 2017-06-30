@@ -39,4 +39,5 @@ public class ProcessPoliciesLessOrEqual2YearsOldTest {
 				.findAllTwoYearsOldPolicies(twoYearsBeforeFormatted, todayFormatted);
 		Assert.assertNotEquals(0, rows.size());
 	}
+
 }
