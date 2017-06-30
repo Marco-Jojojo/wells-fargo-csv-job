@@ -20,7 +20,7 @@ public class WFMamSrcGenRecs {
 
 	public void billingProcess(final int cycleNumber) {
 		this.calcUnclearedBilledAmt.updWFMamSrcFileRec(cycleNumber);
-		this.calcUnclearedUnBilledCreditAmt.wfMamSrcFileUpdRecDBI1(cycleNumber);
+		// this.calcUnclearedUnBilledCreditAmt.wfMamSrcFileUpdRecDBI1(cycleNumber);
 		this.processPoliciesLessOrEqual2YearsOld.processPolicies(cycleNumber);
 		// this.applyCredits.applyCreditsProcess(cycleNumber);
 
