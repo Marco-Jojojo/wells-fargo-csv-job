@@ -1,8 +1,6 @@
 package com.peiwc.billing.process;
 
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +26,10 @@ public class BillingPart2Process {
 	private static final String USER_NOT_FOUND = "Could not get user information";
 
 	private static final String NAME_NOT_FOUND = "Could not get consolidated name";
+
+	private static final String REPLACE = "";
+
+	private static final String WF_REGEX = "([\\[\\])}/$*%\\\\^:\";~|\\{(])";
 
 	private static final String PENDING_REC = "PENDING_REC";
 
@@ -154,15 +156,9 @@ public class BillingPart2Process {
 
 	}
 
-	private String removeSpecialCharacters(String string) {
+	private String removeSpecialCharacters(final String string) {
 
-		final Pattern pt = Pattern.compile("[^a-zA-Z0-9]");
-		final Matcher match = pt.matcher(string);
-		while (match.find()) {
-			final String s = match.group();
-			string = string.replaceAll("\\" + s, "");
-		}
-
-		return string;
+		final String result = string.replaceAll(BillingPart2Process.WF_REGEX, BillingPart2Process.REPLACE);
+		return result;
 	}
 }
