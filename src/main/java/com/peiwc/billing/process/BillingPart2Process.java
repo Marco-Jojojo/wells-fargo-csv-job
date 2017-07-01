@@ -1,6 +1,8 @@
 package com.peiwc.billing.process;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -83,9 +85,11 @@ public class BillingPart2Process {
 
 				srcFile.setSecondaryAuth(StringUtils.trim(user.getZip()));
 
-				srcFile.setConsolidatedName(consolidatedName);
+				srcFile.setConsolidatedName(removeSpecialCharacters(consolidatedName));
 
-				srcFile.setAddress(StringUtils.trim(user.getAddress()));
+				final String address = StringUtils.trim(user.getAddress());
+
+				srcFile.setAddress(removeSpecialCharacters(address));
 
 				final String address2 = StringUtils.EMPTY;
 				if (!StringUtils.isEmpty(user.getAddress2())) {
@@ -148,5 +152,17 @@ public class BillingPart2Process {
 		error.setStatus(BillingPart2Process.PENDING_REC);
 		wfMamErrLogRepository.saveAndFlush(error);
 
+	}
+
+	private String removeSpecialCharacters(String string) {
+
+		final Pattern pt = Pattern.compile("[^a-zA-Z0-9]");
+		final Matcher match = pt.matcher(string);
+		while (match.find()) {
+			final String s = match.group();
+			string = string.replaceAll("\\" + s, "");
+		}
+
+		return string;
 	}
 }
