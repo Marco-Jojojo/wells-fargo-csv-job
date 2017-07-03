@@ -52,6 +52,8 @@ public class MailSender {
 				Transport.send(message);
 			} catch (final MessagingException ex) {
 				MailSender.LOGGER.error(ex, ex);
+			} catch (final Exception ex) {
+				MailSender.LOGGER.error(ex, ex);
 			}
 		}
 	}
