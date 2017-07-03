@@ -27,6 +27,10 @@ public class BillingPart2Process {
 
 	private static final String NAME_NOT_FOUND = "Could not get consolidated name";
 
+	private static final String REPLACE = "";
+
+	private static final String WF_REGEX = "([\\[\\])}/$*%\\\\^:\";~|\\{(])";
+
 	private static final String PENDING_REC = "PENDING_REC";
 
 	private static final String STATUS_CODE_EXPIRED = "2";
@@ -34,6 +38,8 @@ public class BillingPart2Process {
 	private static final String STATUS_EXPIRED = "Expired";
 
 	private static final String STATUS_ACTIVE = "Active";
+
+	private static final String STATUS_DASH = "-";
 
 	@Autowired
 	private WFMamSrcFileDAO wfMamSrcFileDAO;
@@ -81,9 +87,11 @@ public class BillingPart2Process {
 
 				srcFile.setSecondaryAuth(StringUtils.trim(user.getZip()));
 
-				srcFile.setConsolidatedName(consolidatedName);
+				srcFile.setConsolidatedName(removeSpecialCharacters(consolidatedName));
 
-				srcFile.setAddress(StringUtils.trim(user.getAddress()));
+				final String address = StringUtils.trim(user.getAddress());
+
+				srcFile.setAddress(removeSpecialCharacters(address));
 
 				final String address2 = StringUtils.EMPTY;
 				if (!StringUtils.isEmpty(user.getAddress2())) {
@@ -116,8 +124,8 @@ public class BillingPart2Process {
 					final String phone = StringUtils.EMPTY;
 
 					if (!StringUtils.isEmpty(optional.getPhoneArea())) {
-						srcFile.setPhone(StringUtils.join(optional.getPhoneArea(), optional.getPhonePrefix(),
-								optional.getPhoneSuffix()));
+						srcFile.setPhone(StringUtils.join(optional.getPhoneArea(), BillingPart2Process.STATUS_DASH,
+								optional.getPhonePrefix(), BillingPart2Process.STATUS_DASH, optional.getPhoneSuffix()));
 					} else {
 						srcFile.setPhone(phone);
 					}
@@ -146,5 +154,11 @@ public class BillingPart2Process {
 		error.setStatus(BillingPart2Process.PENDING_REC);
 		wfMamErrLogRepository.saveAndFlush(error);
 
+	}
+
+	private String removeSpecialCharacters(final String string) {
+
+		final String result = string.replaceAll(BillingPart2Process.WF_REGEX, BillingPart2Process.REPLACE);
+		return result;
 	}
 }

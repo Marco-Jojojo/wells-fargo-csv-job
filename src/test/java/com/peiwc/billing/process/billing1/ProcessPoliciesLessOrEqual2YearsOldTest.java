@@ -35,8 +35,9 @@ public class ProcessPoliciesLessOrEqual2YearsOldTest {
 		final SimpleDateFormat sqlFormat = new SimpleDateFormat("yyyy-MM-dd");
 		final String todayFormatted = sqlFormat.format(today);
 		final String twoYearsBeforeFormatted = sqlFormat.format(twoYearsBefore);
-		final List<WFMamSrcFile> rows = this.processPoliciesLessOrEqual2YearsOldDAO.findAll(twoYearsBeforeFormatted,
-				todayFormatted);
+		final List<WFMamSrcFile> rows = this.processPoliciesLessOrEqual2YearsOldDAO
+				.findAllTwoYearsOldPolicies(twoYearsBeforeFormatted, todayFormatted);
 		Assert.assertNotEquals(0, rows.size());
 	}
+
 }
