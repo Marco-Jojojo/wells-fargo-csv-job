@@ -50,6 +50,7 @@ public class MailSender {
 				message.setSubject(mailSubject);
 				message.setText(mailMessage);
 				Transport.send(message);
+				MailSender.LOGGER.info("send mail message success!");
 			} catch (final MessagingException ex) {
 				MailSender.LOGGER.error(ex, ex);
 			} catch (final Exception ex) {

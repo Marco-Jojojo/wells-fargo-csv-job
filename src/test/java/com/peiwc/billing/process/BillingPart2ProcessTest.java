@@ -3,6 +3,7 @@ package com.peiwc.billing.process;
 import org.apache.log4j.BasicConfigurator;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,4 +42,14 @@ public class BillingPart2ProcessTest {
 
 	}
 
+	@Ignore
+	@Test
+	public void testspecialCharacterRemoval() {
+		final String test = "SANTOS A. UY, JR., M. D. ( A CORP )";
+
+//		final String result = billingPart2Process.removeSpecialCharacters(test);
+//
+//		Assert.assertNotNull(result);
+
+	}
 }
