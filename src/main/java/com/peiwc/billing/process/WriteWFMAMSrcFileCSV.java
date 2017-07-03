@@ -194,7 +194,9 @@ public class WriteWFMAMSrcFileCSV {
 					break;
 				case '`':
 					break;
-				case '‘':
+				case '´':
+					break;
+				case '\'':
 					break;
 				case '-':
 					break;
