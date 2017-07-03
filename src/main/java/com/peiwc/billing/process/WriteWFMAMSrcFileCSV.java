@@ -5,7 +5,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.text.DecimalFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
@@ -13,7 +12,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.annotation.PostConstruct;
-import javax.swing.text.MaskFormatter;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -132,7 +130,7 @@ public class WriteWFMAMSrcFileCSV {
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
 		builder.append(formatString(wfMamSrcFile.getZip()));
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
-		builder.append(addQuotes(phoneFormat(wfMamSrcFile.getPhone())));
+		builder.append(addQuotes(wfMamSrcFile.getPhone()));
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
 		builder.append(formatString(wfMamSrcFile.getStatusInvoice()));
 		builder.append(WriteWFMAMSrcFileCSV.NEW_LINE);
@@ -171,87 +169,11 @@ public class WriteWFMAMSrcFileCSV {
 			resultFormat = stringValue.replaceAll(WriteWFMAMSrcFileCSV.QUOT,
 			        WriteWFMAMSrcFileCSV.QUOT + WriteWFMAMSrcFileCSV.QUOT);
 		}
-		return WriteWFMAMSrcFileCSV.QUOT + removeSpecialCharacters(resultFormat) + WriteWFMAMSrcFileCSV.QUOT;
+		return WriteWFMAMSrcFileCSV.QUOT + resultFormat + WriteWFMAMSrcFileCSV.QUOT;
 	}
 
 	private String formatNumber(final Number numberValue) {
 		final String finalFormat = numberFormat.format(numberValue).replaceAll(",", "");
 		return WriteWFMAMSrcFileCSV.QUOT + finalFormat + WriteWFMAMSrcFileCSV.QUOT;
-	}
-
-	private String removeSpecialCharacters(final String stringValue) {
-		final char[] characters = stringValue.toCharArray();
-		final StringBuilder cleanString = new StringBuilder();
-		for (final char c : characters) {
-			switch (c) {
-				case '!':
-					break;
-				case '@':
-					break;
-				case '#':
-					break;
-				case '&':
-					break;
-				case '`':
-					break;
-				case '´':
-					break;
-				case '\'':
-					break;
-				case '-':
-					break;
-				case '_':
-					break;
-				case '$':
-					break;
-				case '%':
-					break;
-				case '^':
-					break;
-				case '*':
-					break;
-				case '(':
-					break;
-				case ')':
-					break;
-				case '{':
-					break;
-				case '}':
-					break;
-				case '[':
-					break;
-				case ']':
-					break;
-				case '\\':
-					break;
-				case '/':
-					break;
-				case '|':
-					break;
-				case ':':
-					break;
-				case ';':
-					break;
-				case '"':
-					break;
-				default:
-					cleanString.append(c);
-			}
-		}
-		return cleanString.toString();
-	}
-
-	private String phoneFormat(final String phoneValue) {
-		final String phoneMask = "###-###-####";
-		String formattedPhoneNumber = "";
-		MaskFormatter maskFormatter = null;
-		try {
-			maskFormatter = new MaskFormatter(phoneMask);
-			maskFormatter.setValueContainsLiteralCharacters(false);
-			formattedPhoneNumber = maskFormatter.valueToString(phoneValue);
-		} catch (final ParseException e) {
-			WriteWFMAMSrcFileCSV.LOGGER.error(e, e);
-		}
-		return formattedPhoneNumber;
 	}
 }

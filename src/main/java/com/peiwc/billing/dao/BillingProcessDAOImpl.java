@@ -25,13 +25,14 @@ public class BillingProcessDAOImpl implements BillingProcessDAO {
 	public static final String GET_USER_INFORMATION = "SELECT "
 			+ "ADDR_1, ADDR_2, CITY, STATE, ZIP1, STATUS_CODE FROM SPR_LOCATION as b "
 			+ "JOIN POLICY_MASTER as r ON r.SUBMISSION_NUMBER = b.SUBMISSION_NUMBER "
-			+ "WHERE b.SUBMISSION_NUMBER = :submissionNumber AND b.PRIMARY_ADDRESS_IND = 'Y'";
+			+ "WHERE b.SUBMISSION_NUMBER = :submissionNumber AND b.ENTITY_NUMBER = 1";
 
 	public static final String GET_OPTIONAL_INFORMATION = "SELECT "
 			+ "PHONE_AREA_CODE, PHONE_PREFIX, PHONE_SUFFIX, EMAIL_ADDRESS "
 			+ "FROM SPR_INSURED_CONTACT_ WHERE SUBMISSION_NUMBER = :submissionNumber";
 
-	public static final String GET_NAME_FROM_SPR_DBA = "SELECT DBA_NAME FROM SPR_DBA WHERE SUBMISSION_NUMBER = :submissionNumber";
+	public static final String GET_NAME_FROM_SPR_DBA = "SELECT DBA_NAME FROM SPR_DBA WHERE SUBMISSION_NUMBER = :submissionNumber "
+			+ "AND ENTITY_NUMBER = 1 AND DBA_NUMBER = 1";
 
 	public static final String GET_NAME_FROM_SPR_ENTITY_FILE = "SELECT ENTITY_NAME FROM SPR_ENTITY_FILE "
 			+ "WHERE SUBMISSION_NUMBER = :submissionNumber";
