@@ -2,7 +2,6 @@ package com.peiwc.billing.dao;
 
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -14,7 +13,8 @@ import com.peiwc.billing.domain.WFMamSrcFile;
 @Repository("processPoliciesLessOrEqual2YearsOldDAOImpl")
 public class ProcessPoliciesLessOrEqual2YearsOldDAOImpl implements ProcessPoliciesLessOrEqual2YearsOldDAO {
 
-	private static final Logger LOGGER = Logger.getLogger(ProcessPoliciesLessOrEqual2YearsOldDAO.class);
+	// private static final Logger LOGGER =
+	// Logger.getLogger(ProcessPoliciesLessOrEqual2YearsOldDAO.class);
 
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
