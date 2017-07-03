@@ -25,8 +25,6 @@ public class MailSender {
 	private boolean isEnabled;
 	@Value("${mail.to.subject}")
 	private String mailSubject;
-	@Value("${mail.send.from}")
-	private String mailFrom;
 
 	/**
 	 * sends a mail message indicating the finish status of the current process.
@@ -46,6 +44,7 @@ public class MailSender {
 				final Message message = new MimeMessage(session);
 				final String responsible = System.getProperty("email.notification.address");
 				message.setRecipient(Message.RecipientType.TO, new InternetAddress(responsible));
+				final String mailFrom = System.getProperty("email.from.address");
 				final Address[] from = new Address[] { new InternetAddress(mailFrom) };
 				message.addFrom(from);
 				message.setSubject(mailSubject);
