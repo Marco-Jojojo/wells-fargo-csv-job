@@ -9,6 +9,10 @@ import org.springframework.stereotype.Component;
 import com.peiwc.billing.dao.ApplyCreditsDAO;
 import com.peiwc.billing.domain.WFMamSrcFile;
 
+/**
+ * @author jolivarria
+ *
+ */
 @Component("applyCredits")
 public class ApplyCredits {
 
@@ -17,6 +21,11 @@ public class ApplyCredits {
 	@Autowired
 	private ApplyCreditsDAO applyCreditsDAO;
 
+	/**
+	 * calculate Amount due for WF_MAM_SRC_FILE
+	 * 
+	 * @param cycleNumber
+	 */
 	public void applyCreditsProcess(final int cycleNumber) {
 		ApplyCredits.LOGGER.info("PROCESS STATUS: Starting ApplyCredits.applyCreditsProcess");
 		final List<WFMamSrcFile> recordsFromWFMamSrcFile = this.applyCreditsDAO.findAll(cycleNumber);

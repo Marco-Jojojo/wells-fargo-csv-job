@@ -10,6 +10,10 @@ import com.peiwc.billing.dao.CalcUnclearedBilledAmtDAO;
 import com.peiwc.billing.domain.WFMamSrcFile;
 import com.peiwc.billing.domain.WFMamSrcFilePK;
 
+/**
+ * @author jolivarria
+ *
+ */
 @Component("calcUnclearedBilledAmt")
 public class CalcUnclearedBilledAmt {
 
@@ -18,6 +22,11 @@ public class CalcUnclearedBilledAmt {
 	@Autowired
 	private CalcUnclearedBilledAmtDAO calcUnclearedBilledAmtDAO;
 
+	/**
+	 * Take records from COLLECTION MASTER and insert them into WF_MAM_SRC_FILE
+	 * 
+	 * @param cycleNumber
+	 */
 	public void updWFMamSrcFileRec(final int cycleNumber) {
 		CalcUnclearedBilledAmt.LOGGER.info("PROCESS STATUS: Starting CalcUnclearedBilledAmt.updWFMamSrcFileRec");
 		final List<WFMamSrcFile> rows = this.calcUnclearedBilledAmtDAO.findAll();

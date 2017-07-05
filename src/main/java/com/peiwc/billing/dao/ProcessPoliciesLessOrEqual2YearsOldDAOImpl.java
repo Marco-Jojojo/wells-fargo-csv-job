@@ -10,6 +10,10 @@ import org.springframework.stereotype.Repository;
 import com.peiwc.billing.dao.mappers.SrcFileMapperForTwoYearsPolicies;
 import com.peiwc.billing.domain.WFMamSrcFile;
 
+/**
+ * @author jolivarria
+ *
+ */
 @Repository("processPoliciesLessOrEqual2YearsOldDAOImpl")
 public class ProcessPoliciesLessOrEqual2YearsOldDAOImpl implements ProcessPoliciesLessOrEqual2YearsOldDAO {
 

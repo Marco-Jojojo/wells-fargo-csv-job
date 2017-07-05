@@ -14,6 +14,10 @@ import com.peiwc.billing.dao.ProcessPoliciesLessOrEqual2YearsOldDAO;
 import com.peiwc.billing.domain.WFMamSrcFile;
 import com.peiwc.billing.domain.WFMamSrcFilePK;
 
+/**
+ * @author jolivarria
+ *
+ */
 @Component("processPoliciesLessOrEqual2YearsOld")
 public class ProcessPoliciesLessOrEqual2YearsOld {
 
@@ -22,6 +26,12 @@ public class ProcessPoliciesLessOrEqual2YearsOld {
 	@Autowired
 	private ProcessPoliciesLessOrEqual2YearsOldDAO processPoliciesLessOrEqual2YearsOldDAO;
 
+	/**
+	 * Get two years old records from POLICY_MASTER and insert them
+	 * WF_MAM_SRC_FILE
+	 *
+	 * @param cycleNumber
+	 */
 	public void processPolicies(final int cycleNumber) {
 		ProcessPoliciesLessOrEqual2YearsOld.LOGGER
 				.info("PROCESS STATUS: Starting ProcessPoliciesLessOrEqual2YearsOld.processPolicies");
@@ -56,6 +66,12 @@ public class ProcessPoliciesLessOrEqual2YearsOld {
 				.info("PROCESS STATUS: Ending ProcessPoliciesLessOrEqual2YearsOld.processPolicies");
 	}
 
+	/**
+	 * Get records from POLICY_MASTER where EFFECTIVE DAY > currentDay and
+	 * insert them in WF_MAM_SRC_FILE table
+	 * 
+	 * @param cycleNumber
+	 */
 	public void futurePolicies(final int cycleNumber) {
 		ProcessPoliciesLessOrEqual2YearsOld.LOGGER
 				.info("PROCESS STATUS: Starting ProcessPoliciesLessOrEqual2YearsOld.futurePolicies");

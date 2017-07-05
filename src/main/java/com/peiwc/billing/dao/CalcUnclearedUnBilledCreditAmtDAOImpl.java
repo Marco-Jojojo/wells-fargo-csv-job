@@ -14,6 +14,10 @@ import com.peiwc.billing.dao.mappers.SrcFileMapper;
 import com.peiwc.billing.dao.mappers.SrcFileMapperForFindOneUnBilledCreditAmt;
 import com.peiwc.billing.domain.WFMamSrcFile;
 
+/**
+ * @author jolivarria
+ *
+ */
 @Repository("calcUnclearedUnBilledCreditAmtDAOImpl")
 public class CalcUnclearedUnBilledCreditAmtDAOImpl implements CalcUnclearedUnBilledCreditAmtDAO {
 

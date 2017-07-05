@@ -10,6 +10,10 @@ import org.springframework.stereotype.Repository;
 import com.peiwc.billing.dao.mappers.SrcFileMapperForFindAllUnclearedBilledAmt;
 import com.peiwc.billing.domain.WFMamSrcFile;
 
+/**
+ * @author jolivarria
+ *
+ */
 @Repository("calcUnclearedBilledAmtDAOImpl")
 public class CalcUnclearedBilledAmtDAOImpl implements CalcUnclearedBilledAmtDAO {
 

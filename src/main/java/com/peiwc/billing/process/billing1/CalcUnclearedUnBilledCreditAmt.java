@@ -13,6 +13,10 @@ import com.peiwc.billing.dao.CalcUnclearedUnBilledCreditAmtDAO;
 import com.peiwc.billing.domain.WFMamSrcFile;
 import com.peiwc.billing.domain.WFMamSrcFilePK;
 
+/**
+ * @author jolivarria
+ *
+ */
 @Component("calcUnclearedUnBilledCreditAmt")
 public class CalcUnclearedUnBilledCreditAmt {
 
@@ -21,6 +25,9 @@ public class CalcUnclearedUnBilledCreditAmt {
 	@Autowired
 	private CalcUnclearedUnBilledCreditAmtDAO unBilledCreditAmtDAO;
 
+	/**
+	 * @param cycleNumber
+	 */
 	public void wfMamSrcFileUpdRecDBI1(final int cycleNumber) {
 
 		CalcUnclearedUnBilledCreditAmt.LOGGER.info("PROCESS STATUS: Starting CalcUnclearedUnBilledCreditAmt");

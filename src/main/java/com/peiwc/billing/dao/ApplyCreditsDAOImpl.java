@@ -13,7 +13,7 @@ import com.peiwc.billing.dao.mappers.SrcFileMapperForApplyCredits;
 import com.peiwc.billing.domain.WFMamSrcFile;
 
 /**
- * @author jose.solano
+ * @author jolivarria
  *
  */
 @Repository("applyCreditsDAOImpl")
