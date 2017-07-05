@@ -12,6 +12,10 @@ import org.springframework.stereotype.Repository;
 import com.peiwc.billing.dao.mappers.SrcFileMapperForApplyCredits;
 import com.peiwc.billing.domain.WFMamSrcFile;
 
+/**
+ * @author jose.solano
+ *
+ */
 @Repository("applyCreditsDAOImpl")
 public class ApplyCreditsDAOImpl implements ApplyCreditsDAO {
 
