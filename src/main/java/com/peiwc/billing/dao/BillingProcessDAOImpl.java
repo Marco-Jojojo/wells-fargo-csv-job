@@ -17,7 +17,8 @@ import com.peiwc.billing.domain.WFSPROptional;
 import com.peiwc.billing.domain.WFUserInfo;
 
 /**
- * @author alfonso.pech
+ * @author alfonso.pech Implementation of the DAO of the billing process, this
+ *         will fill the user information
  *
  */
 @Repository("billingDAOImpl")

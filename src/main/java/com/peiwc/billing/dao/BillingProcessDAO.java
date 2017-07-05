@@ -8,7 +8,7 @@ import com.peiwc.billing.domain.WFSPROptional;
 import com.peiwc.billing.domain.WFUserInfo;
 
 /**
- * @author alfonso.pech
+ * @author alfonso.pech Interface for the DAO of the billing process
  *
  */
 public interface BillingProcessDAO {

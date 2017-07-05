@@ -19,7 +19,7 @@ import com.peiwc.billing.domain.WFSPROptional;
 import com.peiwc.billing.domain.WFUserInfo;
 
 /**
- * @author alfonso.pech
+ * @author alfonso.pech Process to get the user information by cycle number.
  *
  */
 @Component
