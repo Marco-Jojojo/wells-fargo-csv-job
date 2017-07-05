@@ -18,6 +18,10 @@ import com.peiwc.billing.domain.WFSPRName;
 import com.peiwc.billing.domain.WFSPROptional;
 import com.peiwc.billing.domain.WFUserInfo;
 
+/**
+ * @author alfonso.pech
+ *
+ */
 @Component
 public class BillingPart2Process {
 
@@ -50,6 +54,10 @@ public class BillingPart2Process {
 	@Autowired
 	private BillingInformationProcess billingInformationProcess;
 
+	/**
+	 * @param cycleNumber
+	 * @return boolean
+	 */
 	public boolean updateUserInfo(final int cycleNumber) {
 		final boolean hasRunSuccessfully = true;
 		BillingPart2Process.LOGGER.debug("Begin billing part2 for current cycle");
