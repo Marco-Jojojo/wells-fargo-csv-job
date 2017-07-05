@@ -37,6 +37,9 @@ public class WriteWFMAMSrcFileCSV {
 	 * comma
 	 */
 	public static final String COMMA = ",";
+	/**
+	 * Quot string
+	 */
 	public static final String QUOT = "\"";
 	@Autowired
 	private WFMamSrcFileDAO wfMamSrcFileDAO;
