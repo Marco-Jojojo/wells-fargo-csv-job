@@ -7,8 +7,11 @@ import org.springframework.jdbc.core.RowMapper;
 
 import com.peiwc.billing.domain.WFMamOpHDRTRLR;
 
+/**
+*
+*
+*/
 public class WFMamOpHDRTRLRMapper implements RowMapper<WFMamOpHDRTRLR> {
-
 	@Override
 	public WFMamOpHDRTRLR mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 		final WFMamOpHDRTRLR wfMamOpHdrTrlr = new WFMamOpHDRTRLR();
@@ -20,5 +23,4 @@ public class WFMamOpHDRTRLRMapper implements RowMapper<WFMamOpHDRTRLR> {
 		wfMamOpHdrTrlr.setStatus(rs.getString("STATUS"));
 		return wfMamOpHdrTrlr;
 	}
-
 }

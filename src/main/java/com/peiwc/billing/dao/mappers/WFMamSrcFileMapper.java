@@ -8,8 +8,11 @@ import org.springframework.jdbc.core.RowMapper;
 import com.peiwc.billing.domain.WFMamSrcFile;
 import com.peiwc.billing.domain.WFMamSrcFilePK;
 
+/**
+*
+*
+*/
 public class WFMamSrcFileMapper implements RowMapper<WFMamSrcFile> {
-
 	@Override
 	public WFMamSrcFile mapRow(final ResultSet rs, final int rowNumber) throws SQLException {
 		final WFMamSrcFile file = new WFMamSrcFile();
@@ -35,5 +38,4 @@ public class WFMamSrcFileMapper implements RowMapper<WFMamSrcFile> {
 		file.setSubmissionNumber(rs.getInt("SUBMISSION_NUMBER"));
 		return file;
 	}
-
 }

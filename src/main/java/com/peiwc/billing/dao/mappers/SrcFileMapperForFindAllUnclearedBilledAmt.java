@@ -8,8 +8,11 @@ import org.springframework.jdbc.core.RowMapper;
 import com.peiwc.billing.domain.WFMamSrcFile;
 import com.peiwc.billing.domain.WFMamSrcFilePK;
 
+/**
+*
+*
+*/
 public class SrcFileMapperForFindAllUnclearedBilledAmt implements RowMapper<WFMamSrcFile> {
-
 	@Override
 	public WFMamSrcFile mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 		final WFMamSrcFile wfMamSrcFile = new WFMamSrcFile();
@@ -29,5 +32,4 @@ public class SrcFileMapperForFindAllUnclearedBilledAmt implements RowMapper<WFMa
 		wfMamSrcFile.setAmountDue(rs.getFloat("AMOUNT_DUE"));
 		return wfMamSrcFile;
 	}
-
 }

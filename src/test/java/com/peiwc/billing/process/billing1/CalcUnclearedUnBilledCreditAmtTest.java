@@ -16,14 +16,19 @@ import com.peiwc.billing.configuration.ConfigurationBeanMock;
 import com.peiwc.billing.dao.CalcUnclearedUnBilledCreditAmtDAO;
 import com.peiwc.billing.domain.WFMamSrcFile;
 
+/**
+ *
+ */
 @ContextConfiguration(classes = { ConfigurationBeanMock.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 public class CalcUnclearedUnBilledCreditAmtTest {
-
 	@Autowired
 	private CalcUnclearedUnBilledCreditAmtDAO unclearedUnBilledCreditAmtDAO;
 
+	/**
+	 *
+	 */
 	@Ignore
 	@Test
 	public void testFindAll() {

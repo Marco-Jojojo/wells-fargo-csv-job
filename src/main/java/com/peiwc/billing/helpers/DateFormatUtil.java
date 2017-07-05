@@ -7,6 +7,10 @@ import java.util.Date;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
+/**
+ *
+ *
+ */
 public class DateFormatUtil {
 	private static SimpleDateFormat format;
 	private static SimpleDateFormat dateFormatParameter;
@@ -16,10 +20,22 @@ public class DateFormatUtil {
 		DateFormatUtil.dateFormatParameter = new SimpleDateFormat("dd/MM/yyyy");
 	}
 
+	/**
+	 * formats a date for use in database
+	 *
+	 * @param date
+	 * @return date representation in string format
+	 */
 	public static String formatDate(final Date date) {
 		return DateFormatUtil.format.format(date);
 	}
 
+	/**
+	 * gets the date by current parameter if parameter not set, returns default
+	 * date.
+	 *
+	 * @return date calculated by property or system.
+	 */
 	public static Date currentDateByParameter() {
 		Date date = new Date();
 		final String dateFromParameter = System.getProperty("start.date");

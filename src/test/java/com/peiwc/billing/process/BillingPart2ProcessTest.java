@@ -15,11 +15,17 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.peiwc.billing.configuration.ConfigurationBeanMock;
 
+/**
+ *
+ *
+ */
 @ContextConfiguration(classes = { ConfigurationBeanMock.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 public class BillingPart2ProcessTest {
-
+	/**
+	 * sets the logger
+	 */
 	@Before
 	public void setup() {
 		BasicConfigurator.configure();
@@ -27,29 +33,29 @@ public class BillingPart2ProcessTest {
 
 	@Autowired
 	BillingPart2Process billingPart2Process;
-
 	@Autowired
 	NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+	/**
+	 *
+	 */
 	@Test
 	public void testBillingProcess2() {
-
 		final int cycleNumber = 2006;
-
 		final boolean success = billingPart2Process.updateUserInfo(cycleNumber);
-
 		Assert.assertTrue(success);
-
 	}
 
+	/**
+	 *
+	 */
 	@Ignore
 	@Test
 	public void testspecialCharacterRemoval() {
 		final String test = "SANTOS A. UY, JR., M. D. ( A CORP )";
-
-//		final String result = billingPart2Process.removeSpecialCharacters(test);
-//
-//		Assert.assertNotNull(result);
-
+		// final String result =
+		// billingPart2Process.removeSpecialCharacters(test);
+		//
+		// Assert.assertNotNull(result);
 	}
 }

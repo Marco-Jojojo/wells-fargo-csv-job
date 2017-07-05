@@ -15,14 +15,20 @@ import com.peiwc.billing.configuration.ConfigurationBeanMock;
 import com.peiwc.billing.dao.CalcUnclearedBilledAmtDAO;
 import com.peiwc.billing.domain.WFMamSrcFile;
 
+/**
+ * @author carlos.acosta
+ *
+ */
 @ContextConfiguration(classes = { ConfigurationBeanMock.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 public class CalcUnclearedBilledAmtTest {
-
 	@Autowired
 	private CalcUnclearedBilledAmtDAO unclearedBilledAmtDAO;
 
+	/**
+	 *
+	 */
 	@Test
 	public void testIsRecordInSrcFile() {
 		final List<WFMamSrcFile> rows = this.unclearedBilledAmtDAO.findAll();

@@ -15,18 +15,21 @@ import com.peiwc.billing.configuration.ConfigurationBeanMock;
 import com.peiwc.billing.dao.ApplyCreditsDAO;
 import com.peiwc.billing.domain.WFMamSrcFile;
 
+/**
+ */
 @ContextConfiguration(classes = { ConfigurationBeanMock.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 public class ApplyCreditsTest {
-
 	@Autowired
 	private ApplyCreditsDAO applyCreditsDAO;
 
+	/**
+	 *
+	 */
 	@Test
 	public void testFindAll() {
 		final List<WFMamSrcFile> rows = this.applyCreditsDAO.findAll(2006);
 		Assert.assertNotEquals(0, rows.size());
 	}
-
 }

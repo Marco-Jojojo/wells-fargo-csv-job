@@ -7,8 +7,11 @@ import org.springframework.jdbc.core.RowMapper;
 
 import com.peiwc.billing.domain.WFMamSrcFile;
 
+/**
+*
+*
+*/
 public class SrcFileMapperForTwoYearsPolicies implements RowMapper<WFMamSrcFile> {
-
 	@Override
 	public WFMamSrcFile mapRow(final ResultSet rs, final int rowNumber) throws SQLException {
 		final WFMamSrcFile wfMamSrcFile = new WFMamSrcFile();
@@ -21,5 +24,4 @@ public class SrcFileMapperForTwoYearsPolicies implements RowMapper<WFMamSrcFile>
 		wfMamSrcFile.setInvoiceDate(rs.getDate("INVOICE_DATE"));
 		return wfMamSrcFile;
 	}
-
 }

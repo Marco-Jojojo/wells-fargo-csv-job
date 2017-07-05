@@ -18,14 +18,19 @@ import com.peiwc.billing.configuration.ConfigurationBeanMock;
 import com.peiwc.billing.dao.ProcessPoliciesLessOrEqual2YearsOldDAO;
 import com.peiwc.billing.domain.WFMamSrcFile;
 
+/**
+ *
+ */
 @ContextConfiguration(classes = { ConfigurationBeanMock.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
 public class ProcessPoliciesLessOrEqual2YearsOldTest {
-
 	@Autowired
 	private ProcessPoliciesLessOrEqual2YearsOldDAO processPoliciesLessOrEqual2YearsOldDAO;
 
+	/**
+	 *
+	 */
 	@Test
 	public void testFindAll() {
 		final Calendar cal = Calendar.getInstance();
@@ -36,8 +41,7 @@ public class ProcessPoliciesLessOrEqual2YearsOldTest {
 		final String todayFormatted = sqlFormat.format(today);
 		final String twoYearsBeforeFormatted = sqlFormat.format(twoYearsBefore);
 		final List<WFMamSrcFile> rows = this.processPoliciesLessOrEqual2YearsOldDAO
-				.findAllTwoYearsOldPolicies(twoYearsBeforeFormatted, todayFormatted);
+		        .findAllTwoYearsOldPolicies(twoYearsBeforeFormatted, todayFormatted);
 		Assert.assertNotEquals(0, rows.size());
 	}
-
 }

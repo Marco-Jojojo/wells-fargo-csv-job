@@ -12,20 +12,19 @@ import com.peiwc.billing.dao.mappers.WFMamOpHDRTRLRMapper;
 import com.peiwc.billing.domain.WFMamOpHDRTRLR;
 import com.peiwc.billing.helpers.DateFormatUtil;
 
+/**
+ *
+ *
+ */
 @Repository("wfMamOpHDRTRLRRepository")
 public class WFMamOpHDRTRLRRepositoryImpl implements WFMamOpHDRTRLRRepository {
-
 	private static final Logger LOGGER = Logger.getLogger(WFMamOpHDRTRLRRepositoryImpl.class);
-
 	private static final String FIND_BY_CYCLE_NUMBER = "select * from WF_MAM_OP_HDR_TRLR where CYCLE_NUMBER = :cycleNumber";
-
 	private static final String UPDATE_WFMAMOPHDRTRLR = "	update WF_MAM_OP_HDR_TRLR set  CREATION_DATE = :creationDate ,  "
-			+ " TOTAL_RECORD_COUNT = :totalRecordCount , FILENAME = :fileName , STATUS_MESSAGE = :errorMessage , "
-			+ " STATUS = :status where CYCLE_NUMBER = :cycleNumber";
-
+	        + " TOTAL_RECORD_COUNT = :totalRecordCount , FILENAME = :fileName , STATUS_MESSAGE = :errorMessage , "
+	        + " STATUS = :status where CYCLE_NUMBER = :cycleNumber";
 	private static final String INSERT_WFMAMOPHDRTRLR = "	insert into WF_MAM_OP_HDR_TRLR (CYCLE_NUMBER,CREATION_DATE,TOTAL_RECORD_COUNT,FILENAME,STATUS_MESSAGE,STATUS) "
-			+ "values( :cycleNumber , :creationDate , :totalRecordCount , :fileName , :errorMessage , :status )";
-
+	        + "values( :cycleNumber , :creationDate , :totalRecordCount , :fileName , :errorMessage , :status )";
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
@@ -35,7 +34,7 @@ public class WFMamOpHDRTRLRRepositoryImpl implements WFMamOpHDRTRLRRepository {
 		params.addValue("cycleNumber", nextCycle);
 		WFMamOpHDRTRLR wfMamOpHDRTRLR = null;
 		final List<WFMamOpHDRTRLR> wfMamOpHDRTRLRList = this.namedParameterJdbcTemplate
-				.query(WFMamOpHDRTRLRRepositoryImpl.FIND_BY_CYCLE_NUMBER, params, new WFMamOpHDRTRLRMapper());
+		        .query(WFMamOpHDRTRLRRepositoryImpl.FIND_BY_CYCLE_NUMBER, params, new WFMamOpHDRTRLRMapper());
 		WFMamOpHDRTRLRRepositoryImpl.LOGGER.info("Number of results = " + wfMamOpHDRTRLRList.size());
 		for (final WFMamOpHDRTRLR wfMamOpHDRTRLR2 : wfMamOpHDRTRLRList) {
 			wfMamOpHDRTRLR = wfMamOpHDRTRLR2;
@@ -54,7 +53,7 @@ public class WFMamOpHDRTRLRRepositoryImpl implements WFMamOpHDRTRLRRepository {
 		params.addValue("status", wfMamOpHdrTrlr.getStatus());
 		this.namedParameterJdbcTemplate.update(WFMamOpHDRTRLRRepositoryImpl.INSERT_WFMAMOPHDRTRLR, params);
 		WFMamOpHDRTRLRRepositoryImpl.LOGGER
-				.info("insert WFMamOpHDRTRL: " + WFMamOpHDRTRLRRepositoryImpl.INSERT_WFMAMOPHDRTRLR);
+		        .info("insert WFMamOpHDRTRL: " + WFMamOpHDRTRLRRepositoryImpl.INSERT_WFMAMOPHDRTRLR);
 		return wfMamOpHdrTrlr;
 	}
 
@@ -70,5 +69,4 @@ public class WFMamOpHDRTRLRRepositoryImpl implements WFMamOpHDRTRLRRepository {
 		this.namedParameterJdbcTemplate.update(WFMamOpHDRTRLRRepositoryImpl.UPDATE_WFMAMOPHDRTRLR, params);
 		return wfMamOpHdrTrlr;
 	}
-
 }
