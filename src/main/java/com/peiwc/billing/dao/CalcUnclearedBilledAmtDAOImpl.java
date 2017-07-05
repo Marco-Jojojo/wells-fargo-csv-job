@@ -16,15 +16,39 @@ public class CalcUnclearedBilledAmtDAOImpl implements CalcUnclearedBilledAmtDAO 
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	private static final String FIND_ALL = "SELECT cm.POLICY_NUMBER as REFERENCE_NUMBER, cm.SUBMISSION_NUMBER as SUBMISSION_NUMBER, CASE WHEN "
-			+ "MAX(spb.AMOUNT_DUE) < SUM(cm.NET_PREMIUM_AMOUNT) THEN MAX(spb.AMOUNT_DUE) ELSE CASE WHEN SUM(cm.NET_PREMIUM_AMOUNT) < 0 THEN MAX(spb.AMOUNT_DUE) ELSE SUM(cm.NET_PREMIUM_AMOUNT) END END AS AMOUNT_DUE, "
-			+ "CONCAT(LTRIM(RTRIM(cm.POLICY_PREFIX_1)), LTRIM(RTRIM(cm.POLICY_PREFIX_2)), LTRIM(RTRIM(cm.POLICY_NUMBER)), '-', LTRIM(RTRIM(cm.POLICY_SUFFIX))) as INVOICE_NUMBER, spb.STMT_DATE as INVOICE_DATE, spb.DUE_DATE as DUE_DATE "
-			+ "FROM COLLECTION_MASTER cm LEFT OUTER JOIN SP_BILL_STMT_CTRL spb ON "
-			+ "cm.POLICY_PREFIX_1 = spb.POLICY_PREFIX_1 AND cm.POLICY_PREFIX_2 = spb.POLICY_PREFIX_2 AND cm.POLICY_NUMBER = spb.POLICY_NUMBER AND cm.policy_suffix = spb.policy_suffix AND "
-			+ "cm.DIRECT_BILL_INVOICE = spb.INVOICE_NUMBER "
-			+ "WHERE cm.cleared_receivable = 'N' AND cm.O_COMMENT NOT LIKE '%OFFSET%' AND cm.DIRECT_BILL_INVOICE NOT IN (0, 99999999) GROUP BY "
-			+ "cm.POLICY_NUMBER, cm.POLICY_PREFIX_1, cm.POLICY_PREFIX_2, cm.POLICY_SUFFIX, cm.SUBMISSION_NUMBER, cm.DIRECT_BILL_INVOICE, spb.DUE_DATE, spb.STMT_DATE";
-
+                  private static final String FIND_ALL = "SELECT " +
+                                                                        "	cm.POLICY_NUMBER as REFERENCE_NUMBER, " +
+                                                                        "	cm.SUBMISSION_NUMBER as SUBMISSION_NUMBER, " +
+                                                                        "	CASE WHEN MAX(spb.AMOUNT_DUE) < SUM(cm.NET_PREMIUM_AMOUNT) " +
+                                                                        "		THEN MAX(spb.AMOUNT_DUE) " +
+                                                                        "	ELSE CASE WHEN SUM(cm.NET_PREMIUM_AMOUNT) < 0 " +
+                                                                        "		THEN MAX(spb.AMOUNT_DUE) ELSE SUM(cm.NET_PREMIUM_AMOUNT) " +
+                                                                        "		END " +
+                                                                        "	END AS AMOUNT_DUE, " +
+                                                                        "	CONCAT(LTRIM(RTRIM(cm.POLICY_PREFIX_1)), LTRIM(RTRIM(cm.POLICY_PREFIX_2)), LTRIM(RTRIM(cm.POLICY_NUMBER)), '-', LTRIM(RTRIM(cm.POLICY_SUFFIX))) as INVOICE_NUMBER, " +
+                                                                        "	spb.STMT_DATE as INVOICE_DATE, " +
+                                                                        "	spb.DUE_DATE as DUE_DATE " +
+                                                                        "FROM COLLECTION_MASTER cm " +
+                                                                        "	LEFT OUTER JOIN SP_BILL_STMT_CTRL spb ON " +
+                                                                        "	cm.POLICY_PREFIX_1 = spb.POLICY_PREFIX_1 " +
+                                                                        "	AND cm.POLICY_PREFIX_2 = spb.POLICY_PREFIX_2 " +
+                                                                        "	AND cm.POLICY_NUMBER = spb.POLICY_NUMBER " +
+                                                                        "	AND cm.policy_suffix = spb.policy_suffix " +
+                                                                        "	AND cm.DIRECT_BILL_INVOICE = spb.INVOICE_NUMBER " +
+                                                                        "WHERE " +
+                                                                        "	cm.cleared_receivable = 'N' " +
+                                                                        "	AND cm.O_COMMENT NOT LIKE '%OFFSET%' " +
+                                                                        "	AND cm.DIRECT_BILL_INVOICE NOT IN (0, 99999999) " +
+                                                                        "	GROUP BY " +
+                                                                        "		cm.POLICY_NUMBER, " +
+                                                                        "		cm.POLICY_PREFIX_1, " +
+                                                                        "		cm.POLICY_PREFIX_2, " +
+                                                                        "		cm.POLICY_SUFFIX, " +
+                                                                        "		cm.SUBMISSION_NUMBER, " +
+                                                                        "		cm.DIRECT_BILL_INVOICE, " +
+                                                                        "		spb.DUE_DATE, " +
+                                                                        "		spb.STMT_DATE;";
+        
 	private static final String SAVE_RECORD = "INSERT INTO WF_MAM_SRC_FILE(CYCLE_NUMBER,SEQUENCE_NUMBER,"
 			+ "REFERENCE_NUMBER,SECONDARY_AUTH,AMOUNT_DUE,INVOICE_NUMBER,INVOICE_DATE,CONSOLIDATED_NAME, DUE_DATE, SUBMISSION_NUMBER)VALUES"
 			+ "(:cycleNumber,:sequenceNumber,:referenceNumber,:secondaryAuth,:amountDue,:invoiceNumber,:invoiceDate,'', :dueDate, :submissionNumber)";
