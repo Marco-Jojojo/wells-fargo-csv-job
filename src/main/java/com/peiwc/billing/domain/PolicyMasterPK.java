@@ -7,6 +7,10 @@ import javax.persistence.Embeddable;
 
 import com.google.common.base.Objects;
 
+/**
+ * Embedded id for PolicyMaster
+ *
+ */
 @Embeddable
 public class PolicyMasterPK implements Serializable {
 
@@ -21,18 +25,30 @@ public class PolicyMasterPK implements Serializable {
 	@Column(name = "POLICY_SUFFIX")
 	private String policySuffix;
 
+	/**
+	 * @return policyNumber
+	 */
 	public String getPolicyNumber() {
 		return policyNumber;
 	}
 
+	/**
+	 * @param policyNumber
+	 */
 	public void setPolicyNumber(final String policyNumber) {
 		this.policyNumber = policyNumber;
 	}
 
+	/**
+	 * @return policySuffix
+	 */
 	public String getPolicySuffix() {
 		return policySuffix;
 	}
 
+	/**
+	 * @param policySuffix
+	 */
 	public void setPolicySuffix(final String policySuffix) {
 		this.policySuffix = policySuffix;
 	}
