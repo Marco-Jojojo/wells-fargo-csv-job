@@ -37,6 +37,9 @@ public class WFMamOpHDRTRLR {
 	@Column(name = "STATUS", length = 20)
 	private String status;
 
+	/**
+	 *
+	 */
 	public WFMamOpHDRTRLR() {
 		fileName = "";
 		statusMessage = "";
@@ -88,11 +91,17 @@ public class WFMamOpHDRTRLR {
 		this.totalRecordCount = totalRecordCount;
 	}
 
+	/**
+	 * @return String
+	 */
 	public String getStatusMessage() {
 		return statusMessage;
 	}
 
-	public void setStatusMessage(String statusMessage) {
+	/**
+	 * @param statusMessage
+	 */
+	public void setStatusMessage(final String statusMessage) {
 		this.statusMessage = statusMessage;
 	}
 
