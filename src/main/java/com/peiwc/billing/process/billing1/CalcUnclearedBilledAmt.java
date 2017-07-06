@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.peiwc.billing.dao.CalcUnclearedBilledAmtDAO;
+import com.peiwc.billing.dao.WFMamErrLogRepository;
+import com.peiwc.billing.domain.WFMamErrLog;
 import com.peiwc.billing.domain.WFMamSrcFile;
 import com.peiwc.billing.domain.WFMamSrcFilePK;
 
@@ -22,9 +24,16 @@ public class CalcUnclearedBilledAmt {
 	@Autowired
 	private CalcUnclearedBilledAmtDAO calcUnclearedBilledAmtDAO;
 
+	@Autowired
+	private WFMamErrLogRepository wfMamErrLogRepository;
+
+	private static final String PENDING_REC = "PENDING_REC";
+
+	private static final String POLICY_NUMBER_DESCRIPTION_ERROR = "Policy number cannot be zero or null";
+
 	/**
 	 * Take records from COLLECTION MASTER and insert them into WF_MAM_SRC_FILE
-	 * 
+	 *
 	 * @param cycleNumber
 	 */
 	public void updWFMamSrcFileRec(final int cycleNumber) {
@@ -37,6 +46,9 @@ public class CalcUnclearedBilledAmt {
 			final WFMamSrcFilePK id = new WFMamSrcFilePK();
 			id.setCycleNumber(cycleNumber);
 			id.setSequenceNumber(sequenceNumber);
+			if ("0".equals(row.getReferenceNumber())) {
+				this.sendError(cycleNumber, sequenceNumber, CalcUnclearedBilledAmt.PENDING_REC);
+			}
 			sequenceNumber += 1;
 			row.setId(id);
 			this.calcUnclearedBilledAmtDAO.create(row);
@@ -44,5 +56,15 @@ public class CalcUnclearedBilledAmt {
 		}
 		CalcUnclearedBilledAmt.LOGGER.info("PROCESS STATUS: created: " + createCounter);
 		CalcUnclearedBilledAmt.LOGGER.info("PROCESS STATUS: Ending CalcUnclearedBilledAmt.updWFMamSrcFileRec");
+	}
+
+	private void sendError(final int cycleNumber, final int sequenceNumber, final String errorMsg) {
+		final WFMamErrLog error = new WFMamErrLog();
+		error.setCycleNumber(cycleNumber);
+		error.setSequenceNumber(sequenceNumber);
+		error.setDescription(errorMsg);
+		error.setStatus(CalcUnclearedBilledAmt.POLICY_NUMBER_DESCRIPTION_ERROR);
+		wfMamErrLogRepository.saveAndFlush(error);
+
 	}
 }
