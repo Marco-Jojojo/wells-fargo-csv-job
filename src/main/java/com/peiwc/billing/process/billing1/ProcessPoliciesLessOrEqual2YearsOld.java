@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.peiwc.billing.dao.ProcessPoliciesLessOrEqual2YearsOldDAO;
+import com.peiwc.billing.dao.WFMamErrLogRepository;
+import com.peiwc.billing.domain.WFMamErrLog;
 import com.peiwc.billing.domain.WFMamSrcFile;
 import com.peiwc.billing.domain.WFMamSrcFilePK;
 
@@ -25,6 +27,15 @@ public class ProcessPoliciesLessOrEqual2YearsOld {
 
 	@Autowired
 	private ProcessPoliciesLessOrEqual2YearsOldDAO processPoliciesLessOrEqual2YearsOldDAO;
+
+	@Autowired
+	private WFMamErrLogRepository wfMamErrLogRepository;
+
+	private static final String PENDING_REC = "PENDING_REC";
+
+	private static final String POLICY_NUMBER_DESCRIPTION_ERROR = "Policy number cannot be zero or null";
+
+	private static final String DUE_DATE_DESCRIPTION_ERROR = "Due date cannot bu null";
 
 	/**
 	 * Get two years old records from POLICY_MASTER and insert them
@@ -55,6 +66,13 @@ public class ProcessPoliciesLessOrEqual2YearsOld {
 				final WFMamSrcFilePK id = new WFMamSrcFilePK();
 				id.setCycleNumber(cycleNumber);
 				id.setSequenceNumber(seqNumber);
+				if ("0".equals(recordFromPM.getReferenceNumber())) {
+					this.sendError(cycleNumber, seqNumber,
+							ProcessPoliciesLessOrEqual2YearsOld.POLICY_NUMBER_DESCRIPTION_ERROR);
+				} else if (recordFromPM.getDueDate() == null) {
+					this.sendError(cycleNumber, seqNumber,
+							ProcessPoliciesLessOrEqual2YearsOld.DUE_DATE_DESCRIPTION_ERROR);
+				}
 				seqNumber += 1;
 				recordFromPM.setId(id);
 				this.processPoliciesLessOrEqual2YearsOldDAO.create(recordFromPM);
@@ -69,7 +87,7 @@ public class ProcessPoliciesLessOrEqual2YearsOld {
 	/**
 	 * Get records from POLICY_MASTER where EFFECTIVE DAY > currentDay and
 	 * insert them in WF_MAM_SRC_FILE table
-	 * 
+	 *
 	 * @param cycleNumber
 	 */
 	public void futurePolicies(final int cycleNumber) {
@@ -92,6 +110,13 @@ public class ProcessPoliciesLessOrEqual2YearsOld {
 				final WFMamSrcFilePK id = new WFMamSrcFilePK();
 				id.setCycleNumber(cycleNumber);
 				id.setSequenceNumber(seqNumber);
+				if ("0".equals(recordFromPM.getReferenceNumber())) {
+					this.sendError(cycleNumber, seqNumber,
+							ProcessPoliciesLessOrEqual2YearsOld.POLICY_NUMBER_DESCRIPTION_ERROR);
+				} else if (recordFromPM.getDueDate() == null) {
+					this.sendError(cycleNumber, seqNumber,
+							ProcessPoliciesLessOrEqual2YearsOld.DUE_DATE_DESCRIPTION_ERROR);
+				}
 				seqNumber += 1;
 				recordFromPM.setId(id);
 				this.processPoliciesLessOrEqual2YearsOldDAO.create(recordFromPM);
@@ -101,6 +126,17 @@ public class ProcessPoliciesLessOrEqual2YearsOld {
 		ProcessPoliciesLessOrEqual2YearsOld.LOGGER.info("PROCESS STATUS: created: " + createCounter);
 		ProcessPoliciesLessOrEqual2YearsOld.LOGGER
 				.info("PROCESS STATUS: Ending ProcessPoliciesLessOrEqual2YearsOld.futurePolicies");
+	}
+
+	private void sendError(final int cycleNumber, final int sequenceNumber, final String errorMsg) {
+		final WFMamErrLog error = new WFMamErrLog();
+		error.setCycleNumber(cycleNumber);
+		error.setSequenceNumber(sequenceNumber);
+		error.setDescription(errorMsg);
+		error.setStatus(ProcessPoliciesLessOrEqual2YearsOld.PENDING_REC);
+		ProcessPoliciesLessOrEqual2YearsOld.LOGGER.info("PROCESS STATUS: MSG ERROR: " + error.getDescription());
+		wfMamErrLogRepository.saveAndFlush(error);
+
 	}
 
 }

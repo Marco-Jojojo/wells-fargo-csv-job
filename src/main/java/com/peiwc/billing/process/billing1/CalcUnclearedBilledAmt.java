@@ -31,6 +31,8 @@ public class CalcUnclearedBilledAmt {
 
 	private static final String POLICY_NUMBER_DESCRIPTION_ERROR = "Policy number cannot be zero or null";
 
+	private static final String DUE_DATE_DESCRIPTION_ERROR = "Due date cannot bu null";
+
 	/**
 	 * Take records from COLLECTION MASTER and insert them into WF_MAM_SRC_FILE
 	 *
@@ -47,7 +49,9 @@ public class CalcUnclearedBilledAmt {
 			id.setCycleNumber(cycleNumber);
 			id.setSequenceNumber(sequenceNumber);
 			if ("0".equals(row.getReferenceNumber())) {
-				this.sendError(cycleNumber, sequenceNumber, CalcUnclearedBilledAmt.PENDING_REC);
+				this.sendError(cycleNumber, sequenceNumber, CalcUnclearedBilledAmt.POLICY_NUMBER_DESCRIPTION_ERROR);
+			} else if (row.getDueDate() == null) {
+				this.sendError(cycleNumber, sequenceNumber, CalcUnclearedBilledAmt.DUE_DATE_DESCRIPTION_ERROR);
 			}
 			sequenceNumber += 1;
 			row.setId(id);
@@ -63,7 +67,8 @@ public class CalcUnclearedBilledAmt {
 		error.setCycleNumber(cycleNumber);
 		error.setSequenceNumber(sequenceNumber);
 		error.setDescription(errorMsg);
-		error.setStatus(CalcUnclearedBilledAmt.POLICY_NUMBER_DESCRIPTION_ERROR);
+		error.setStatus(CalcUnclearedBilledAmt.PENDING_REC);
+		CalcUnclearedBilledAmt.LOGGER.info("PROCESS STATUS: MSG ERROR: " + error.getDescription());
 		wfMamErrLogRepository.saveAndFlush(error);
 
 	}
