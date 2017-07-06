@@ -7,6 +7,10 @@ import javax.persistence.Embeddable;
 
 import com.google.common.base.Objects;
 
+/**
+ * Embedded id for SprEntityFile
+ *
+ */
 @Embeddable
 public class SprEntityFilePK implements Serializable {
 
@@ -24,26 +28,44 @@ public class SprEntityFilePK implements Serializable {
 	@Column(name = "ENTITY_NUMBER")
 	private int entityNumber;
 
+	/**
+	 * @return submissionNumber
+	 */
 	public int getSubmissionNumber() {
 		return submissionNumber;
 	}
 
+	/**
+	 * @param submissionNumber
+	 */
 	public void setSubmissionNumber(final int submissionNumber) {
 		this.submissionNumber = submissionNumber;
 	}
 
+	/**
+	 * @return nextDbaNumber
+	 */
 	public int getNextDbaNumber() {
 		return nextDbaNumber;
 	}
 
+	/**
+	 * @param nextDbaNumber
+	 */
 	public void setNextDbaNumber(final int nextDbaNumber) {
 		this.nextDbaNumber = nextDbaNumber;
 	}
 
+	/**
+	 * @return entityNumber
+	 */
 	public int getEntityNumber() {
 		return entityNumber;
 	}
 
+	/**
+	 * @param entityNumber
+	 */
 	public void setEntityNumber(final int entityNumber) {
 		this.entityNumber = entityNumber;
 	}

@@ -7,6 +7,10 @@ import javax.persistence.Embeddable;
 
 import com.google.common.base.Objects;
 
+/**
+ * Embedded if for SprInsuredContact
+ *
+ */
 @Embeddable
 public class SprInsuredContactPK implements Serializable {
 
@@ -21,18 +25,30 @@ public class SprInsuredContactPK implements Serializable {
 	@Column(name = "SUBMISSION_NUMBER")
 	private int submissionNumber;
 
+	/**
+	 * @return contectCodeId
+	 */
 	public int getContectCodeId() {
 		return contectCodeId;
 	}
 
+	/**
+	 * @param contectCodeId
+	 */
 	public void setContectCodeId(final int contectCodeId) {
 		this.contectCodeId = contectCodeId;
 	}
 
+	/**
+	 * @return submissionNumber
+	 */
 	public int getSubmissionNumber() {
 		return submissionNumber;
 	}
 
+	/**
+	 * @param submissionNumber
+	 */
 	public void setSubmissionNumber(final int submissionNumber) {
 		this.submissionNumber = submissionNumber;
 	}

@@ -7,6 +7,10 @@ import javax.persistence.Embeddable;
 
 import com.google.common.base.Objects;
 
+/**
+ * Embedded id for SprLocation
+ *
+ */
 @Embeddable
 public class SprLocationPK implements Serializable {
 
@@ -24,26 +28,44 @@ public class SprLocationPK implements Serializable {
 	@Column(name = "LOCATION")
 	private String location;
 
+	/**
+	 * @return submissionNumber
+	 */
 	public int getSubmissionNumber() {
 		return submissionNumber;
 	}
 
+	/**
+	 * @param submissionNumber
+	 */
 	public void setSubmissionNumber(final int submissionNumber) {
 		this.submissionNumber = submissionNumber;
 	}
 
+	/**
+	 * @return entityNumber
+	 */
 	public int getEntityNumber() {
 		return entityNumber;
 	}
 
+	/**
+	 * @param entityNumber
+	 */
 	public void setEntityNumber(final int entityNumber) {
 		this.entityNumber = entityNumber;
 	}
 
+	/**
+	 * @return location
+	 */
 	public String getLocation() {
 		return location;
 	}
 
+	/**
+	 * @param location
+	 */
 	public void setLocation(final String location) {
 		this.location = location;
 	}

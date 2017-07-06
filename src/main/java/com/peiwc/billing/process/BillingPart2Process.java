@@ -19,7 +19,8 @@ import com.peiwc.billing.domain.WFSPROptional;
 import com.peiwc.billing.domain.WFUserInfo;
 
 /**
- * @author alfonso.pech Process to get the user information by cycle number.
+ * @author alfonso.pech Process to fill WF_MAM_SRC_FILE with the user
+ *         information by providing the cycleNumber.
  *
  */
 @Component

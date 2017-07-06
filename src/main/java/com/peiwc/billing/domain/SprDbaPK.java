@@ -7,6 +7,10 @@ import javax.persistence.Embeddable;
 
 import com.google.common.base.Objects;
 
+/**
+ * Embedded id for SprDba
+ *
+ */
 @Embeddable
 public class SprDbaPK implements Serializable {
 
@@ -24,26 +28,44 @@ public class SprDbaPK implements Serializable {
 	@Column(name = "DBA_NUMBER")
 	private int dbaNumber;
 
+	/**
+	 * @return submissionNumber
+	 */
 	public int getSubmissionNumber() {
 		return submissionNumber;
 	}
 
+	/**
+	 * @param submissionNumber
+	 */
 	public void setSubmissionNumber(final int submissionNumber) {
 		this.submissionNumber = submissionNumber;
 	}
 
+	/**
+	 * @return entityNumber
+	 */
 	public int getEntityNumber() {
 		return entityNumber;
 	}
 
+	/**
+	 * @param entityNumber
+	 */
 	public void setEntityNumber(final int entityNumber) {
 		this.entityNumber = entityNumber;
 	}
 
+	/**
+	 * @return dbaNumber
+	 */
 	public int getDbaNumber() {
 		return dbaNumber;
 	}
 
+	/**
+	 * @param dbaNumber
+	 */
 	public void setDbaNumber(final int dbaNumber) {
 		this.dbaNumber = dbaNumber;
 	}
