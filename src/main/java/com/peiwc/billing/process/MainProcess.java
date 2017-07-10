@@ -68,9 +68,9 @@ public class MainProcess {
 				billingPart2Process.updateUserInfo(nextCycle);
 				final String fileNameId = System.getProperty("csv.id.prefix");
 				final String fileNamePrefix = System.getProperty("csv.name.prefix");
-				String fileName = "test.csv";
+				String fileName = "test.txt";
 				if (StringUtils.isNotEmpty(fileNamePrefix) && StringUtils.isNotEmpty(fileNameId)) {
-					fileName = fileNameId + "_" + fileNamePrefix + generateFileSuffix() + ".csv";
+					fileName = fileNameId + "_" + fileNamePrefix + generateFileSuffix() + ".txt";
 				}
 				try {
 					final int totalRecordCount = writeWFMAMSrcFileCSV.writeDataToCSV(nextCycle, fileName);
