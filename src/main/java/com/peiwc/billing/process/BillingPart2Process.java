@@ -50,18 +50,51 @@ public class BillingPart2Process {
 	 */
 	public boolean updateUserInfo(final int cycleNumber) {
 		final boolean hasRunSuccessfully = true;
+		boolean updateFlag = true;
 		BillingPart2Process.LOGGER.debug("Begin billing part2 for current cycle");
 		final List<WFMamSrcFile> wfMamList = wfMamSrcFileDAO.findByCycleNumber(cycleNumber);
 		for (final WFMamSrcFile srcFile : wfMamList) {
 
 			final int submissionNumber = srcFile.getSubmissionNumber();
-			List<WFUserInfo> users = billingInformationProcess.getUserInformation(submissionNumber);
+			final List<WFUserInfo> users = billingInformationProcess.getUserInformation(submissionNumber);
 			final List<WFDBAName> dbaNames = billingInformationProcess.getDBAName(submissionNumber);
 			String consolidatedName = StringUtils.EMPTY;
+			String address = StringUtils.EMPTY;
+			String address2 = StringUtils.EMPTY;
+			String city = StringUtils.EMPTY;
+			String state = StringUtils.EMPTY;
+			String zip = StringUtils.EMPTY;
+			String statusDB = StringUtils.EMPTY;
 
-			if (CollectionUtils.isEmpty(users)) {
-				users = billingInformationProcess.getUserInformationSPRLocation(submissionNumber);
-				if (CollectionUtils.isEmpty(users)) {
+			if (!CollectionUtils.isEmpty(users)) {
+				final WFUserInfo user = users.iterator().next();
+				zip = user.getZip();
+				address = StringUtils.trim(user.getAddress());
+				if (!StringUtils.isEmpty(user.getAddress2())) {
+					address2 = StringUtils.trim(user.getAddress2());
+				}
+				city = user.getCity();
+				state = user.getState();
+				statusDB = user.getStatus();
+
+			} else {
+				final List<WFUserInfo> sprUsers = billingInformationProcess
+						.getUserInformationSPRLocation(submissionNumber);
+				if (!CollectionUtils.isEmpty(sprUsers)) {
+					BillingPart2Process.LOGGER.debug("using SPR LOCATION for submissionNumber: " + submissionNumber);
+					final WFUserInfo sprUser = sprUsers.iterator().next();
+
+					zip = sprUser.getZip();
+					address = StringUtils.trim(sprUser.getAddress());
+					if (!StringUtils.isEmpty(sprUser.getAddress2())) {
+						address2 = StringUtils.trim(sprUser.getAddress2());
+					}
+					city = sprUser.getCity();
+					state = sprUser.getState();
+					statusDB = sprUser.getStatus();
+
+				} else {
+					updateFlag = false;
 					sendError(cycleNumber, srcFile.getId().getSequenceNumber(), BillingPart2Process.USER_NOT_FOUND);
 				}
 			}
@@ -79,34 +112,32 @@ public class BillingPart2Process {
 						consolidatedName = StringUtils.trim(sprName.getEntityName());
 					}
 				} else {
+					updateFlag = false;
 					sendError(cycleNumber, srcFile.getId().getSequenceNumber(), BillingPart2Process.NAME_NOT_FOUND);
 				}
 			}
-			final WFUserInfo user = users.iterator().next();
-			srcFile.setSecondaryAuth(StringUtils.trim(user.getZip()));
+
+			srcFile.setSecondaryAuth(zip);
 			srcFile.setConsolidatedName(removeSpecialCharacters(consolidatedName));
-			final String address = StringUtils.trim(user.getAddress());
 			srcFile.setAddress(removeSpecialCharacters(address));
-			final String address2 = StringUtils.EMPTY;
-			if (!StringUtils.isEmpty(user.getAddress2())) {
-				srcFile.setAddress2(StringUtils.trim(user.getAddress2()));
-			} else {
-				srcFile.setAddress2(address2);
-			}
-			srcFile.setCity(StringUtils.trim(user.getCity()));
-			srcFile.setState(user.getState());
-			srcFile.setZip(StringUtils.trim(user.getZip()));
+			srcFile.setAddress2(removeSpecialCharacters(address2));
+			srcFile.setCity(city);
+			srcFile.setState(state);
+			srcFile.setZip(zip);
+
 			String status = StringUtils.EMPTY;
-			if (BillingPart2Process.STATUS_CODE_EXPIRED.equals(user.getStatus())) {
+			if (BillingPart2Process.STATUS_CODE_EXPIRED.equals(statusDB)) {
 				status = BillingPart2Process.STATUS_EXPIRED;
 			} else {
 				status = BillingPart2Process.STATUS_ACTIVE;
 			}
 			srcFile.setStatusInvoice(status);
+
 			if (BillingPart2Process.LOGGER.isDebugEnabled()) {
 				BillingPart2Process.LOGGER.debug("srcFile null : " + srcFile == null);
 				BillingPart2Process.LOGGER.debug("srcFile values : " + ToStringBuilder.reflectionToString(srcFile));
 			}
+
 			final List<WFSPROptional> optionals = billingInformationProcess.getOptional(submissionNumber);
 			if (!CollectionUtils.isEmpty(optionals)) {
 				final WFSPROptional optional = optionals.iterator().next();
@@ -125,8 +156,9 @@ public class BillingPart2Process {
 				}
 			}
 
-			wfMamSrcFileDAO.updateSrcFile(srcFile);
-
+			if (updateFlag) {
+				wfMamSrcFileDAO.updateSrcFile(srcFile);
+			}
 		}
 
 		return hasRunSuccessfully;
