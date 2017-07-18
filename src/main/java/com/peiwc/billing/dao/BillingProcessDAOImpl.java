@@ -11,6 +11,7 @@ import com.peiwc.billing.dao.mappers.WFDBANameMapper;
 import com.peiwc.billing.dao.mappers.WFSPRNameMapper;
 import com.peiwc.billing.dao.mappers.WFSPROptionalMapper;
 import com.peiwc.billing.dao.mappers.WFUserInfoMapper;
+import com.peiwc.billing.dao.mappers.WFUserInfoSPRLocationMapper;
 import com.peiwc.billing.domain.WFDBAName;
 import com.peiwc.billing.domain.WFSPRName;
 import com.peiwc.billing.domain.WFSPROptional;
@@ -40,6 +41,14 @@ public class BillingProcessDAOImpl implements BillingProcessDAO {
 	/**
 	 *
 	 */
+	public static final String GET_USER_INFORMATION_SPR_LOCATION = "SELECT "
+			+ "ADDR_1, ADDR_2, CITY, STATE, ZIP1, STATUS_CODE FROM SPR_LOCATION as b "
+			+ "JOIN POLICY_MASTER as r ON r.SUBMISSION_NUMBER = b.SUBMISSION_NUMBER "
+			+ "WHERE b.SUBMISSION_NUMBER = :submissionNumber AND b.ENTITY_NUMBER = 1";
+
+	/**
+	 *
+	 */
 	public static final String GET_OPTIONAL_INFORMATION = "SELECT "
 			+ "PHONE_AREA_CODE, PHONE_PREFIX, PHONE_SUFFIX, EMAIL_ADDRESS "
 			+ "FROM SPR_INSURED_CONTACT_ WHERE SUBMISSION_NUMBER = :submissionNumber";
@@ -62,6 +71,16 @@ public class BillingProcessDAOImpl implements BillingProcessDAO {
 		parameters.addValue("submissionNumber", submissionNumber);
 		final List<WFUserInfo> result = namedParameterJdbcTemplate.query(BillingProcessDAOImpl.GET_USER_INFORMATION,
 				parameters, new WFUserInfoMapper());
+
+		return result;
+	}
+
+	@Override
+	public List<WFUserInfo> getUserInformationSPRLocation(final int submissionNumber) {
+		final MapSqlParameterSource parameters = new MapSqlParameterSource();
+		parameters.addValue("submissionNumber", submissionNumber);
+		final List<WFUserInfo> result = namedParameterJdbcTemplate.query(
+				BillingProcessDAOImpl.GET_USER_INFORMATION_SPR_LOCATION, parameters, new WFUserInfoSPRLocationMapper());
 
 		return result;
 	}

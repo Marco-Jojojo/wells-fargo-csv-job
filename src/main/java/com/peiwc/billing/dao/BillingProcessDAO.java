@@ -21,6 +21,12 @@ public interface BillingProcessDAO {
 
 	/**
 	 * @param submissionNumber
+	 * @return List<WFUserInfo>
+	 */
+	List<WFUserInfo> getUserInformationSPRLocation(int submissionNumber);
+
+	/**
+	 * @param submissionNumber
 	 * @return List<WFDBAName>
 	 */
 	List<WFDBAName> getUserDBAName(int submissionNumber);

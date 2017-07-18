@@ -34,6 +34,16 @@ public class BillingInformationProcess {
 
 	/**
 	 * @param submissionNumber
+	 * @return List<WFUserInfo>
+	 */
+	public List<WFUserInfo> getUserInformationSPRLocation(final int submissionNumber) {
+		final List<WFUserInfo> result = billingProcessDAO.getUserInformationSPRLocation(submissionNumber);
+
+		return result;
+	}
+
+	/**
+	 * @param submissionNumber
 	 * @return List<WFDBAName>
 	 */
 	public List<WFDBAName> getDBAName(final int submissionNumber) {
