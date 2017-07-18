@@ -8,11 +8,11 @@ import javax.persistence.Embeddable;
 import com.google.common.base.Objects;
 
 /**
- * Embedded id for PolicyMaster
+ * Embedded id for BillingStatementHe
  *
  */
 @Embeddable
-public class PolicyMasterPK implements Serializable {
+public class BillingStatementHePK implements Serializable {
 
 	/**
 	 *
@@ -98,10 +98,10 @@ public class PolicyMasterPK implements Serializable {
 		if (obj == null) {
 			equals = false;
 		} else {
-			if (obj instanceof PolicyMasterPK) {
+			if (obj instanceof BillingStatementHePK) {
 				equals = false;
 			} else {
-				final PolicyMasterPK other = (PolicyMasterPK) obj;
+				final BillingStatementHePK other = (BillingStatementHePK) obj;
 				equals = Objects.equal(other.policyPrefix1, this.policyPrefix1)
 						&& Objects.equal(other.policyPrefix2, this.policyPrefix2)
 						&& Objects.equal(other.policyNumber, this.policyNumber)

@@ -11,7 +11,6 @@ public class WFUserInfo {
 	private String city;
 	private String state;
 	private String zip;
-	private String phone;
 	private String status;
 
 	/**
@@ -82,20 +81,6 @@ public class WFUserInfo {
 	 */
 	public void setZip(final String zip) {
 		this.zip = zip;
-	}
-
-	/**
-	 * @return phone
-	 */
-	public String getPhone() {
-		return phone;
-	}
-
-	/**
-	 * @param phone
-	 */
-	public void setPhone(final String phone) {
-		this.phone = phone;
 	}
 
 	/**
