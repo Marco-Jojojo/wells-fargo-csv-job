@@ -154,6 +154,9 @@ public class BillingPart2Process {
 				} else {
 					srcFile.setEmail(email);
 				}
+			} else {
+				srcFile.setPhone(StringUtils.EMPTY);
+				srcFile.setEmail(StringUtils.EMPTY);
 			}
 
 			if (updateFlag) {
