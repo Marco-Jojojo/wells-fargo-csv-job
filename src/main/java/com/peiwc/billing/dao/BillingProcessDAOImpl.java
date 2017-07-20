@@ -36,7 +36,7 @@ public class BillingProcessDAOImpl implements BillingProcessDAO {
 			+ "JOIN BILLING_STATEMENT_HE as p "
 			+ "ON b.POLICY_PREFIX_1 = p.POLICY_PREFIX_1 and b.POLICY_PREFIX_2 = p.POLICY_PREFIX_2 and "
 			+ "b.POLICY_NUMBER = p.POLICY_NUMBER and b.POLICY_SUFFIX = p.POLICY_SUFFIX "
-			+ "WHERE b.SUBMISSION_NUMBER = :submissionNumber";
+			+ "WHERE b.SUBMISSION_NUMBER = :submissionNumber ORDER BY p.STMT_DATE desc";
 
 	/**
 	 *
