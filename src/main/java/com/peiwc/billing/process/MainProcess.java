@@ -104,8 +104,8 @@ public class MainProcess {
 		final StringBuilder buffer = new StringBuilder();
 		final List<WFMamErrLog> errors = this.wfMamErrLogRepository.getErrorsFromCycleNumber(nextCycle);
 		if (!CollectionUtils.isEmpty(errors)) {
-			buffer.append(
-			        "the following records have not been processed since there was no information in mandatory fields: \r\n");
+			buffer.append("the following sequence numbers have not been processed "
+			        + "since there was no information in mandatory fields: \r\n");
 			int count = 0;
 			for (final WFMamErrLog wfMamErrLog : errors) {
 				final int sequenceNumber = wfMamErrLog.getSequenceNumber();
