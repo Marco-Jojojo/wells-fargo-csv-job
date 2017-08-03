@@ -15,7 +15,7 @@ public interface ProcessPoliciesLessOrEqual2YearsOldDAO {
 	 * @param today
 	 * @return List<WFMamSrcFile>
 	 */
-	List<WFMamSrcFile> findAllTwoYearsOldPolicies(String twoYearsBefore, String today);
+	List<WFMamSrcFile> findAllPoliciesWithoutOutstandingBills();
 
 	/**
 	 * @param today

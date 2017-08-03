@@ -51,10 +51,8 @@ public class ProcessPoliciesLessOrEqual2YearsOld {
 		cal.add(Calendar.YEAR, -2);
 		final Date twoYearsBefore = cal.getTime();
 		final SimpleDateFormat sqlFormat = new SimpleDateFormat("yyyy-MM-dd");
-		final String todayFormatted = sqlFormat.format(today);
-		final String twoYearsBeforeFormatted = sqlFormat.format(twoYearsBefore);
 		final List<WFMamSrcFile> recordsFromPolicyMaster = this.processPoliciesLessOrEqual2YearsOldDAO
-				.findAllTwoYearsOldPolicies(twoYearsBeforeFormatted, todayFormatted);
+				.findAllPoliciesWithoutOutstandingBills();
 		ProcessPoliciesLessOrEqual2YearsOld.LOGGER
 				.info("PROCESS STATUS: Getting records: " + recordsFromPolicyMaster.size());
 		int seqNumber = this.processPoliciesLessOrEqual2YearsOldDAO.getMaxSequenceNumber(cycleNumber) + 1;

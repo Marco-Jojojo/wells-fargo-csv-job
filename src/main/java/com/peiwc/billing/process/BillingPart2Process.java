@@ -126,11 +126,15 @@ public class BillingPart2Process {
 			srcFile.setZip(zip);
 
 			String status = StringUtils.EMPTY;
-			if (BillingPart2Process.STATUS_CODE_EXPIRED.equals(statusDB)) {
-				status = BillingPart2Process.STATUS_EXPIRED;
-			} else {
-				status = BillingPart2Process.STATUS_ACTIVE;
-			}
+                                                      if (srcFile.getAmountDue() == 0) {
+                                                           status = BillingPart2Process.STATUS_EXPIRED;
+                                                      } else {
+                                                            if (BillingPart2Process.STATUS_CODE_EXPIRED.equals(statusDB)) {
+                                                                    status = BillingPart2Process.STATUS_EXPIRED;
+                                                            } else {
+                                                                    status = BillingPart2Process.STATUS_ACTIVE;
+                                                            }
+                                                      }
 			srcFile.setStatusInvoice(status);
 
 			if (BillingPart2Process.LOGGER.isDebugEnabled()) {

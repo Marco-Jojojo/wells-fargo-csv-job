@@ -23,46 +23,25 @@ public class ProcessPoliciesLessOrEqual2YearsOldDAOImpl implements ProcessPolici
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	private static final String FIND_ALL_TWO_YEARS_OLD_POLICIES = 
+	private static final String FIND_ALL_POLICIES_WITHOUT_OUTSTANDING_BILLS = 
                 "SELECT " +
                 "	p.POLICY_NUMBER AS REFERENCE_NUMBER, " +
                 "	p.SUBMISSION_NUMBER AS SUBMISSION_NUMBER , " +
-                "	CASE WHEN MAX(spb.AMOUNT_DUE) < SUM(c.NET_PREMIUM_AMOUNT) " +
-                "		THEN MAX(spb.AMOUNT_DUE) " +
-                "	ELSE CASE WHEN SUM(c.NET_PREMIUM_AMOUNT) < 0 " +
-                "		THEN MAX(spb.AMOUNT_DUE) " +
-                "		ELSE SUM(c.NET_PREMIUM_AMOUNT) " +
-                "		END " +
-                "END AS AMOUNT_DUE, " +
+                "SUM(c.NET_PREMIUM_AMOUNT) AS AMOUNT_DUE, " +
                 "	CONCAT(LTRIM(RTRIM(c.POLICY_PREFIX_1)), LTRIM(RTRIM(c.POLICY_PREFIX_2)), LTRIM(RTRIM(c.POLICY_NUMBER)), '-', LTRIM(RTRIM(c.POLICY_SUFFIX))) AS INVOICE_NUMBER, " +
-                "	spb.STMT_DATE AS INVOICE_DATE, " +
-                "	spb.DUE_DATE AS DUE_DATE " +
+                "	p.EFFECTIVE_DATE AS INVOICE_DATE, " +
+                "p.EFFECTIVE_DATE AS DUE_DATE " +
                 "	FROM " +
                 "		POLICY_MASTER p, " +
-                "		SPR_FINANCIAL_FILE s, " +
-                "		COLLECTION_MASTER c LEFT OUTER JOIN " +
-                "			SP_BILL_STMT_CTRL spb ON " +
-                "			c.POLICY_PREFIX_1 = spb.POLICY_PREFIX_1 " +
-                "			AND c.POLICY_PREFIX_2 = spb.POLICY_PREFIX_2 " +
-                "			AND c.POLICY_NUMBER = spb.POLICY_NUMBER " +
-                "			AND c.POLICY_SUFFIX = spb.POLICY_SUFFIX " +
-                "			AND c.DIRECT_BILL_INVOICE = spb.INVOICE_NUMBER " +
+                "		COLLECTION_MASTER c " +
                 "	WHERE " +
-                "		p.SUBMISSION_NUMBER = s.SUBMISSION_NUMBER " +
-                "		AND p.POLICY_PREFIX_1 = s.POLICY_PREFIX_1 " +
-                "		AND p.POLICY_PREFIX_2 = s.POLICY_PREFIX_2 " +
-                "		AND p.SUBMISSION_NUMBER = c.SUBMISSION_NUMBER " +
+                "		p.SUBMISSION_NUMBER = c.SUBMISSION_NUMBER " +
                 "		AND p.POLICY_NUMBER = c.POLICY_NUMBER " +
                 "		AND p.POLICY_PREFIX_1 = c.POLICY_PREFIX_1 " +
                 "		AND p.POLICY_PREFIX_2 = c.POLICY_PREFIX_2 " +
                 "		AND p.POLICY_SUFFIX = c.POLICY_SUFFIX " +
-                "		AND p.WINNING_QUOTE_NUMBER = s.QUOTE_NUMBER " +
-                "		AND s.AGYDIRECT_BILL_CODE ='D' " +
-                "		AND p.EFFECTIVE_DATE < :today AND p.EFFECTIVE_DATE >= :twoYearsBefore " +
-                "		AND c.CLEARED_RECEIVABLE='N' " +
-                "		AND c.TRANSFER_FLAG='' " +
-                "		AND c.O_COMMENT NOT LIKE '%OFFSET%' " +
-                "		AND c.DIRECT_BILL_INVOICE NOT IN (0, 99999999) " +
+                "		AND c.CLEARED_RECEIVABLE != 'N' " +
+                "		AND p.STATUS_CODE != 2 AND p.STATUS_CODE != 6 " +
                 "		GROUP BY " +
                 "			p.SUBMISSION_NUMBER, " +
                 "			p.POLICY_NUMBER, " +
@@ -70,9 +49,7 @@ public class ProcessPoliciesLessOrEqual2YearsOldDAOImpl implements ProcessPolici
                 "			c.POLICY_PREFIX_2, " +
                 "			c.POLICY_NUMBER, " +
                 "			c.POLICY_SUFFIX, " +
-                "			spb.STMT_DATE, " +
-                "			spb.DUE_DATE, " +
-                "			c.DIRECT_BILL_INVOICE;";
+                "			p.EFFECTIVE_DATE;";
 
 	private static final String FIND_ALL_FUTURE_POLICIES = 
                 "SELECT " +
@@ -132,12 +109,9 @@ public class ProcessPoliciesLessOrEqual2YearsOldDAOImpl implements ProcessPolici
 	private static final String GET_MAX_SEQUENCE_NUMBER = "SELECT MAX(SEQUENCE_NUMBER) FROM WF_MAM_SRC_FILE WHERE CYCLE_NUMBER = :cycleNumber";
 
 	@Override
-	public List<WFMamSrcFile> findAllTwoYearsOldPolicies(final String twoYearsBefore, final String today) {
-		final MapSqlParameterSource parameters = new MapSqlParameterSource();
-		parameters.addValue("today", today);
-		parameters.addValue("twoYearsBefore", twoYearsBefore);
+	public List<WFMamSrcFile> findAllPoliciesWithoutOutstandingBills() {
 		return this.namedParameterJdbcTemplate.query(
-				ProcessPoliciesLessOrEqual2YearsOldDAOImpl.FIND_ALL_TWO_YEARS_OLD_POLICIES, parameters,
+				ProcessPoliciesLessOrEqual2YearsOldDAOImpl.FIND_ALL_POLICIES_WITHOUT_OUTSTANDING_BILLS, 
 				new SrcFileMapperForTwoYearsPolicies());
 	}
 

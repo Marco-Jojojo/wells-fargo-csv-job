@@ -1,8 +1,5 @@
 package com.peiwc.billing.process.billing1;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.junit.Assert;
@@ -27,21 +24,14 @@ import com.peiwc.billing.domain.WFMamSrcFile;
 public class ProcessPoliciesLessOrEqual2YearsOldTest {
 	@Autowired
 	private ProcessPoliciesLessOrEqual2YearsOldDAO processPoliciesLessOrEqual2YearsOldDAO;
-
+        
 	/**
 	 *
 	 */
 	@Test
 	public void testFindAll() {
-		final Calendar cal = Calendar.getInstance();
-		final Date today = cal.getTime();
-		cal.add(Calendar.YEAR, -2);
-		final Date twoYearsBefore = cal.getTime();
-		final SimpleDateFormat sqlFormat = new SimpleDateFormat("yyyy-MM-dd");
-		final String todayFormatted = sqlFormat.format(today);
-		final String twoYearsBeforeFormatted = sqlFormat.format(twoYearsBefore);
 		final List<WFMamSrcFile> rows = this.processPoliciesLessOrEqual2YearsOldDAO
-		        .findAllTwoYearsOldPolicies(twoYearsBeforeFormatted, todayFormatted);
+		        .findAllPoliciesWithoutOutstandingBills();
 		Assert.assertNotEquals(0, rows.size());
 	}
 }
