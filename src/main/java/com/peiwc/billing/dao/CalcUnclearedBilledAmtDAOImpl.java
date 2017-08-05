@@ -51,16 +51,7 @@ public class CalcUnclearedBilledAmtDAOImpl implements CalcUnclearedBilledAmtDAO 
                                                                         "		cm.SUBMISSION_NUMBER, " +
                                                                         "		cm.DIRECT_BILL_INVOICE, " +
                                                                         "		spb.DUE_DATE, " +
-                                                                        "		spb.STMT_DATE " +
-                                                                        "HAVING " +
-                                                                       "	(CASE WHEN MAX(spb.AMOUNT_DUE) < SUM(cm.NET_PREMIUM_AMOUNT) " +
-                                                                       "		THEN MAX(spb.AMOUNT_DUE) " +
-                                                                       "	ELSE CASE WHEN SUM(cm.NET_PREMIUM_AMOUNT) < 0 " +
-                                                                       "		THEN MAX(spb.AMOUNT_DUE) " +
-                                                                       "		 ELSE " +
-                                                                       "			SUM(cm.NET_PREMIUM_AMOUNT) " +
-                                                                       "		 END " +
-                                                                       "	END) > 0;";
+                                                                        "		spb.STMT_DATE;";
         
 	private static final String SAVE_RECORD = "INSERT INTO WF_MAM_SRC_FILE(CYCLE_NUMBER,SEQUENCE_NUMBER,"
 			+ "REFERENCE_NUMBER,SECONDARY_AUTH,AMOUNT_DUE,INVOICE_NUMBER,INVOICE_DATE,CONSOLIDATED_NAME, DUE_DATE, SUBMISSION_NUMBER)VALUES"

@@ -31,7 +31,7 @@ public class ProcessPoliciesLessOrEqual2YearsOldTest {
 	@Test
 	public void testFindAll() {
 		final List<WFMamSrcFile> rows = this.processPoliciesLessOrEqual2YearsOldDAO
-		        .findAllPoliciesWithoutOutstandingBills();
+		        .findAllPoliciesForZeroBills();
 		Assert.assertNotEquals(0, rows.size());
 	}
 }

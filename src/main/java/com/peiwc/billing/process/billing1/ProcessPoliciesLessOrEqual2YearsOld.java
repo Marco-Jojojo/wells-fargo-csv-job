@@ -46,21 +46,13 @@ public class ProcessPoliciesLessOrEqual2YearsOld {
 	public void processPolicies(final int cycleNumber) {
 		ProcessPoliciesLessOrEqual2YearsOld.LOGGER
 				.info("PROCESS STATUS: Starting ProcessPoliciesLessOrEqual2YearsOld.processPolicies");
-		final Calendar cal = Calendar.getInstance();
-		final Date today = cal.getTime();
-		cal.add(Calendar.YEAR, -2);
-		final Date twoYearsBefore = cal.getTime();
-		final SimpleDateFormat sqlFormat = new SimpleDateFormat("yyyy-MM-dd");
 		final List<WFMamSrcFile> recordsFromPolicyMaster = this.processPoliciesLessOrEqual2YearsOldDAO
-				.findAllPoliciesWithoutOutstandingBills();
+				.findAllPoliciesForZeroBills();
 		ProcessPoliciesLessOrEqual2YearsOld.LOGGER
 				.info("PROCESS STATUS: Getting records: " + recordsFromPolicyMaster.size());
 		int seqNumber = this.processPoliciesLessOrEqual2YearsOldDAO.getMaxSequenceNumber(cycleNumber) + 1;
 		int createCounter = 0;
 		for (final WFMamSrcFile recordFromPM : recordsFromPolicyMaster) {
-			final List<WFMamSrcFile> recordsFound = this.processPoliciesLessOrEqual2YearsOldDAO
-					.findOneInWFSrcFile(cycleNumber, recordFromPM.getSubmissionNumber());
-			if (CollectionUtils.isEmpty(recordsFound)) {
 				final WFMamSrcFilePK id = new WFMamSrcFilePK();
 				id.setCycleNumber(cycleNumber);
 				id.setSequenceNumber(seqNumber);
@@ -75,7 +67,6 @@ public class ProcessPoliciesLessOrEqual2YearsOld {
 				recordFromPM.setId(id);
 				this.processPoliciesLessOrEqual2YearsOldDAO.create(recordFromPM);
 				createCounter += 1;
-			}
 		}
 		ProcessPoliciesLessOrEqual2YearsOld.LOGGER.info("PROCESS STATUS: created: " + createCounter);
 		ProcessPoliciesLessOrEqual2YearsOld.LOGGER

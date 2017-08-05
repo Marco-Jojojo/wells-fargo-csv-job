@@ -23,32 +23,25 @@ public class ProcessPoliciesLessOrEqual2YearsOldDAOImpl implements ProcessPolici
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	private static final String FIND_ALL_POLICIES_WITHOUT_OUTSTANDING_BILLS = 
+	private static final String FIND_ALL_POLICIES_FOR_ZERO_BILLS = 
                 "SELECT " +
                 "	p.POLICY_NUMBER AS REFERENCE_NUMBER, " +
                 "	p.SUBMISSION_NUMBER AS SUBMISSION_NUMBER , " +
-                "SUM(c.NET_PREMIUM_AMOUNT) AS AMOUNT_DUE, " +
-                "	CONCAT(LTRIM(RTRIM(c.POLICY_PREFIX_1)), LTRIM(RTRIM(c.POLICY_PREFIX_2)), LTRIM(RTRIM(c.POLICY_NUMBER)), '-', LTRIM(RTRIM(c.POLICY_SUFFIX))) AS INVOICE_NUMBER, " +
+                "0 AS AMOUNT_DUE, " +
+                "	CONCAT(LTRIM(RTRIM(p.POLICY_PREFIX_1)), LTRIM(RTRIM(p.POLICY_PREFIX_2)), LTRIM(RTRIM(p.POLICY_NUMBER)), '-', LTRIM(RTRIM(p.POLICY_SUFFIX))) AS INVOICE_NUMBER, " +
                 "	p.EFFECTIVE_DATE AS INVOICE_DATE, " +
                 "p.EFFECTIVE_DATE AS DUE_DATE " +
                 "	FROM " +
-                "		POLICY_MASTER p, " +
-                "		COLLECTION_MASTER c " +
+                "		POLICY_MASTER p " +
                 "	WHERE " +
-                "		p.SUBMISSION_NUMBER = c.SUBMISSION_NUMBER " +
-                "		AND p.POLICY_NUMBER = c.POLICY_NUMBER " +
-                "		AND p.POLICY_PREFIX_1 = c.POLICY_PREFIX_1 " +
-                "		AND p.POLICY_PREFIX_2 = c.POLICY_PREFIX_2 " +
-                "		AND p.POLICY_SUFFIX = c.POLICY_SUFFIX " +
-                "		AND c.CLEARED_RECEIVABLE != 'N' " +
-                "		AND p.STATUS_CODE != 2 AND p.STATUS_CODE != 6 " +
+                "		p.STATUS_CODE != 2 AND p.STATUS_CODE != 6 " +
                 "		GROUP BY " +
                 "			p.SUBMISSION_NUMBER, " +
                 "			p.POLICY_NUMBER, " +
-                "			c.POLICY_PREFIX_1, " +
-                "			c.POLICY_PREFIX_2, " +
-                "			c.POLICY_NUMBER, " +
-                "			c.POLICY_SUFFIX, " +
+                "			p.POLICY_PREFIX_1, " +
+                "			p.POLICY_PREFIX_2, " +
+                "			p.POLICY_NUMBER, " +
+                "			p.POLICY_SUFFIX, " +
                 "			p.EFFECTIVE_DATE;";
 
 	private static final String FIND_ALL_FUTURE_POLICIES = 
@@ -109,9 +102,9 @@ public class ProcessPoliciesLessOrEqual2YearsOldDAOImpl implements ProcessPolici
 	private static final String GET_MAX_SEQUENCE_NUMBER = "SELECT MAX(SEQUENCE_NUMBER) FROM WF_MAM_SRC_FILE WHERE CYCLE_NUMBER = :cycleNumber";
 
 	@Override
-	public List<WFMamSrcFile> findAllPoliciesWithoutOutstandingBills() {
+	public List<WFMamSrcFile> findAllPoliciesForZeroBills() {
 		return this.namedParameterJdbcTemplate.query(
-				ProcessPoliciesLessOrEqual2YearsOldDAOImpl.FIND_ALL_POLICIES_WITHOUT_OUTSTANDING_BILLS, 
+				ProcessPoliciesLessOrEqual2YearsOldDAOImpl.FIND_ALL_POLICIES_FOR_ZERO_BILLS, 
 				new SrcFileMapperForTwoYearsPolicies());
 	}
 
