@@ -84,7 +84,7 @@ public class MainProcess {
 				if (hasRunSuccessfully) {
 					wfMamOpHDRTRLRProcess.setCurrentState(ProcessState.FINISHED, nextCycle);
 					mailSender.sendMailMessage(
-					        "Cycle Number " + nextCycle + " has run successfully\r\n " + getFailedRecordsMessage(nextCycle));
+					        "Cycle Number: " + nextCycle + " has run successfully.\r\n " + getFailedRecordsMessage(nextCycle));
 				}
 			} catch (final Exception ex) {
 				hasRunSuccessfully = false;
@@ -104,14 +104,14 @@ public class MainProcess {
 		final StringBuilder buffer = new StringBuilder();
 		final List<WFMamErrLog> errors = this.wfMamErrLogRepository.getErrorsFromCycleNumber(nextCycle);
 		if (!CollectionUtils.isEmpty(errors)) {
-			buffer.append("\nThe following sequence numbers have not been processed since there was no information in mandatory fields: \r\n\n");
+			buffer.append("\nThe following records have not been processed since there was no information in mandatory fields: \r\n\n");
 			int count = 0;
 			for (final WFMamErrLog wfMamErrLog : errors) {
 				final int sequenceNumber = wfMamErrLog.getSequenceNumber();
 				if (count != 0) {
-					buffer.append(",");
+					buffer.append("\n");
 				}
-				buffer.append(sequenceNumber);
+				buffer.append("Sequence Number: ").append(sequenceNumber).append(" -> Reason: ").append(wfMamErrLog.getDescription());
 				count++;
 			}
 		}
