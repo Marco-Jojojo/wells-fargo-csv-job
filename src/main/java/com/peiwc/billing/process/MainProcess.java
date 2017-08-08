@@ -56,7 +56,7 @@ public class MainProcess {
 		if (!processManagerCheck.checkIfProcessHasAlreadyRun(currentDate)) {
 			try {
 				nextCycle = processManagerCheck.getNextCycleNumber();
-				MainProcess.LOGGER.info("Process Has not been run, Next cycle is: " + nextCycle);
+				MainProcess.LOGGER.info("Process has not been run, Next cycle number is: " + nextCycle);
 				final WFMamOpHDRTRLR wfMamOpHDRTRLR = wfMamOpHDRTRLRProcess.saveNextCycle(nextCycle, currentDate);
 				wfMamOpHDRTRLRProcess.setCurrentState(ProcessState.PENDING_START, nextCycle);
 				MainProcess.LOGGER.info("wfMamOpHDRTRLR cycleNumber: " + wfMamOpHDRTRLR.getCycleNumber()
@@ -84,12 +84,12 @@ public class MainProcess {
 				if (hasRunSuccessfully) {
 					wfMamOpHDRTRLRProcess.setCurrentState(ProcessState.FINISHED, nextCycle);
 					mailSender.sendMailMessage(
-					        "Process #" + nextCycle + "has run successfully\r\n " + getFailedRecordsMessage(nextCycle));
+					        "Cycle Number " + nextCycle + " has run successfully\r\n " + getFailedRecordsMessage(nextCycle));
 				}
 			} catch (final Exception ex) {
 				hasRunSuccessfully = false;
 				wfMamOpHDRTRLRProcess.saveStatusMessage(nextCycle, ex.getMessage());
-				mailSender.sendMailMessage("Process # " + nextCycle + " , has failed: " + ex.getMessage());
+				mailSender.sendMailMessage("Process (Cycle Number) #" + nextCycle + ", has failed: " + ex.getMessage());
 				MainProcess.LOGGER.error(ex, ex);
 			}
 		} else {
@@ -104,8 +104,7 @@ public class MainProcess {
 		final StringBuilder buffer = new StringBuilder();
 		final List<WFMamErrLog> errors = this.wfMamErrLogRepository.getErrorsFromCycleNumber(nextCycle);
 		if (!CollectionUtils.isEmpty(errors)) {
-			buffer.append("the following sequence numbers have not been processed "
-			        + "since there was no information in mandatory fields: \r\n");
+			buffer.append("\nThe following sequence numbers have not been processed since there was no information in mandatory fields: \r\n\n");
 			int count = 0;
 			for (final WFMamErrLog wfMamErrLog : errors) {
 				final int sequenceNumber = wfMamErrLog.getSequenceNumber();

@@ -35,7 +35,7 @@ public class ProcessPoliciesLessOrEqual2YearsOld {
 
 	private static final String POLICY_NUMBER_DESCRIPTION_ERROR = "Policy number cannot be zero or null";
 
-	private static final String DUE_DATE_DESCRIPTION_ERROR = "Due date cannot bu null";
+	private static final String DUE_DATE_DESCRIPTION_ERROR = "Due date cannot be null";
 
 	/**
 	 * Get two years old records from POLICY_MASTER and insert them
