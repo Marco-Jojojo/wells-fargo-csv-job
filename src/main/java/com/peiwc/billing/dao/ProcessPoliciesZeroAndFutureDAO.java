@@ -8,7 +8,7 @@ import com.peiwc.billing.domain.WFMamSrcFile;
  * @author jolivarria
  *
  */
-public interface ProcessPoliciesLessOrEqual2YearsOldDAO {
+public interface ProcessPoliciesZeroAndFutureDAO {
 
 	/**
 	 * @param twoYearsBefore
@@ -35,9 +35,4 @@ public interface ProcessPoliciesLessOrEqual2YearsOldDAO {
 	 */
 	void create(WFMamSrcFile wfMamSrcFile);
 
-	/**
-	 * @param cycleNumber
-	 * @return int
-	 */
-	int getMaxSequenceNumber(int cycleNumber);
 }

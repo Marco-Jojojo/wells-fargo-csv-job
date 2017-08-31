@@ -27,6 +27,8 @@ public class ProcessDAOImpl implements ProcessDAO {
 	private static final String GET_LAST_CYCLE_NUMBER = "select isnull(max( cycle_number ),0) as cycle_number "
 			+ "from WF_MAM_OP_HDR_TRLR";
 
+        private static final String GET_MAX_SEQUENCE_NUMBER = "SELECT MAX(SEQUENCE_NUMBER) FROM WF_MAM_SRC_FILE WHERE CYCLE_NUMBER = :cycleNumber";
+        
 	/**
 	 * {@inheritDoc}
 	 */
@@ -55,5 +57,12 @@ public class ProcessDAOImpl implements ProcessDAO {
 				parameters, Integer.class);
 		return lastCycleNumber;
 	}
+
+    @Override
+    public int getMaxSequenceNumber(int cycleNumber) {
+        final MapSqlParameterSource parameters = new MapSqlParameterSource();
+        parameters.addValue("cycleNumber", cycleNumber);
+        return this.namedParameterJdbcTemplate.queryForObject(GET_MAX_SEQUENCE_NUMBER, parameters, Integer.class);
+    }
 
 }

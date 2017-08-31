@@ -14,11 +14,8 @@ import com.peiwc.billing.domain.WFMamSrcFile;
  * @author jolivarria
  *
  */
-@Repository("processPoliciesLessOrEqual2YearsOldDAOImpl")
-public class ProcessPoliciesLessOrEqual2YearsOldDAOImpl implements ProcessPoliciesLessOrEqual2YearsOldDAO {
-
-	// private static final Logger LOGGER =
-	// Logger.getLogger(ProcessPoliciesLessOrEqual2YearsOldDAO.class);
+@Repository
+public class ProcessPoliciesZeroAndFutureDAOImpl implements ProcessPoliciesZeroAndFutureDAO {
 
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -34,15 +31,7 @@ public class ProcessPoliciesLessOrEqual2YearsOldDAOImpl implements ProcessPolici
                 "	FROM " +
                 "		POLICY_MASTER p " +
                 "	WHERE " +
-                "		p.STATUS_CODE != 2 AND p.STATUS_CODE != 6 " +
-                "		GROUP BY " +
-                "			p.SUBMISSION_NUMBER, " +
-                "			p.POLICY_NUMBER, " +
-                "			p.POLICY_PREFIX_1, " +
-                "			p.POLICY_PREFIX_2, " +
-                "			p.POLICY_NUMBER, " +
-                "			p.POLICY_SUFFIX, " +
-                "			p.EFFECTIVE_DATE;";
+                "		p.STATUS_CODE != 2 AND p.STATUS_CODE != 6;";
 
 	private static final String FIND_ALL_FUTURE_POLICIES = 
                 "SELECT " +
@@ -96,15 +85,12 @@ public class ProcessPoliciesLessOrEqual2YearsOldDAOImpl implements ProcessPolici
 	private static final String FIND_ONE_IN_WF_MAM_SRC_FILE = "SELECT * FROM WF_MAM_SRC_FILE "
 			+ " WHERE CYCLE_NUMBER =:cycleNumber AND SUBMISSION_NUMBER =:submissionNumber";
 
-	private static final String SAVE_RECORD = "INSERT INTO WF_MAM_SRC_FILE (CYCLE_NUMBER, SEQUENCE_NUMBER, SUBMISSION_NUMBER, SECONDARY_AUTH, REFERENCE_NUMBER, CONSOLIDATED_NAME, AMOUNT_DUE, INVOICE_NUMBER, INVOICE_DATE, DUE_DATE)"
-			+ " VALUES(:cycleNumber, :sequenceNumber, :submissionNumber, :secondaryAuth, :referenceNumber, '',:amountDue, :invoiceNumber, :invoiceDate, :dueDate)";
-
-	private static final String GET_MAX_SEQUENCE_NUMBER = "SELECT MAX(SEQUENCE_NUMBER) FROM WF_MAM_SRC_FILE WHERE CYCLE_NUMBER = :cycleNumber";
+	private static final String SAVE_RECORD = "INSERT INTO WF_MAM_SRC_FILE (CYCLE_NUMBER, SEQUENCE_NUMBER, SUBMISSION_NUMBER, SECONDARY_AUTH, REFERENCE_NUMBER, CONSOLIDATED_NAME, AMOUNT_DUE, INVOICE_NUMBER, INVOICE_DATE, DUE_DATE, CLEARED_RECORD_SENT)"
+			+ " VALUES(:cycleNumber, :sequenceNumber, :submissionNumber, :secondaryAuth, :referenceNumber, '',:amountDue, :invoiceNumber, :invoiceDate, :dueDate, 1)";
 
 	@Override
 	public List<WFMamSrcFile> findAllPoliciesForZeroBills() {
-		return this.namedParameterJdbcTemplate.query(
-				ProcessPoliciesLessOrEqual2YearsOldDAOImpl.FIND_ALL_POLICIES_FOR_ZERO_BILLS, 
+		return this.namedParameterJdbcTemplate.query(ProcessPoliciesZeroAndFutureDAOImpl.FIND_ALL_POLICIES_FOR_ZERO_BILLS, 
 				new SrcFileMapperForTwoYearsPolicies());
 	}
 
@@ -112,8 +98,7 @@ public class ProcessPoliciesLessOrEqual2YearsOldDAOImpl implements ProcessPolici
 	public List<WFMamSrcFile> findAllFuturePolicies(final String today) {
 		final MapSqlParameterSource parameters = new MapSqlParameterSource();
 		parameters.addValue("today", today);
-		return this.namedParameterJdbcTemplate.query(
-				ProcessPoliciesLessOrEqual2YearsOldDAOImpl.FIND_ALL_FUTURE_POLICIES, parameters,
+		return this.namedParameterJdbcTemplate.query(ProcessPoliciesZeroAndFutureDAOImpl.FIND_ALL_FUTURE_POLICIES, parameters,
 				new SrcFileMapperForTwoYearsPolicies());
 	}
 
@@ -122,8 +107,7 @@ public class ProcessPoliciesLessOrEqual2YearsOldDAOImpl implements ProcessPolici
 		final MapSqlParameterSource parameters = new MapSqlParameterSource();
 		parameters.addValue("cycleNumber", cycleNumber);
 		parameters.addValue("submissionNumber", submissionNumber);
-		return this.namedParameterJdbcTemplate.query(
-				ProcessPoliciesLessOrEqual2YearsOldDAOImpl.FIND_ONE_IN_WF_MAM_SRC_FILE, parameters,
+		return this.namedParameterJdbcTemplate.query(ProcessPoliciesZeroAndFutureDAOImpl.FIND_ONE_IN_WF_MAM_SRC_FILE, parameters,
 				new SrcFileMapperForTwoYearsPolicies());
 	}
 
@@ -139,15 +123,7 @@ public class ProcessPoliciesLessOrEqual2YearsOldDAOImpl implements ProcessPolici
 		parameters.addValue("dueDate", wfMamSrcFile.getDueDate());
 		parameters.addValue("invoiceNumber", wfMamSrcFile.getInvoiceNumber());
 		parameters.addValue("amountDue", wfMamSrcFile.getAmountDue());
-		this.namedParameterJdbcTemplate.update(ProcessPoliciesLessOrEqual2YearsOldDAOImpl.SAVE_RECORD, parameters);
-	}
-
-	@Override
-	public int getMaxSequenceNumber(final int cycleNumber) {
-		final MapSqlParameterSource parameters = new MapSqlParameterSource();
-		parameters.addValue("cycleNumber", cycleNumber);
-		return this.namedParameterJdbcTemplate.queryForObject(
-				ProcessPoliciesLessOrEqual2YearsOldDAOImpl.GET_MAX_SEQUENCE_NUMBER, parameters, Integer.class);
+		this.namedParameterJdbcTemplate.update(ProcessPoliciesZeroAndFutureDAOImpl.SAVE_RECORD, parameters);
 	}
 
 }

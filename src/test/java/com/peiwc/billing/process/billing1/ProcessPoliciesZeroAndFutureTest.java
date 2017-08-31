@@ -12,8 +12,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.peiwc.billing.configuration.ConfigurationBeanMock;
-import com.peiwc.billing.dao.ProcessPoliciesLessOrEqual2YearsOldDAO;
 import com.peiwc.billing.domain.WFMamSrcFile;
+import com.peiwc.billing.dao.ProcessPoliciesZeroAndFutureDAO;
 
 /**
  *
@@ -21,9 +21,9 @@ import com.peiwc.billing.domain.WFMamSrcFile;
 @ContextConfiguration(classes = { ConfigurationBeanMock.class })
 @RunWith(SpringJUnit4ClassRunner.class)
 @DirtiesContext(classMode = ClassMode.AFTER_CLASS)
-public class ProcessPoliciesLessOrEqual2YearsOldTest {
+public class ProcessPoliciesZeroAndFutureTest {
 	@Autowired
-	private ProcessPoliciesLessOrEqual2YearsOldDAO processPoliciesLessOrEqual2YearsOldDAO;
+	private ProcessPoliciesZeroAndFutureDAO processPoliciesLessOrEqual2YearsOldDAO;
         
 	/**
 	 *

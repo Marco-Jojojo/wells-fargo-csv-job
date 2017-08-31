@@ -1,41 +1,35 @@
 package com.peiwc.billing.process.billing1;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
  *
  * @author jolivarria
  *
  */
-@Component("wfMamSrcGenRecs")
-public class WFMamSrcGenRecs {
+@Service("wfMamSrcGenRecs")
+public class WFMamSrcGenRecs
+{
 
-	@Autowired
-	private CalcUnclearedBilledAmt calcUnclearedBilledAmt;
+    @Autowired
+    private CalcUnclearedBilledAmt calcUnclearedBilledAmt;
 
-	@Autowired
-	private CalcUnclearedUnBilledCreditAmt calcUnclearedUnBilledCreditAmt;
+    @Autowired
+    private CalcClearedReceivableRecords calcClearedReceivableRecords;
 
-	@Autowired
-	private ProcessPoliciesLessOrEqual2YearsOld processPoliciesLessOrEqual2YearsOld;
+    @Autowired
+    private ProcessPoliciesZeroAndFuture processPoliciesLessOrEqual2YearsOld;
 
-	@Autowired
-	private ApplyCredits applyCredits;
-
-	/**
-	 * Begin the billing process calling subtasks
-	 * 
-	 * @param cycleNumber
-	 *
-	 */
-	public void billingProcess(final int cycleNumber) {
-		this.calcUnclearedBilledAmt.updWFMamSrcFileRec(cycleNumber);
-		// this.calcUnclearedUnBilledCreditAmt.wfMamSrcFileUpdRecDBI1(cycleNumber);
-		this.processPoliciesLessOrEqual2YearsOld.processPolicies(cycleNumber);
-		this.processPoliciesLessOrEqual2YearsOld.futurePolicies(cycleNumber);
-		// this.applyCredits.applyCreditsProcess(cycleNumber);
-
-	}
+    /**
+     * Starts the billing process calling subtasks. First, the Outstanding bills are going to be processed, then the Zero bill policies, after that the future policies, and finally the Cleared receivables will be processed.
+     * @param cycleNumber
+     */
+    public void billingProcess(final int cycleNumber) {
+        calcUnclearedBilledAmt.updWFMamSrcFileRec(cycleNumber); // Outstanding bills
+        processPoliciesLessOrEqual2YearsOld.processPolicies(cycleNumber); // Zero bill policies
+        processPoliciesLessOrEqual2YearsOld.futurePolicies(cycleNumber); // Future policies
+        calcClearedReceivableRecords.processPolicies(cycleNumber); // Cleared receivables bills
+    }
 
 }

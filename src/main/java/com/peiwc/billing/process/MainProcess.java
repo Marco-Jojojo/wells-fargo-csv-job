@@ -36,6 +36,8 @@ public class MainProcess {
 	private WFMamSrcGenRecs wfMamSrcGenRecs;
 	@Autowired
 	private BillingPart2Process billingPart2Process;
+	@Autowired
+                  private UpdateHistoricalPolicies updateHistoricalPolicies;
 	@Value("${csv.name.suffix}")
 	private String dateFormatPattern;
 	@Autowired
@@ -64,8 +66,9 @@ public class MainProcess {
 				wfMamOpHDRTRLRProcess.setCurrentState(ProcessState.RUNNING, nextCycle);
 				// here goes the main process where the data for WF_MAM_SRC_FILE
 				// table is filled.
-				this.wfMamSrcGenRecs.billingProcess(nextCycle);
+				wfMamSrcGenRecs.billingProcess(nextCycle);
 				billingPart2Process.updateUserInfo(nextCycle);
+                                                                        updateHistoricalPolicies.updateHistoricalBills();
 				final String fileNameId = System.getProperty("csv.id.prefix");
 				final String fileNamePrefix = System.getProperty("csv.name.prefix");
 				String fileName = "test.txt";
