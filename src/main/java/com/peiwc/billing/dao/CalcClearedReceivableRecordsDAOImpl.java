@@ -37,6 +37,7 @@ public class CalcClearedReceivableRecordsDAOImpl implements CalcClearedReceivabl
             "		 AND cm.POLICY_SUFFIX = bill.POLICY_SUFFIX " +
             "		 AND cm.DIRECT_BILL_INVOICE = bill.INVOICE_NUMBER " +
             "		 WHERE cm.CLEARED_RECEIVABLE = 'Y'  " +
+            "		 AND cm.DATE_CLEARED BETWEEN DATEADD(DAY, -60, GETDATE()) AND GETDATE() " +
             "		 AND cm.DIRECT_BILL_INVOICE NOT IN (0, 99999999) " +
             "	 ) AS cm_bill " +
             "ON cm_bill.SUBMISSION_NUMBER = wf.SUBMISSION_NUMBER " +
