@@ -2,6 +2,7 @@ package com.peiwc.billing.dao;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.PreparedStatementCallback;
@@ -14,23 +15,24 @@ import org.springframework.stereotype.Repository;
  * @date Aug 30, 2017
  */
 @Repository
-public class UpdateHistoricalPoliciesDAOImpl implements UpdateHistoricalPoliciesDAO
-{
-    
-    public static final String STMNT = "EXEC dbo.updateHistoricalBillsWF ";
-    
-    @Autowired
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    
-    @Override
-    public void update() {
-        MapSqlParameterSource parameters = new MapSqlParameterSource();
-        namedParameterJdbcTemplate.execute(STMNT , parameters, new PreparedStatementCallback<Boolean>() {
-            @Override
-            public Boolean doInPreparedStatement(PreparedStatement ps) throws SQLException, DataAccessException {
-                return ps.execute();
-            }
-        });
-    }
+public class UpdateHistoricalPoliciesDAOImpl implements UpdateHistoricalPoliciesDAO {
+	/**
+	 * Stored procedure call for update historical bills.
+	 */
+	public static final String STMNT = "EXEC dbo.updateHistoricalBillsWF ";
+	@Autowired
+	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
+	@Override
+	public void update() {
+		final MapSqlParameterSource parameters = new MapSqlParameterSource();
+		namedParameterJdbcTemplate.execute(UpdateHistoricalPoliciesDAOImpl.STMNT, parameters,
+		        new PreparedStatementCallback<Boolean>() {
+			        @Override
+			        public Boolean doInPreparedStatement(final PreparedStatement ps)
+			                throws SQLException, DataAccessException {
+				        return ps.execute();
+			        }
+		        });
+	}
 }

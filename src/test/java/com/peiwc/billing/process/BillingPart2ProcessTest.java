@@ -51,6 +51,7 @@ public class BillingPart2ProcessTest {
 	 */
 	@Ignore
 	@Test
+	@SuppressWarnings("unused")
 	public void testspecialCharacterRemoval() {
 		final String test = "SANTOS A. UY, JR., M. D. ( A CORP )";
 		// final String result =
