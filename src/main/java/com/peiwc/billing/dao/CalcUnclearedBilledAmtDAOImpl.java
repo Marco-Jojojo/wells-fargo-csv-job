@@ -32,14 +32,14 @@ public class CalcUnclearedBilledAmtDAOImpl implements CalcUnclearedBilledAmtDAO 
                                                                         "	CONCAT(LTRIM(RTRIM(cm.POLICY_PREFIX_1)), LTRIM(RTRIM(cm.POLICY_PREFIX_2)), LTRIM(RTRIM(cm.POLICY_NUMBER)), '-', LTRIM(RTRIM(cm.POLICY_SUFFIX))) as INVOICE_NUMBER, " +
                                                                         "	spb.STMT_DATE as INVOICE_DATE, " +
                                                                         "	spb.DUE_DATE as DUE_DATE " +
-                                                                        "FROM COLLECTION_MASTER cm " +
+                                                                        "   FROM COLLECTION_MASTER cm " +
                                                                         "	LEFT OUTER JOIN SP_BILL_STMT_CTRL spb ON " +
                                                                         "	cm.POLICY_PREFIX_1 = spb.POLICY_PREFIX_1 " +
                                                                         "	AND cm.POLICY_PREFIX_2 = spb.POLICY_PREFIX_2 " +
                                                                         "	AND cm.POLICY_NUMBER = spb.POLICY_NUMBER " +
                                                                         "	AND cm.policy_suffix = spb.policy_suffix " +
                                                                         "	AND cm.DIRECT_BILL_INVOICE = spb.INVOICE_NUMBER " +
-                                                                        "WHERE " +
+                                                                        "   WHERE " +
                                                                         "	cm.cleared_receivable = 'N' " +
                                                                         "	AND cm.O_COMMENT NOT LIKE '%OFFSET%' " +
                                                                         "	AND cm.DIRECT_BILL_INVOICE NOT IN (0, 99999999) " +

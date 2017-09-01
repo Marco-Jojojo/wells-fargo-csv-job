@@ -37,7 +37,7 @@ public class MainProcess {
 	@Autowired
 	private BillingPart2Process billingPart2Process;
 	@Autowired
-                  private UpdateHistoricalPolicies updateHistoricalPolicies;
+	private UpdateHistoricalPolicies updateHistoricalPolicies;
 	@Value("${csv.name.suffix}")
 	private String dateFormatPattern;
 	@Autowired
@@ -68,7 +68,7 @@ public class MainProcess {
 				// table is filled.
 				wfMamSrcGenRecs.billingProcess(nextCycle);
 				billingPart2Process.updateUserInfo(nextCycle);
-                                                                        updateHistoricalPolicies.updateHistoricalBills();
+				updateHistoricalPolicies.updateHistoricalBills();
 				final String fileNameId = System.getProperty("csv.id.prefix");
 				final String fileNamePrefix = System.getProperty("csv.name.prefix");
 				String fileName = "test.txt";
@@ -86,8 +86,8 @@ public class MainProcess {
 				}
 				if (hasRunSuccessfully) {
 					wfMamOpHDRTRLRProcess.setCurrentState(ProcessState.FINISHED, nextCycle);
-					mailSender.sendMailMessage(
-					        "Cycle Number: " + nextCycle + " has run successfully.\r\n " + getFailedRecordsMessage(nextCycle));
+					mailSender.sendMailMessage("Cycle Number: " + nextCycle + " has run successfully.\r\n "
+					        + getFailedRecordsMessage(nextCycle));
 				}
 			} catch (final Exception ex) {
 				hasRunSuccessfully = false;
@@ -107,10 +107,12 @@ public class MainProcess {
 		final StringBuilder buffer = new StringBuilder();
 		final List<WFMamErrLog> errors = this.wfMamErrLogRepository.getErrorsFromCycleNumber(nextCycle);
 		if (!CollectionUtils.isEmpty(errors)) {
-			buffer.append("\nThe following records have not been processed since there was no information in mandatory fields: \r\n");
+			buffer.append(
+			        "\nThe following records have not been processed since there was no information in mandatory fields: \r\n");
 			for (final WFMamErrLog wfMamErrLog : errors) {
 				final int sequenceNumber = wfMamErrLog.getSequenceNumber();
-				buffer.append("\n-> Sequence Number: ").append(sequenceNumber).append(" / Reason: ").append(wfMamErrLog.getDescription());
+				buffer.append("\n-> Sequence Number: ").append(sequenceNumber).append(" / Reason: ")
+				        .append(wfMamErrLog.getDescription());
 			}
 		}
 		return buffer.toString();
