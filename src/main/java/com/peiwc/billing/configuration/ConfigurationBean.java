@@ -3,13 +3,17 @@ package com.peiwc.billing.configuration;
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp.BasicDataSource;
+import org.jasypt.encryption.StringEncryptor;
+import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
+import org.jasypt.encryption.pbe.config.EnvironmentStringPBEConfig;
+import org.jasypt.spring31.properties.EncryptablePropertyPlaceholderConfigurer;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.annotation.PropertySources;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 /**
@@ -18,7 +22,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
  */
 @Configuration
 @ComponentScans({ @ComponentScan("com.peiwc.billing") })
-@PropertySources({ @PropertySource("file:database.mssql.properties"), @PropertySource("file:common.properties") })
 public class ConfigurationBean {
 
 	@Value("${database.mssql.driverClassName}")
@@ -45,6 +48,40 @@ public class ConfigurationBean {
 	 */
 	public static final String PERSISTENCE_APP_NAME = "WFPU";
 
+        /**
+         * Defines the algorithm and reads system property for encryption.
+         * @return 
+         */
+    @Bean
+    public static EnvironmentStringPBEConfig environmentVariablesConfiguration() {
+        EnvironmentStringPBEConfig environmentVariablesConfiguration = new EnvironmentStringPBEConfig();
+        environmentVariablesConfiguration.setAlgorithm("PBEWithMD5AndDES");
+        environmentVariablesConfiguration.setPasswordSysPropertyName("jasypt.encryptor.password");
+        return environmentVariablesConfiguration;
+    }
+
+    /**
+     * Reads the String Encryptor.
+     * @return 
+     */
+    @Bean
+    public static StringEncryptor configurationEncryptor() {
+        StandardPBEStringEncryptor configurationEncryptor = new StandardPBEStringEncryptor();
+        configurationEncryptor.setConfig(environmentVariablesConfiguration());
+        return configurationEncryptor;
+    }
+
+    /**
+     * Defines the environment and encryptable property placeholder.
+     * @return 
+     */
+    @Bean
+    public static PropertyPlaceholderConfigurer propertyConfigurer() {
+        String envPrefix = System.getProperty("env.prefix");
+        EncryptablePropertyPlaceholderConfigurer propertyConfigurer = new EncryptablePropertyPlaceholderConfigurer(configurationEncryptor());
+        propertyConfigurer.setLocations(new ClassPathResource("database.mssql-"+envPrefix+".properties"), new ClassPathResource("common.properties"));
+        return propertyConfigurer;
+    }
 	/**
 	 * generates a global datasource using the persistence settings in the
 	 * properties file.
