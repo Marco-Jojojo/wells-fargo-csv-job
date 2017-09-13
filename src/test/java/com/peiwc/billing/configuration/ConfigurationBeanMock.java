@@ -1,17 +1,8 @@
 package com.peiwc.billing.configuration;
 
-import java.util.Properties;
-
-import javax.persistence.EntityManagerFactory;
-import javax.sql.DataSource;
-
 import org.hibernate.jpa.HibernatePersistenceProvider;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.FilterType;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
@@ -24,98 +15,104 @@ import org.springframework.orm.jpa.vendor.HibernateJpaDialect;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
+import javax.persistence.EntityManagerFactory;
+import javax.sql.DataSource;
+import java.util.Properties;
+
 /**
  * Configuration file for checking integration tests in current application.
  */
 @Configuration
-@ComponentScan(basePackages = { "com.peiwc.billing" }, excludeFilters = {
-		@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = { ConfigurationBean.class }) })
-@EnableJpaRepositories(entityManagerFactoryRef = "entityManagerFactory", basePackages = { "com.peiwc.billing.dao" })
+@ComponentScan(basePackages = {"com.peiwc.billing"}, excludeFilters = {
+        @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = {ConfigurationBean.class})})
+@EnableJpaRepositories(entityManagerFactoryRef = "entityManagerFactory", basePackages = {"com.peiwc.billing.dao"})
 @EnableTransactionManagement
-@PropertySource("file:database.h2.properties")
+@PropertySources({@PropertySource("file:database.h2.properties"), @PropertySource("file:common.properties")})
+
 public class ConfigurationBeanMock {
 
 
-	@Value("${database.mssql.databasePlatform}")
-	private String databasePlatform;
-	@Value("${database.mssql.showSql}")
-	private String showSql;
-	@Value("${database.mssql.generateDdl}")
-	private String generateDdl;
+    @Value("${database.mssql.databasePlatform}")
+    private String databasePlatform;
+    @Value("${database.mssql.showSql}")
+    private String showSql;
+    @Value("${database.mssql.generateDdl}")
+    private String generateDdl;
 
-	/**
-	 * global persistence name shared across application
-	 */
-	public static final String PERSISTENCE_APP_NAME = "WFPU";
+    /**
+     * global persistence name shared across application
+     */
+    public static final String PERSISTENCE_APP_NAME = "WFPU";
 
-	/**
-	 * generates global datasource.
-	 *
-	 * @return global datasource.
-	 */
-	@Bean("dataSource")
-	public DataSource getDataSource() {
-		final EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
-		final EmbeddedDatabase db = builder.setType(EmbeddedDatabaseType.H2).addScript("file:database/create-db.sql")
-				.addScript("file:database/insert-data.sql").build();
-		return db;
-	}
+    /**
+     * generates global datasource.
+     *
+     * @return global datasource.
+     */
+    @Bean("dataSource")
+    public DataSource getDataSource() {
+        final EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
+        final EmbeddedDatabase db = builder.setType(EmbeddedDatabaseType.H2).addScript("file:database/create-db.sql")
+                .addScript("file:database/insert-data.sql").build();
+        return db;
+    }
 
-	/**
-	 * generates entitymanager factory.
-	 *
-	 * @return a global entity manager factory.
-	 */
-	@Bean("entityManagerFactory")
-	public LocalContainerEntityManagerFactoryBean getEntityManagerFactory() {
-		final LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
-		factory.setPersistenceProvider(new HibernatePersistenceProvider());
-		factory.setDataSource(getDataSource());
-		factory.setJpaDialect(new HibernateJpaDialect());
-		factory.setPackagesToScan("com.peiwc.billing.domain");
-		factory.setJpaVendorAdapter(getJpaVendorAdapter());
-		final Properties jpaProperties = new Properties();
-		jpaProperties.setProperty("hibernate.dialect", databasePlatform);
-		factory.setJpaProperties(jpaProperties);
-		factory.setPersistenceUnitName(ConfigurationBeanMock.PERSISTENCE_APP_NAME);
-		return factory;
-	}
+    /**
+     * generates entitymanager factory.
+     *
+     * @return a global entity manager factory.
+     */
+    @Bean("entityManagerFactory")
+    public LocalContainerEntityManagerFactoryBean getEntityManagerFactory() {
+        final LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
+        factory.setPersistenceProvider(new HibernatePersistenceProvider());
+        factory.setDataSource(getDataSource());
+        factory.setJpaDialect(new HibernateJpaDialect());
+        factory.setPackagesToScan("com.peiwc.billing.domain");
+        factory.setJpaVendorAdapter(getJpaVendorAdapter());
+        final Properties jpaProperties = new Properties();
+        jpaProperties.setProperty("hibernate.dialect", databasePlatform);
+        factory.setJpaProperties(jpaProperties);
+        factory.setPersistenceUnitName(ConfigurationBeanMock.PERSISTENCE_APP_NAME);
+        return factory;
+    }
 
-	/**
-	 * generates a hibernate vendor adapter.
-	 *
-	 * @return a generated vendor adapter.
-	 */
-	@Bean("vendorAdapter")
-	public JpaVendorAdapter getJpaVendorAdapter() {
-		final HibernateJpaVendorAdapter hibernateVendor = new HibernateJpaVendorAdapter();
-		hibernateVendor.setDatabasePlatform(databasePlatform);
-		hibernateVendor.setShowSql(Boolean.valueOf(showSql));
-		hibernateVendor.setGenerateDdl(Boolean.valueOf(generateDdl));
-		return hibernateVendor;
-	}
+    /**
+     * generates a hibernate vendor adapter.
+     *
+     * @return a generated vendor adapter.
+     */
+    @Bean("vendorAdapter")
+    public JpaVendorAdapter getJpaVendorAdapter() {
+        final HibernateJpaVendorAdapter hibernateVendor = new HibernateJpaVendorAdapter();
+        hibernateVendor.setDatabasePlatform(databasePlatform);
+        hibernateVendor.setShowSql(Boolean.valueOf(showSql));
+        hibernateVendor.setGenerateDdl(Boolean.valueOf(generateDdl));
+        return hibernateVendor;
+    }
 
-	/**
-	 * generates a named jdbc template.
-	 *
-	 * @return a global named jdbc template.
-	 */
-	@Bean("namedParameterJdbcTemplate")
-	public NamedParameterJdbcTemplate getNamedParameterJdbcTemplate() {
-		final NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(getDataSource());
-		return namedParameterJdbcTemplate;
-	}
+    /**
+     * generates a named jdbc template.
+     *
+     * @return a global named jdbc template.
+     */
+    @Bean("namedParameterJdbcTemplate")
+    public NamedParameterJdbcTemplate getNamedParameterJdbcTemplate() {
+        final NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(getDataSource());
+        return namedParameterJdbcTemplate;
+    }
 
-	/**
-	 * generates a transaction manager for use in @Transactional annotations
-	 * @param entityManagerFactory entityManager Factory passed as parameter when building transaction manager method.
-	 * @return a transaction manager to use in jpa transactions.
-	 */
-	@Bean
-	JpaTransactionManager transactionManager(final EntityManagerFactory entityManagerFactory) {
-		final JpaTransactionManager transactionManager = new JpaTransactionManager();
-		transactionManager.setEntityManagerFactory(entityManagerFactory);
-		return transactionManager;
-	}
+    /**
+     * generates a transaction manager for use in @Transactional annotations
+     *
+     * @param entityManagerFactory entityManager Factory passed as parameter when building transaction manager method.
+     * @return a transaction manager to use in jpa transactions.
+     */
+    @Bean
+    JpaTransactionManager transactionManager(final EntityManagerFactory entityManagerFactory) {
+        final JpaTransactionManager transactionManager = new JpaTransactionManager();
+        transactionManager.setEntityManagerFactory(entityManagerFactory);
+        return transactionManager;
+    }
 
 }

@@ -27,4 +27,10 @@ public interface ProcessDAO {
 	 */
 	int getLastCycleNumber();
 
+        /**
+         * Gets the max sequence number given a Cycle Number
+        * @param cycleNumber
+        * @return sequence number
+        */
+       int getMaxSequenceNumber(int cycleNumber);
 }

@@ -4,7 +4,10 @@ import java.util.Date;
 
 import javax.transaction.Transactional;
 
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import com.peiwc.billing.dao.WFMamOpHDRTRLRRepository;
@@ -16,10 +19,14 @@ import com.peiwc.billing.domain.WFMamOpHDRTRLR;
  */
 @Component("wfMamOpHDRTRLRProcess")
 public class WFMamOpHDRTRLRProcess {
-
-
 	@Autowired
 	private WFMamOpHDRTRLRRepository wfMamOpHDRTRLRRepository;
+	@Autowired
+	private ProcessManagerCheck processManagerCheck;
+	private static final Logger LOGGER = Logger.getLogger(WFMamOpHDRTRLRProcess.class);
+	private static final String PROC_ALREADY_RUN = "PROCESS HAS ALREADY BEEN RUN FOR TODAY";
+	@Value("${cifs.process.enabled}")
+	private boolean processEnabled;
 
 	/**
 	 * saves next cycle and return generated object
@@ -35,7 +42,9 @@ public class WFMamOpHDRTRLRProcess {
 		final WFMamOpHDRTRLR wfMamOpHDRTRLR = new WFMamOpHDRTRLR();
 		wfMamOpHDRTRLR.setCreationDate(currentDate);
 		wfMamOpHDRTRLR.setCycleNumber(nextCycle);
-		return this.wfMamOpHDRTRLRRepository.saveAndFlush(wfMamOpHDRTRLR);
+		WFMamOpHDRTRLRProcess.LOGGER
+		        .info("wfMamOpHDRTRLR before saving: " + ToStringBuilder.reflectionToString(wfMamOpHDRTRLR));
+		return this.wfMamOpHDRTRLRRepository.insert(wfMamOpHDRTRLR);
 	}
 
 	/**
@@ -48,21 +57,75 @@ public class WFMamOpHDRTRLRProcess {
 	 *            records that have been processed currently.
 	 */
 	public void saveTotalRecordsProcessed(final int nextCycle, final int totalRecordCount) {
-		WFMamOpHDRTRLR wfMamOpHDRTRLR = wfMamOpHDRTRLRRepository.findOne(nextCycle);
+		final WFMamOpHDRTRLR wfMamOpHDRTRLR = wfMamOpHDRTRLRRepository.findOne(nextCycle);
 		wfMamOpHDRTRLR.setTotalRecordCount(totalRecordCount);
-		this.wfMamOpHDRTRLRRepository.saveAndFlush(wfMamOpHDRTRLR);
+		this.wfMamOpHDRTRLRRepository.update(wfMamOpHDRTRLR);
 	}
-
 
 	/**
 	 * saves current Error Message to master table for current cycle.
-	 * @param cycleNumber current cycle number run by the application.
-	 * @param errorMessage critical error caught during execution.
+	 *
+	 * @param cycleNumber
+	 *            current cycle number run by the application.
+	 * @param errorMessage
+	 *            critical error caught during execution.
 	 */
-	public void saveErrorMessage(int cycleNumber,String errorMessage){
-		WFMamOpHDRTRLR wfMamOpHDRTRLR = wfMamOpHDRTRLRRepository.findOne(cycleNumber);
-		wfMamOpHDRTRLR.setErrorMessage(errorMessage);
-		wfMamOpHDRTRLRRepository.saveAndFlush(wfMamOpHDRTRLR);
+	public void saveStatusMessage(final int cycleNumber, final String errorMessage) {
+		final WFMamOpHDRTRLR wfMamOpHDRTRLR = wfMamOpHDRTRLRRepository.findOne(cycleNumber);
+		if (wfMamOpHDRTRLR != null && errorMessage != null) {
+			String errMessage = errorMessage;
+			if (errorMessage.length() > 100) {
+				errMessage = errorMessage.substring(0, 99);
+			}
+			wfMamOpHDRTRLR.setStatusMessage(errMessage);
+			wfMamOpHDRTRLRRepository.update(wfMamOpHDRTRLR);
+		}
 	}
 
+	/**
+	 * saves current state of project to master table.
+	 *
+	 * @param processState
+	 *            indicates the current process of project.
+	 * @param cycleNumber
+	 *            current cycle number run by the application.
+	 */
+	public void setCurrentState(final ProcessState processState, final int cycleNumber) {
+		final WFMamOpHDRTRLR wfMamOpHDRTRLR = wfMamOpHDRTRLRRepository.findOne(cycleNumber);
+		WFMamOpHDRTRLRProcess.LOGGER.info("Process State is: " + processState.getName());
+		wfMamOpHDRTRLR.setStatus(processState.getName());
+		wfMamOpHDRTRLRRepository.update(wfMamOpHDRTRLR);
+	}
+
+	/**
+	 * if process has already run for today, sets error as already run.
+	 *
+	 * @return cycle number.
+	 */
+	public int setProcessAsAlreadyRunForToday() {
+		final int lastCycleNumber = processManagerCheck.getLastCycleNumber();
+		this.setCurrentState(ProcessState.ALREADY_RUN, lastCycleNumber);
+		this.setProcessAlreadyRun(lastCycleNumber);
+		return lastCycleNumber;
+	}
+
+	private void setProcessAlreadyRun(final int lastCycleNumber) {
+		final WFMamOpHDRTRLR wfMamOpHrdTrlr = this.wfMamOpHDRTRLRRepository.findOne(lastCycleNumber);
+		wfMamOpHrdTrlr.setStatusMessage(WFMamOpHDRTRLRProcess.PROC_ALREADY_RUN);
+		wfMamOpHDRTRLRRepository.update(wfMamOpHrdTrlr);
+	}
+
+	/**
+	 * saves generated filename into database from current run.
+	 * 
+	 * @param nextCycle
+	 *            current cycle that is being run.
+	 * @param fileName
+	 *            generated csv file name, this is generated from run.
+	 */
+	public void saveFileName(final int nextCycle, final String fileName) {
+		final WFMamOpHDRTRLR wfMamOpHDRTRLR = wfMamOpHDRTRLRRepository.findOne(nextCycle);
+		wfMamOpHDRTRLR.setFileName(fileName);
+		this.wfMamOpHDRTRLRRepository.update(wfMamOpHDRTRLR);
+	}
 }

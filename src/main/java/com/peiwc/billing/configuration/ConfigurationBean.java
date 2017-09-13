@@ -1,42 +1,28 @@
 package com.peiwc.billing.configuration;
 
-import java.util.Properties;
-
-import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.apache.commons.dbcp.BasicDataSource;
-import org.hibernate.jpa.HibernatePersistenceProvider;
+import org.jasypt.encryption.StringEncryptor;
+import org.jasypt.encryption.pbe.StandardPBEStringEncryptor;
+import org.jasypt.encryption.pbe.config.EnvironmentStringPBEConfig;
+import org.jasypt.spring31.properties.EncryptablePropertyPlaceholderConfigurer;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.orm.jpa.JpaVendorAdapter;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.HibernateJpaDialect;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.transaction.annotation.TransactionManagementConfigurer;
 
 /**
- *
  * this bean contains all the configuration managed across the current
  * application.
- *
  */
 @Configuration
 @ComponentScans({ @ComponentScan("com.peiwc.billing") })
-@EnableJpaRepositories(entityManagerFactoryRef = "entityManagerFactory", basePackages = { "com.peiwc.billing.dao" })
-@EnableTransactionManagement
-@PropertySource("file:database.mssql.properties")
-public class ConfigurationBean implements TransactionManagementConfigurer {
+public class ConfigurationBean {
 
 	@Value("${database.mssql.driverClassName}")
 	private String driverClassName;
@@ -62,6 +48,40 @@ public class ConfigurationBean implements TransactionManagementConfigurer {
 	 */
 	public static final String PERSISTENCE_APP_NAME = "WFPU";
 
+        /**
+         * Defines the algorithm and reads system property for encryption.
+         * @return 
+         */
+    @Bean
+    public static EnvironmentStringPBEConfig environmentVariablesConfiguration() {
+        EnvironmentStringPBEConfig environmentVariablesConfiguration = new EnvironmentStringPBEConfig();
+        environmentVariablesConfiguration.setAlgorithm("PBEWithMD5AndDES");
+        environmentVariablesConfiguration.setPasswordSysPropertyName("jasypt.encryptor.password");
+        return environmentVariablesConfiguration;
+    }
+
+    /**
+     * Reads the String Encryptor.
+     * @return 
+     */
+    @Bean
+    public static StringEncryptor configurationEncryptor() {
+        StandardPBEStringEncryptor configurationEncryptor = new StandardPBEStringEncryptor();
+        configurationEncryptor.setConfig(environmentVariablesConfiguration());
+        return configurationEncryptor;
+    }
+
+    /**
+     * Defines the environment and encryptable property placeholder.
+     * @return 
+     */
+    @Bean
+    public static PropertyPlaceholderConfigurer propertyConfigurer() {
+        String envPrefix = System.getProperty("env.prefix");
+        EncryptablePropertyPlaceholderConfigurer propertyConfigurer = new EncryptablePropertyPlaceholderConfigurer(configurationEncryptor());
+        propertyConfigurer.setLocations(new ClassPathResource("database.mssql-"+envPrefix+".properties"), new ClassPathResource("common.properties"));
+        return propertyConfigurer;
+    }
 	/**
 	 * generates a global datasource using the persistence settings in the
 	 * properties file.
@@ -77,56 +97,8 @@ public class ConfigurationBean implements TransactionManagementConfigurer {
 		dataSource.setPassword(password);
 		dataSource.setMaxActive(Integer.parseInt(maxActive));
 		dataSource.setMinIdle(Integer.parseInt(minIdle));
+		dataSource.setDefaultAutoCommit(true);
 		return dataSource;
-	}
-
-	/**
-	 * Generates a entity manager factory that scans the application beans to
-	 * search all JPA managed beans.
-	 *
-	 * @return an global entity manager factory
-	 */
-	@Bean("entityManagerFactory")
-	public LocalContainerEntityManagerFactoryBean getEntityManagerFactory() {
-		final LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
-		factory.setPersistenceProvider(new HibernatePersistenceProvider());
-		factory.setDataSource(getDataSource());
-		factory.setJpaDialect(new HibernateJpaDialect());
-		factory.setPackagesToScan("com.peiwc.billing.domain");
-		factory.setJpaVendorAdapter(getJpaVendorAdapter());
-		final Properties jpaProperties = new Properties();
-		jpaProperties.setProperty("hibernate.dialect", databasePlatform);
-		factory.setJpaProperties(jpaProperties);
-		factory.setPersistenceUnitName(ConfigurationBean.PERSISTENCE_APP_NAME);
-		return factory;
-	}
-
-	/**
-	 * Generates a vendor adapter for hibernate that manages specific vendor
-	 * properties of hibernate connection.
-	 *
-	 * @return a global vendor adapter for hibernate.
-	 */
-	@Bean("vendorAdapter")
-	public JpaVendorAdapter getJpaVendorAdapter() {
-		final HibernateJpaVendorAdapter hibernateVendor = new HibernateJpaVendorAdapter();
-		hibernateVendor.setDatabasePlatform(databasePlatform);
-		hibernateVendor.setShowSql(Boolean.valueOf(showSql));
-		hibernateVendor.setGenerateDdl(Boolean.valueOf(generateDdl));
-		return hibernateVendor;
-	}
-
-	/**
-	 * constructs a transaction manager for use when generating a transaction in
-	 * a DAO repository or component.
-	 *
-	 * @return a global transaction manager for use in the application.
-	 */
-	@Bean("transactionManager")
-	public JpaTransactionManager setTransactionManager() {
-		final JpaTransactionManager transactionManager = new JpaTransactionManager();
-		transactionManager.setDataSource(getDataSource());
-		return transactionManager;
 	}
 
 	/**
@@ -138,27 +110,6 @@ public class ConfigurationBean implements TransactionManagementConfigurer {
 	public NamedParameterJdbcTemplate getNamedParameterJdbcTemplate() {
 		final NamedParameterJdbcTemplate namedParameterJdbcTemplate = new NamedParameterJdbcTemplate(getDataSource());
 		return namedParameterJdbcTemplate;
-	}
-
-	/**
-	 * generates an annotationdriven transaction manager
-	 * @return datasource transaction manager.
-	 */
-	@Override
-	public PlatformTransactionManager annotationDrivenTransactionManager() {
-		return new DataSourceTransactionManager(getDataSource());
-	}
-
-	/**
-	 * generates a transaction manager for use in @Transactional annotations
-	 * @param entityManagerFactory entityManager Factory passed as parameter when building transaction manager method.
-	 * @return a transaction manager to use in jpa transactions.
-	 */
-	@Bean
-	JpaTransactionManager transactionManager(final EntityManagerFactory entityManagerFactory) {
-		final JpaTransactionManager transactionManager = new JpaTransactionManager();
-		transactionManager.setEntityManagerFactory(entityManagerFactory);
-		return transactionManager;
 	}
 
 }

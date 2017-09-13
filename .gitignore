@@ -9,3 +9,5 @@ target
 *.csv
 .idea
 *.iml
+*.txt
+nbactions.xml

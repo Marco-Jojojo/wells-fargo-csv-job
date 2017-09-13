@@ -4,8 +4,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.annotation.PostConstruct;
 
@@ -14,24 +18,42 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
+import com.peiwc.billing.dao.WFMamErrLogRepository;
 import com.peiwc.billing.dao.WFMamSrcFileDAO;
+import com.peiwc.billing.domain.WFMamErrLog;
 import com.peiwc.billing.domain.WFMamSrcFile;
+import com.peiwc.billing.domain.WFMamSrcFilePK;
 
 /**
  * this process generates a CSV file from data retrieved from current cycle.
  */
 @Component("writeWFMAMSrcFileCSV")
 public class WriteWFMAMSrcFileCSV {
-
+	/**
+	 * new line
+	 */
+	public static final String NEW_LINE = "\r\n";
+	/**
+	 * comma
+	 */
+	public static final String COMMA = ",";
+	/**
+	 * Quot string
+	 */
+	public static final String QUOT = "\"";
 	@Autowired
 	private WFMamSrcFileDAO wfMamSrcFileDAO;
-
+	@Autowired
+	private WFMamErrLogRepository wfMamErrLogRepository;
 	private final static Logger LOGGER = Logger.getLogger(WriteWFMAMSrcFileCSV.class);
-
 	private SimpleDateFormat dateFormat;
-
+	private DecimalFormat numberFormat;
 	@Value("${csv.date.format}")
 	private String currentDateFormat;
+	@Value("${numeric.decimal.places}")
+	private int minFractionDigits;
+	@Value("${csv.headers}")
+	private String csvHeaders;
 
 	/**
 	 * Add code initialize
@@ -39,17 +61,9 @@ public class WriteWFMAMSrcFileCSV {
 	@PostConstruct
 	public void init() {
 		dateFormat = new SimpleDateFormat(currentDateFormat);
+		numberFormat = new DecimalFormat();
+		numberFormat.setMinimumFractionDigits(minFractionDigits);
 	}
-
-	/**
-	 * new line
-	 */
-	public static final String NEW_LINE = "\r\n";
-
-	/**
-	 * comma
-	 */
-	public static final String COMMA = ",";
 
 	/**
 	 * writes Data Retrieved from cycle number to database.
@@ -67,12 +81,17 @@ public class WriteWFMAMSrcFileCSV {
 		int recordCount = 0;
 		final List<WFMamSrcFile> wfList = this.wfMamSrcFileDAO.findByCycleNumber(cycleNumber);
 		OutputStream out = null;
+		final Set<WFMamSrcFilePK> errorList = this.getErrorsFromCycle(cycleNumber);
 		try {
-			out = new FileOutputStream(fileName, true);
+			out = new FileOutputStream(fileName);
+			final byte[] headers = (csvHeaders + WriteWFMAMSrcFileCSV.NEW_LINE).getBytes();
+			out.write(headers);
 			for (final WFMamSrcFile wfMamSrcFile : wfList) {
-				final String csvLine = getCSVFromSrcFile(wfMamSrcFile);
-				out.write(csvLine.getBytes());
-				recordCount++;
+				if (!errorList.contains(wfMamSrcFile.getId())) {
+					final String csvLine = getCSVFromSrcFile(wfMamSrcFile);
+					out.write(csvLine.getBytes());
+					recordCount++;
+				}
 			}
 		} finally {
 			if (out != null) {
@@ -92,31 +111,72 @@ public class WriteWFMAMSrcFileCSV {
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
 		builder.append(wfMamSrcFile.getSecondaryAuth());
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
-		builder.append(wfMamSrcFile.getConsolidatedName());
+		builder.append(formatString(wfMamSrcFile.getConsolidatedName()));
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
-		builder.append(dateFormat.format(wfMamSrcFile.getDueDate()));
+		builder.append(formatDate(wfMamSrcFile.getDueDate()));
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
-		builder.append(wfMamSrcFile.getAmountDue());
+		builder.append(formatNumber(wfMamSrcFile.getAmountDue()));
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
 		builder.append(wfMamSrcFile.getInvoiceNumber());
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
-		builder.append(dateFormat.format(wfMamSrcFile.getInvoiceDate()));
+		builder.append(formatDate(wfMamSrcFile.getInvoiceDate()));
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
-		builder.append(wfMamSrcFile.getEmail());
+		builder.append(formatString(wfMamSrcFile.getEmail()));
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
-		builder.append(wfMamSrcFile.getAddress());
+		builder.append(formatString(wfMamSrcFile.getAddress()));
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
-		builder.append(wfMamSrcFile.getAddress2());
+		builder.append(formatString(wfMamSrcFile.getAddress2()));
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
-		builder.append(wfMamSrcFile.getCity());
+		builder.append(formatString(wfMamSrcFile.getCity()));
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
-		builder.append(wfMamSrcFile.getState());
+		builder.append(formatString(wfMamSrcFile.getState()));
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
-		builder.append(wfMamSrcFile.getZip());
+		builder.append(formatString(wfMamSrcFile.getZip()));
 		builder.append(WriteWFMAMSrcFileCSV.COMMA);
-		builder.append(wfMamSrcFile.getPhone());
+		builder.append(addQuotes(wfMamSrcFile.getPhone()));
+		builder.append(WriteWFMAMSrcFileCSV.COMMA);
+		builder.append(formatString(wfMamSrcFile.getStatusInvoice()));
 		builder.append(WriteWFMAMSrcFileCSV.NEW_LINE);
 		return builder.toString();
 	}
 
+	private String addQuotes(final String phoneFormat) {
+		return WriteWFMAMSrcFileCSV.QUOT + phoneFormat + WriteWFMAMSrcFileCSV.QUOT;
+	}
+
+	private Set<WFMamSrcFilePK> getErrorsFromCycle(final int cycleNumber) {
+		final List<WFMamErrLog> errors = wfMamErrLogRepository.getErrorsFromCycleNumber(cycleNumber);
+		final Set<WFMamSrcFilePK> errorList = new HashSet<WFMamSrcFilePK>();
+		for (final WFMamErrLog error : errors) {
+			final int cycleNumberError = error.getCycleNumber();
+			final int sequenceNumber = error.getSequenceNumber();
+			final WFMamSrcFilePK pk = new WFMamSrcFilePK();
+			pk.setCycleNumber(cycleNumberError);
+			pk.setSequenceNumber(sequenceNumber);
+			errorList.add(pk);
+		}
+		return errorList;
+	}
+
+	private String formatDate(final Date dateValue) {
+		String resultFormat = "";
+		if (dateValue != null) {
+			resultFormat = dateFormat.format(dateValue);
+		}
+		return resultFormat;
+	}
+
+	private String formatString(final String stringValue) {
+		String resultFormat = "";
+		if (stringValue != null) {
+			resultFormat = stringValue.replaceAll(WriteWFMAMSrcFileCSV.QUOT,
+			        WriteWFMAMSrcFileCSV.QUOT + WriteWFMAMSrcFileCSV.QUOT);
+		}
+		return WriteWFMAMSrcFileCSV.QUOT + resultFormat + WriteWFMAMSrcFileCSV.QUOT;
+	}
+
+	private String formatNumber(final Number numberValue) {
+		final String finalFormat = numberFormat.format(numberValue).replaceAll(",", "");
+		return WriteWFMAMSrcFileCSV.QUOT + finalFormat + WriteWFMAMSrcFileCSV.QUOT;
+	}
 }
